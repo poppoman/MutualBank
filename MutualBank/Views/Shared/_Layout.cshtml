@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,17 +14,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
           integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-
 </head>
-@*fontawesome*@
-<script src="https://kit.fontawesome.com/d0f99bafb2.js" crossorigin="anonymous"></script>
 
 <body>
     <header>
         <div class="navBar">
-            <!-- 左側 -->
             <div class="topL">
-                <div class="logo"><a href="#"><img src="~/Img/nav/logo.png" alt=""></a></div>
+                <div class="logo"><a asp-page="/Home/Index"><img src="~/Img/nav/logo.png" alt=""></a></div>
                 <div class="search">
                     <div class="region">
                         <span>縣市 <i class="fa-solid fa-caret-down"></i></span>
@@ -87,10 +84,7 @@
                     </i>
                 </div>
             </div>
-
-            <!-- 右側 -->
             <div class="topR">
-                <!-- 橫向選單 -->
                 <i class="iconMaun fa-solid fa-bars"></i>
                 <div class="barManu">
                     <ul>
@@ -98,21 +92,24 @@
                     </ul>
                 </div>
             </div>
-
-
+            <div class="toTop">
+                <a href="#"><i class="fa-solid fa-circle-arrow-up"></i></a>
+            </div>
+        </div>
     </header>
-    <!-- po文面板 -->
+
     <div class="wrap-panel">
-        <div class="postBg">
-            <div class="postCard">
-                <div class="title">
-                    <span>Hello</span>
-                    <p>今天想要貼些什麼呢？</p>
-                </div>
-                <div class="link">
-                    <a class="butn poHelp" href="#">新增需求</a>
-                    <a class="butn poSkill" href="#">提供技能</a>
-                </div>
+        <div class="closeToggle"></div>
+        <div class="postCard">
+            <i class="iconPost fa-solid fa-xmark"></i>
+            <div class="title">
+
+                <span>Hello</span>
+                <p>今天想要貼些什麼呢？</p>
+            </div>
+            <div class="link">
+                <a class="butn poHelp" asp-page="/Home/Index">新增需求</a>
+                <a class="butn poSkill" asp-page="/Home/Index">提供技能</a>
             </div>
         </div>
     </div>
@@ -130,52 +127,76 @@
         </div>
     </footer>
     <script>
-        //-點選地區icon顯示區域面板
-        var iconCounty = document.querySelectorAll('.navBar .topL .search .region span i');
-        var panelCounty = document.querySelector('.navBar .topL .search .region .county');
+        //-點選icon顯示區域面板
+        let iconCounty = document.querySelectorAll('.navBar .topL .search .region span i');
+        let panelCounty = document.querySelector('.navBar .topL .search .region .county');
         iconCounty[0].addEventListener('click', function() {
             panelCounty.classList.toggle('active');
         })
-
-        var panelDist = document.querySelector('.navBar .topL .search .region .dist');
+        let panelDist = document.querySelector('.navBar .topL .search .region .dist');
         iconCounty[1].addEventListener('click', function() {
             panelDist.classList.toggle('active');
         })
+
         //-RWD Manu控制
-        var barManu = document.querySelector('.topR .barManu ');
-        var iconManu = document.querySelector('.navBar .topR .iconMaun');
+        let closeToggle = document.querySelector('.closeToggle');
 
-
+        let barManu = document.querySelector('.topR .barManu ');
+        let iconManu = document.querySelector('.navBar .topR .iconMaun');
         iconManu.addEventListener('click', function() {
             barManu.classList.toggle('active');
-            //點選時切換icon內容
+            //點選時切換icon
             iconManu.classList.toggle('fa-bars');
             iconManu.classList.toggle('fa-xmark');
+            //開啟背景關閉功能
+            closeToggle.classList.add('postOn');
         })
-        //-postBg 點選+號後顯示
-        var btnPo = document.querySelector('.topR .barManu li:first-child');
-        var barManu = document.querySelector('.topR .barManu');
 
-        var panelPoBg = document.querySelector('.postBg');
-        var panelPo = document.querySelector('.postCard');
+
+        //-postQuery 點選+號後顯示面板
+        let btnPo = document.querySelector('.topR .barManu li:first-child');
+        let panelPo = document.querySelector('.postCard');
         btnPo.addEventListener('click', function() {
-            panelPoBg.classList.toggle('active');
+            //panelPoBg.classList.toggle('active');
             panelPo.classList.toggle('active');
-            barManu.classList.toggle('active');
-            //關閉時切換icon內容
+            //開啟背景的點擊關閉功能
+            closeToggle.classList.add('postOn');
+            //同時關閉barManu，並將X恢復為原icon
+            barManu.classList.remove('active');
             iconManu.classList.toggle('fa-bars');
             iconManu.classList.toggle('fa-xmark');
-        })
-        //-postBg 點擊窗外畫面可關閉
-        panelPoBg.addEventListener('click', function() {
-            panelPoBg.classList.remove('active');
-            panelPo.classList.remove('active');
-        })
 
+        })
+        let iconPost = document.querySelector('.wrap-panel .iconPost');
+        iconPost.addEventListener('click', function() {
+            closeToggle.classList.remove('manuOn');
+            closeToggle.classList.remove('postOn');
+            panelPo.classList.remove('active');
+
+        });
+
+        //-點擊背景時關閉面板
+        closeToggle.addEventListener('click', function() {
+            panelPo.classList.remove('active');
+            barManu.classList.remove('active');
+            closeToggle.classList.remove('manuOn');
+            closeToggle.classList.remove('postOn');
+            if (barManu.classList.contains('active')) {
+                //關閉barManu，並將X恢復為原icon
+                barManu.classList.remove('active');
+                iconManu.classList.toggle('fa-bars');
+                iconManu.classList.toggle('fa-xmark');
+            }
+
+        })
     </script>
+
+    @*fontawesome*@
+    <script src="https://kit.fontawesome.com/d0f99bafb2.js" crossorigin="anonymous"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>
