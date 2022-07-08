@@ -7,31 +7,118 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/MutualBank.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/nav.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/rootColor.css" asp-append-version="true" />
+    @*googlefont*@
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
 </head>
+@*fontawesome*@
+<script src="https://kit.fontawesome.com/d0f99bafb2.js" crossorigin="anonymous"></script>
+
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MutualBank</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
+        <div class="navBar">
+            <!-- 左側 -->
+            <div class="topL">
+                <div class="logo"><a href="#"><img src="~/Img/nav/logo.png" alt=""></a></div>
+                <div class="search">
+                    <div class="region">
+                        <span>縣市 <i class="fa-solid fa-caret-down"></i></span>
+                        <div class="county">
+                            <li>
+                                <span>北部</span>
+                                <ul>台北市</ul>
+                                <ul>台北市</ul>
+                                <ul>台北市</ul>
+                                <ul>台北市</ul>
+                                <ul>台北市</ul>
+                            </li>
+                            <li>
+                                <span>中部</span>
+                                <ul>台北市</ul>
+                                <ul>台北市</ul>
+                                <ul>台北市</ul>
+                                <ul>台北市</ul>
+                                <ul>台北市</ul>
+                            </li>
+                            <li>
+                                <span>南部</span>
+                                <ul>台北市</ul>
+                                <ul>台北市</ul>
+                                <ul>台北市</ul>
+                                <ul>台北市</ul>
+                                <ul>台北市</ul>
+                            </li>
+                            <li>
+                                <span>東部</span>
+                                <ul>台北市</ul>
+                                <ul>台北市</ul>
+                                <ul>台北市</ul>
+                                <ul>台北市</ul>
+                                <ul>台北市</ul>
+                            </li>
+                            <li>
+                                <span>離島</span>
+                                <ul>台北市</ul>
+                                <ul>台北市</ul>
+                                <ul>台北市</ul>
+                                <ul>台北市</ul>
+                                <ul>台北市</ul>
+                            </li>
+                        </div>
+                        <span>區域 <i class="fa-solid fa-caret-down"></i></span>
+                        <div class="dist">
+                            <span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span>
+                            <span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span>
+                            <span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span>
+                            <span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span>
+                            <span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span>
+                            <span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span>
+                            <span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span>
+                            <span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span>
+                            <span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span>
+                        </div>
+                    </div>
+                    <input type="text" placeholder="輸入關鍵字">
+                    <i class="fa-solid fa-magnifying-glass">
+                    </i>
                 </div>
             </div>
-        </nav>
+
+            <!-- 右側 -->
+            <div class="topR">
+                <!-- 橫向選單 -->
+                <i class="iconMaun fa-solid fa-bars"></i>
+                <div class="barManu">
+                    <ul>
+                        <partial name="_LoginPartial" />
+                    </ul>
+                </div>
+            </div>
+
+
     </header>
+    <!-- po文面板 -->
+    <div class="wrap-panel">
+        <div class="postBg">
+            <div class="postCard">
+                <div class="title">
+                    <span>Hello</span>
+                    <p>今天想要貼些什麼呢？</p>
+                </div>
+                <div class="link">
+                    <a class="butn poHelp" href="#">新增需求</a>
+                    <a class="butn poSkill" href="#">提供技能</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
+
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -42,6 +129,50 @@
             &copy; 2022 - MutualBank - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+    <script>
+        //-點選地區icon顯示區域面板
+        var iconCounty = document.querySelectorAll('.navBar .topL .search .region span i');
+        var panelCounty = document.querySelector('.navBar .topL .search .region .county');
+        iconCounty[0].addEventListener('click', function() {
+            panelCounty.classList.toggle('active');
+        })
+
+        var panelDist = document.querySelector('.navBar .topL .search .region .dist');
+        iconCounty[1].addEventListener('click', function() {
+            panelDist.classList.toggle('active');
+        })
+        //-RWD Manu控制
+        var barManu = document.querySelector('.topR .barManu ');
+        var iconManu = document.querySelector('.navBar .topR .iconMaun');
+
+
+        iconManu.addEventListener('click', function() {
+            barManu.classList.toggle('active');
+            //點選時切換icon內容
+            iconManu.classList.toggle('fa-bars');
+            iconManu.classList.toggle('fa-xmark');
+        })
+        //-postBg 點選+號後顯示
+        var btnPo = document.querySelector('.topR .barManu li:first-child');
+        var barManu = document.querySelector('.topR .barManu');
+
+        var panelPoBg = document.querySelector('.postBg');
+        var panelPo = document.querySelector('.postCard');
+        btnPo.addEventListener('click', function() {
+            panelPoBg.classList.toggle('active');
+            panelPo.classList.toggle('active');
+            barManu.classList.toggle('active');
+            //關閉時切換icon內容
+            iconManu.classList.toggle('fa-bars');
+            iconManu.classList.toggle('fa-xmark');
+        })
+        //-postBg 點擊窗外畫面可關閉
+        panelPoBg.addEventListener('click', function() {
+            panelPoBg.classList.remove('active');
+            panelPo.classList.remove('active');
+        })
+
+    </script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
