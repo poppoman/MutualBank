@@ -8,7 +8,7 @@
     /* 預覽框線 */
     /*border: 1px solid;*/
 }
-.container {
+.container.fromNav {
     position: relative;
     top: 70px;
 }
@@ -245,10 +245,10 @@ a {
     opacity: 0;
     pointer-events: none;
 }
-    .closeToggle.manuOn {
+    .closeToggle.On {
         pointer-events: auto;
     }
-.closeToggle.postOn {
+.closeToggle.bgOn {
     pointer-events: auto;
     opacity: 100;
 }
