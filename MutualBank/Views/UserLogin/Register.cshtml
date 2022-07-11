@@ -3,40 +3,41 @@
     ViewData["Title"] = "Register";
 }
 
-<div class="col-md-12" id="homeContent">
-    <div class="col-md-10">
+<div class="container row" id="homeContent" style="background-image:">
+    <div class="offset-3 col-6">
         <form method="post" action="/UserLogin/Register">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="LoginName" class="control-label"></label>
+                <label asp-for="LoginName" class="control-label">帳號</label>
                 <input asp-for="LoginName" class="form-control" v-on:change.lazy="ConfirmAccount" v-model="Account" />{{result}}
                 <span asp-validation-for="LoginName" class="text-danger"></span>
                 <span style="color:red">@ViewBag.message</span>
             </div>
             <div class="form-group">
-                <label asp-for="LoginPwd" class="control-label"></label>
+                <label asp-for="LoginPwd" class="control-label">密碼</label>
                 <input asp-for="LoginPwd" class="form-control" />
                 <span asp-validation-for="LoginPwd" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ConfirmPwd" class="control-label"></label>
+                <label asp-for="ConfirmPwd" class="control-label">確認密碼</label>
                 <input asp-for="ConfirmPwd" class="form-control" />
                 <span asp-validation-for="ConfirmPwd" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LoginEmail" class="control-label"></label>
+                <label asp-for="LoginEmail" class="control-label">註冊信箱</label>
                 <input asp-for="LoginEmail" placeholder="例如: XXX@test.com" class="form-control" />
                 <span asp-validation-for="LoginEmail" class="text-danger"></span>
             </div>
-            <br />
             <div class="form-group">
-                <input type="submit" value="註冊" class="btn btn-primary col-md-6 offset-md-3" />
+                </br>
+                <input type="submit" value="註冊" class="btn btn-primary col-6 offset-3" />
             </div>
-             <br />
         </form>
     </div>
-    <div class="col-md-10"></div>
+    <div class="offset-9 col-3" >
+    </div>
 </div>
+<div class="col-7"></div>
 @section Scripts {
 
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
