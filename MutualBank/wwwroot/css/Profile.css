@@ -1,0 +1,22 @@
+.profileBackground { /*  背景 */
+    background-color: #eee;
+}
+#namecard1{          /* 姓名卡 外框色 */
+    background-color: #fdfdb5 ;
+    border-radius: 20%;
+}
+#namecard2{         /* 姓名卡 被景色 */
+    background-color: #fdfdb5;
+    border-radius: 20%;
+}
+
+#Proitemsbtn{         /* 左方表單 按鈕色 */
+    border-radius: 5%;
+    background-color: #ffc9c2;   
+}
+.ulitems li{        /* 左方表單 背景色*/
+    background-color: #dfffdc;
+}
+.card-body{          /* 訊息背景色 */
+    background-color: #dcf1ff;
+}

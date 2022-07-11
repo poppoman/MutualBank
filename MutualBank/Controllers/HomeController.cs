@@ -28,5 +28,9 @@ namespace MutualBank.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        public IActionResult ProfilePage1()
+        {
+            return View();
+        }
     }
 }

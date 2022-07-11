@@ -7,7 +7,7 @@
 {
     <li><a><i class="fa-solid fa-plus"></i><span>新增貼文</span></a></li>
 
-    <li><a>個人頁面</a></li>
+    <li><a asp-action="ProfilePage1" asp-controller="Home">個人頁面</a></li>
     <li><a asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">登出</a></li>
     
 }
