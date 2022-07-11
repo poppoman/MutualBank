@@ -56,7 +56,7 @@ namespace MutualBank.Controllers
 
         }
         #endregion
-
+        #region 登入帳戶
         public IActionResult Login()
         {
             return View();
@@ -89,5 +89,33 @@ namespace MutualBank.Controllers
                 return RedirectToAction("Index", "Home");
             }
         }
+        #endregion
+        #region 登出帳戶
+        public IActionResult Logout()
+        {
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Home");
+        }
+        #endregion
+        #region 忘記密碼
+        [HttpPost]
+        public IActionResult forgetPassword(string Password)
+        {
+            var update = _mutualBankContext.Logins.Find(User.Identity.Name);
+            if (Password != null)
+            {
+                update.LoginPwd = Password;
+                _mutualBankContext.SaveChanges();
+                return RedirectToAction("Login", "UserLogin");
+            }
+            else
+            {
+                TempData["ChangePassword"] = "請填入在按確認!";
+                return RedirectToAction("Index", "Home");
+            }
+
+
+        }
+        #endregion
     }
 }

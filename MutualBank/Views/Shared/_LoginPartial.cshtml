@@ -1,20 +1,17 @@
-﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
-
-
-@if (!SignInManager.IsSignedIn(User))
+﻿ @if (User.Identity.IsAuthenticated)
 {
+
+    @User.Identity.Name
     <li><a><i class="fa-solid fa-plus"></i><span>新增貼文</span></a></li>
 
     <li><a asp-action="ProfilePage1" asp-controller="Home">個人頁面</a></li>
-    <li><a asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">登出</a></li>
+    <a asp-controller="UserLogin" asp-action="Logout" class="btn login"><i class="fa-solid fa-right-to-bracket"></i> 登出</a>
     
 }
 else
 {
-    <li><a asp-area="Identity" asp-page="/Account/Register">註冊</a></li>
-    <li><a asp-area="Identity" asp-page="/Account/Login">登入</a></li>
+    <a asp-controller="UserLogin" asp-action="Register" class="btn login"><i class="fa-solid fa-right-to-bracket"></i> 註冊</a>
+    <a asp-controller="UserLogin" asp-action="Login" class="btn login"><i class="fa-solid fa-right-to-bracket"></i> 登入</a>
 
 }
 
