@@ -1,0 +1,33 @@
+﻿@model MutualBank.Models.ViewModels.UserRegister
+
+@{
+    ViewData["Title"] = "login";
+}
+<div class="row col-lg-10 offset-lg-12">
+    <div class="col-lg-10 offset-lg-1">
+        <form method="post" action="/UserLogin/Login">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="LoginName" class="control-label"></label>
+                <input asp-for="LoginName" class="form-control" />
+                <span asp-validation-for="LoginName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LoginPwd" class="control-label"></label>
+                <input asp-for="LoginPwd" class="form-control" />
+                <span asp-validation-for="LoginPwd" class="text-danger"></span>
+            </div>
+             <br />
+            <div class="form-group">
+                <input type="submit" value="登入" class="btn btn-primary col-md-6 offset-md-3" />
+            </div>
+            <br />
+        </form>
+        @ViewBag.LoginFalse
+    </div>
+</div>
+
+@section Scripts {
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
