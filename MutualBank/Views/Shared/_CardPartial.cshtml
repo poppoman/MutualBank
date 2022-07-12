@@ -1,62 +1,71 @@
-﻿<style>
-    .card {
-        box-shadow: 5px 10px 25px rgba(0, 0, 0, 0.1);
-    }
-        .card span {
-            position: relative;
-            left: 0.5rem;
-            width: 40%;
-            border-radius: 5px;
-            color: var(--black);
-            background: var(--bg);
-            text-align: center;
-            font-weight: 500;
-            border: 2px solid #E0E0E8;
-            padding: 3px 5px;
-        }
-        .card .card-body {
-            position: relative;
-            bottom: 0.25rem;
-        }
-        .card .card-title {
-            border-bottom: 1px solid var(--gray);
-            transition: 0.2s;
-            font-size: 24px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
-        }
-        .card .card-text {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: normal;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            margin-top: 5px;
-        }
-        .card .btn {
-            background: var(--help);
-            font-size: 16px;
-            font-weight: 700;
+﻿
+@section Styles{
+    <style>
+        .card {
+            box-shadow: 5px 10px 25px rgba(0, 0, 0, 0.1);
         }
 
-</style>
-<div class="col">
-    <div class="card m-1 mb-2" style="width: auto;">
-        <div class="imgBx">
-            <img src="https://picsum.photos/id/96/400/400" class="card-img-top p-2" alt="圖片">
-        </div>
-        <span>分類標籤</span>
-        <div class="card-body">
-            <h5 class="card-title">幫忙趕稿</h5>
-            <p class="card-text mt-1">漫畫（英語：comics）是一種二維視覺靜態圖畫藝術，構圖（如顏色、線條運用）比一般美術繪畫（如油畫、水彩畫）精簡，加上文字（如對白、旁述、狀聲詞）所構成的內容。如同其他藝術形式，漫畫可以運用不同的敘事手法，例如誇飾、諷刺、寫實等。傳統漫畫一般在雜誌上連載，或者定時發行單行本。隨著數位技術和網際網路技術的發展，漫畫越來越多以電子書或者網站內容的方式出現。</p>
+            .card span {
+                position: relative;
+                left: 0.5rem;
+                width: 40%;
+                border-radius: 5px;
+                color: var(--black);
+                background: var(--bg);
+                text-align: center;
+                font-weight: 500;
+                border: 2px solid #E0E0E8;
+                padding: 3px 5px;
+            }
 
-            <div class="d-flex  justify-content-center">
-                <a class="btn">留言</a>
+            .card .card-body {
+                position: relative;
+                bottom: 0.25rem;
+            }
+
+            .card .card-title {
+                border-bottom: 1px solid var(--gray);
+                transition: 0.2s;
+                font-size: 24px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 1;
+                -webkit-box-orient: vertical;
+            }
+
+            .card .card-text {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: normal;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                margin-top: 5px;
+            }
+
+            .card .btn {
+                background: var(--help);
+                font-size: 16px;
+                font-weight: 700;
+            }
+
+    </style>
+}
+
+    <div class="col ">
+        <div class="card  mb-2 " style="width: 16rem;">
+            <div class="imgBx">
+                <img src="https://picsum.photos/id/96/400/400" class="card-img-top p-2" alt="圖片">
+            </div>
+            <span>CaseSkilId</span>
+            <div class="card-body">
+                <h5 class="card-title">CaseTitle</h5>
+                <p class="card-text mt-1">CaseIntroduction</p>
+
+                <div class="d-flex  justify-content-center">
+                    <a class="btn">留言</a>
+                </div>
             </div>
         </div>
     </div>
-</div>

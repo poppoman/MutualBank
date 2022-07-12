@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/MutualBank.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/nav.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/rootColor.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/root-color.css" asp-append-version="true" />
 
     @*googlefont*@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700&display=swap" rel="stylesheet">
@@ -101,8 +101,8 @@
     </header>
 
     <div class="wrap-panel">
-        <div class="closeToggle"></div>
-        <div class="postCard">
+        <div class="panelsToggle"></div>
+        <div class="postLink">
             <i class="iconPost fa-solid fa-xmark"></i>
             <div class="title">
 
@@ -135,17 +135,17 @@
         iconCounty[0].addEventListener('click', function() {
             panelCounty.classList.toggle('active');
             //開啟背景的點擊關閉功能
-            closeToggle.classList.add('On');
+            panelsToggle.classList.add('On');
         })
         let panelDist = document.querySelector('.navBar .topL .search .region .dist');
         iconCounty[1].addEventListener('click', function() {
             panelDist.classList.toggle('active');
             //開啟背景的點擊關閉功能
-            closeToggle.classList.add('On');
+            panelsToggle.classList.add('On');
         })
 
         //-RWD Manu控制
-        let closeToggle = document.querySelector('.closeToggle');
+        let panelsToggle = document.querySelector('.panelsToggle');
 
         let barManu = document.querySelector('.topR .barManu ');
         let iconManu = document.querySelector('.navBar .topR .iconMaun');
@@ -155,18 +155,17 @@
             iconManu.classList.toggle('fa-bars');
             iconManu.classList.toggle('fa-xmark');
             //開啟背景關閉功能
-            closeToggle.classList.add('bgOn');
+            panelsToggle.classList.add('bgOn');
         })
 
 
         //-postQuery 點選+號後顯示面板
-        let btnPo = document.querySelector('.topR .barManu li:first-child');
-        let panelPo = document.querySelector('.postCard');
-        btnPo.addEventListener('click', function() {
-            //panelPoBg.classList.toggle('active');
-            panelPo.classList.toggle('active');
+        let btnPost = document.querySelector('.topR .barManu li:first-child');
+        let panelPost = document.querySelector('.postLink');
+        btnPost.addEventListener('click', function() {
+            panelPost.classList.toggle('active');
             //開啟背景的點擊關閉功能
-            closeToggle.classList.add('bgOn');
+            panelsToggle.classList.add('bgOn');
             //同時關閉barManu，並將X恢復為原icon
             barManu.classList.remove('active');
             iconManu.classList.toggle('fa-bars');
@@ -175,20 +174,20 @@
         })
         let iconPost = document.querySelector('.wrap-panel .iconPost');
         iconPost.addEventListener('click', function() {
-            closeToggle.classList.remove('On');
-            closeToggle.classList.remove('bgOn');
-            panelPo.classList.remove('active');
+            panelsToggle.classList.remove('On');
+            panelsToggle.classList.remove('bgOn');
+            panelPost.classList.remove('active');
 
         });
 
         //-點擊背景時關閉面板
-        closeToggle.addEventListener('click', function() {
+        panelsToggle.addEventListener('click', function() {
             panelCounty.classList.remove('active');
             panelDist.classList.remove('active');
-            panelPo.classList.remove('active');
+            panelPost.classList.remove('active');
             barManu.classList.remove('active');
-            closeToggle.classList.remove('On');
-            closeToggle.classList.remove('bgOn');
+            panelsToggle.classList.remove('On');
+            panelsToggle.classList.remove('bgOn');
             if (barManu.classList.contains('active')) {
                 //關閉barManu，並將X恢復為原icon
                 barManu.classList.remove('active');

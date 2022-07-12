@@ -1,72 +1,83 @@
-﻿@{
+﻿@model IEnumerable<Case>
+
+@{
     ViewData["Title"] = "Home Page";
 }
-<link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
+@section Styles{
+    <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/card.css" asp-append-version="true" />
+}
 
-<div class="wrap">
-    <div class="home">
-        <div class="typeBar">
+    <div class="wrap">
+        <div class="home">
+            <div class="typeBar">
 
-            <button type="button" class="butn help" >需要幫忙</button>
-            <button type="button" class="butn skill">提供技能</button>
+                <button type="button" class="butn help">需要幫忙</button>
+                <button type="button" class="butn skill">提供技能</button>
 
-        </div>
-        <div class="tagBar">
-            <div class="tag">
-                <div class="name"><span>音樂</span></div>
-                <div class="name"><span>料理</span></div>
-                <div class="name"><span>照護</span></div>
-                <div class="name"><span>繪畫</span></div>
-                <div class="name"><span>暑假作業</span></div>
-                <div class="name"><span>運動</span></div>
-                <div class="name"><span>交通</span></div>
-                <div class="name"><span>工藝</span></div>
-                <div class="name"><span>維修</span></div>
-                <div class="name"><span>寵物</span></div>
-                <div class="name"><span>陶藝</span></div>
-                <div class="name"><span>其他</span></div>
             </div>
-            <div class="sort">
-                <span>排序：</span>
-                <select class="sortSelect">
-                    <option value="">發佈時間</option>
-                    <option value="">留言數</option>
-                    <option value="">期限</option>
-                </select>
-                <div class="icon">
-                    <i class="fa-solid fa-arrow-down-short-wide"></i>
+            <div class="tagBar">
+                <div class="tag">
+                    <div class="name"><span>音樂</span></div>
+                    <div class="name"><span>料理</span></div>
+                    <div class="name"><span>照護</span></div>
+                    <div class="name"><span>繪畫</span></div>
+                    <div class="name"><span>暑假作業</span></div>
+                    <div class="name"><span>運動</span></div>
+                    <div class="name"><span>交通</span></div>
+                    <div class="name"><span>工藝</span></div>
+                    <div class="name"><span>維修</span></div>
+                    <div class="name"><span>寵物</span></div>
+                    <div class="name"><span>陶藝</span></div>
+                    <div class="name"><span>其他</span></div>
                 </div>
+                <div class="sort">
+                    <span>排序：</span>
+                    <select class="sortSelect">
+                        <option value="">發佈時間</option>
+                        <option value="">留言數</option>
+                        <option value="">期限</option>
+                    </select>
+                    <div class="icon">
+                        <i class="fa-solid fa-arrow-down-short-wide"></i>
+                    </div>
 
+                </div>
             </div>
-        </div>
-        <div class="container-fluid">
-            <div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
-                <partial name="_CardPartial" />
-                <partial name="_CardPartial" />
-                <partial name="_CardPartial" />
-                <partial name="_CardPartial" />
-                <partial name="_CardPartial" />
-                <partial name="_CardPartial" />
-                <partial name="_CardPartial" />
-                <partial name="_CardPartial" />
-                <partial name="_CardPartial" />
-                <partial name="_CardPartial" />
-                <partial name="_CardPartial" />
-                <partial name="_CardPartial" />
-                <partial name="_CardPartial" />
-                <partial name="_CardPartial" />
+            <div class="container-fluid">
+                <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-4">
+                    @foreach (var item in Model)
+                {
+                    <div class="col ">
+                        <div class="card  mb-2 " style="width: 16rem;">
+                            <div class="imgBx">
+                                <img src="https://picsum.photos/id/96/400/400" class="card-img-top p-2" alt="圖片">
+                            </div>
+                            <span>分類標籤</span>
+                            <div class="card-body">
+                                <h5 class="card-title">@item.CaseTitle</h5>
+                                <div style="height:50px;"><p class="card-text mt-1">@item.CaseIntroduction</p></div>
+                                <div class="d-flex  justify-content-center">
+                                    <a class="btn">留言</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     </div>
 </div>
 
-<script>
-    //點選排序icon時切換圖示
-    let iconSort = document.querySelector('.tagBar .sort .icon i');
+@section Scripts{
+    <script>
+        //點選排序icon時切換圖示
+        let iconSort = document.querySelector('.tagBar .sort .icon i');
 
-    iconSort.addEventListener('click', function () {
-        iconSort.classList.toggle('fa-arrow-down-short-wide');
-        iconSort.classList.toggle('fa-arrow-up-short-wide');
-    });
+        iconSort.addEventListener('click', function() {
+            iconSort.classList.toggle('fa-arrow-down-short-wide');
+            iconSort.classList.toggle('fa-arrow-up-short-wide');
+        });
 
-</script>
+    </script>
+}

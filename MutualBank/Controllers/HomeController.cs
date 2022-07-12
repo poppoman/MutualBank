@@ -7,16 +7,20 @@ namespace MutualBank.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly MutualBankContext _mutualBankContext;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, MutualBankContext mutualBankContext)
         {
             _logger = logger;
+            _mutualBankContext = mutualBankContext;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var cards = _mutualBankContext.Cases.ToList();
+            return View(cards);
         }
+
 
         public IActionResult Privacy()
         {
