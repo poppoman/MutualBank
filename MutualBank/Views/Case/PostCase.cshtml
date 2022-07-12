@@ -1,0 +1,188 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@section Styles{
+    <link rel="stylesheet" href="~/css/PostCase.css" asp-append-version="true" />
+}
+@section ScriptReady{
+        <script>
+        //-設定預約貼文可選取的時間(暫定14天內)
+        let currentDate = new Date();
+        function getDateString(date) {
+            let monthJs = date.getMonth();
+            let monthMd = (monthJs + 1) < 10 ? `0${monthJs + 1}` : monthJs + 1 > 12 ? monthJs : monthJs + 1;
+            let dateJs = date.getDate();
+            let dateMd = dateJs < 10 ? `0${dateJs}` : dateJs;
+            return `${date.getFullYear()}-${monthMd}-${dateMd}`;
+        }
+
+        //計算日曆可選取的最大時間
+        function FinalDate(dateBegin, intCounts) {
+            let selectedTimeStamp = new Date(dateBegin).getTime();
+            let resultTimeStamp = selectedTimeStamp + intCounts * 1000 * 60 * 60 * 24;
+            let finalDay = new Date(resultTimeStamp);
+            return getDateString(finalDay);
+        }
+
+        //初始化日曆
+        $(document).ready(function () {
+            //設定日期預設顯示與最大、小值
+            dateApp.min = dateApp.value = getDateString(currentDate);
+            dateApp.max = FinalDate(currentDate, 14);
+            //下架時間提醒
+            dateRemind.innerText = dateApp.max;
+
+            //預設關閉預約發佈時間
+            dateApp.setAttribute('disabled', 'disabled');
+            timeApp.setAttribute('disabled', 'disabled');
+        });
+
+
+
+    </script>
+}
+    <section id="PostCase">
+        <div class="container mb-5">
+            <form class="needs-validation" novalidate="" enctype="multipart/form-data">
+                <div class="row pt-3">
+                    <div class="col-12">
+                        <h4 class="postTitle mb-2">新增貼文</h4>
+                        <h6>說明</h6>
+                        <label for="title" class="form-label">標題</label>
+                        <input type="text" class="form-control" id="title" placeholder="請輸入標題" required>
+                        <div class="invalid-feedback">
+                            此欄位不可為空
+                        </div>
+                    </div>
+
+                    <div class="col-md-5 mb-2">
+                        <label for="need" class="form-label">貼文分類</label>
+                        <select class="form-select" id="need" required>
+                            <option value="" disabled>請選擇</option>
+                            <option>需要幫助</option>
+                            <option>提供技能</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            此欄位不可為空
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <label for="skill" class="form-label">內容分類</label>
+                        <select class="form-select" id="skill" required>
+                            <option value="" disabled>請選擇</option>
+                            <option>料理</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            此欄位不可為空
+                        </div>
+                    </div>
+
+
+                    <div class="col-12 mb-3 mt-3">
+                        <label for="area" class="form-label">說明</label>
+                        <textarea name="" class="form-control" id="area" cols="30" rows="5"
+                              placeholder="簡單描述一下吧！" required></textarea>
+                        <div class="invalid-feedback">
+                            此欄位不可為空
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label for="address" class="form-label">圖片(大小請勿超過2MB)</label>
+                        <input type="file" class="form-control" id="inputPic" onchange="previewPic(this)"
+                           accept="image/*" required>
+                        <img id="pic">
+                        <div class="invalid-feedback">
+                            此欄位不可為空
+                        </div>
+
+                    </div>
+                    <hr class="my-4">
+
+                    <h6>地區</h6>
+                    <div class="col-md-7 mb-2">
+                        <label for="county" class="form-label">縣市</label>
+                        <select class="form-select" id="county" required>
+                            <option value="" disabled>請選擇</option>
+                            <option>United States</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            此欄位不可為空
+                        </div>
+                    </div>
+
+                    <div class="col-md-5 mb-2">
+                        <label for="dist" class="form-label">鄉鎮區</label>
+                        <select class="form-select" id="dist" required>
+                            <option value="" disabled>請選擇</option>
+                            <option>California</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            此欄位不可為空
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label for="availableTime" class="form-label">時間</label>
+                        <input type="text" class="form-control" id="availableTime" placeholder="請輸入時間"
+                           required>
+                        <div class="invalid-feedback">
+                            此欄位不可為空
+                        </div>
+                    </div>
+                    <hr class="my-4">
+
+                    <h6>發佈時間</h6>
+                    <div class="col-12">
+                        <input type="radio" name="postTime" id="timeNow" onchange="disableDate()" checked>
+                        <label for="timeNow">立即發佈</label>
+                        <br>
+                        <input type="radio" name="postTime" id="timeAppointment" onchange="ableDate()">
+                        <label for="timeAppointment">預約發佈時間</label>
+                        <br>
+                        <input type="date" name="" id="dateApp" onmouseout="updateDateRemind()">
+                        <input type="time" name="" id="timeApp">
+                    </div>
+                    <p id="dateP">貼文自動下架時間為 <span id="dateRemind"></span></p>
+
+                    <div class="col-12 text-center">
+                        <button class="postBtn w-25 mt-4"
+                            type="submit">
+                            送出
+                        </button>
+                    </div>
+            </form>
+        </div>
+    </section>
+
+    @section Scripts{
+    <script>
+        //toggle 開放選擇預約時開
+        function disableDate() {
+            dateApp.setAttribute('disabled', 'disabled');
+            timeApp.setAttribute('disabled', 'disabled');
+            dateRemind.innerText = FinalDate(new Date(), 14);
+        }
+        //toggle 開放選擇預約時開
+        function ableDate() {
+            dateApp.removeAttribute('disabled');
+            timeApp.removeAttribute('disabled');
+        }
+        //選擇日期後更新提醒時間
+        function updateDateRemind() {
+            dateRemind.innerText = FinalDate(dateApp.value, 14);
+        }
+        //預覽上傳圖片
+        function previewPic(e) {
+            maxSize_2MB = 1 * 1024 * 1024;
+
+            if (e.files[0].size > maxSize_2MB) {
+                alert('圖片大小超過2MB！無法上傳');
+                e.value = "";
+            }
+            else {
+                pic.src = URL.createObjectURL(e.files[0])
+
+            }
+        }
+
+    </script>
+}
