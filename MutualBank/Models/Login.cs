@@ -9,5 +9,6 @@ namespace MutualBank.Models
         public string LoginName { get; set; } = null!;
         public string LoginPwd { get; set; } = null!;
         public string LoginEmail { get; set; } = null!;
+        public bool LoginLevel { get; set; }
     }
 }
