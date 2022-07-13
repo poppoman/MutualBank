@@ -1,0 +1,117 @@
+﻿
+@section ScriptsReady{
+    <script src="~/js/PostCaseReady.js"></script>
+}
+    <section id="PostCase">
+        <div class="container mb-5">
+            <form class="needs-validation" novalidate="" enctype="multipart/form-data">
+                <div class="row pt-3">
+                    <div class="col-12">
+                        <h4 class="postTitle mb-2">新增貼文</h4>
+                        <h6>說明</h6>
+                        <label for="title" class="form-label">標題</label>
+                        <input type="text" class="form-control" id="title" placeholder="請輸入標題" required>
+                        <div class="invalid-feedback">
+                            此欄位不可為空
+                        </div>
+                    </div>
+
+                    <div class="col-md-5 mb-2">
+                        <label for="need" class="form-label">貼文分類</label>
+                        <select class="form-select" id="need" required>
+                            <option value="" disabled>請選擇</option>
+                            <option>需要幫助</option>
+                            <option>提供技能</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            此欄位不可為空
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <label for="skill" class="form-label">內容分類</label>
+                        <select class="form-select" id="skill" required>
+                            <option value="" disabled>請選擇</option>
+                            <option>料理</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            此欄位不可為空
+                        </div>
+                    </div>
+
+
+                    <div class="col-12 mb-3 mt-3">
+                        <label for="area" class="form-label">說明</label>
+                        <textarea name="" class="form-control" id="area" cols="30" rows="5"
+                              placeholder="簡單描述一下吧！" required></textarea>
+                        <div class="invalid-feedback">
+                            此欄位不可為空
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label for="address" class="form-label">圖片(大小請勿超過2MB)</label>
+                        <input type="file" class="form-control" id="inputPic" onchange="previewPic(this)"
+                           accept="image/*" required>
+                        <img id="pic">
+                        <div class="invalid-feedback">
+                            此欄位不可為空
+                        </div>
+
+                    </div>
+                    <hr class="my-4">
+
+                    <h6>地區</h6>
+                    <div class="col-md-7 mb-2">
+                        <label for="county" class="form-label">縣市</label>
+                        <select class="form-select" id="county" required>
+                            <option value="" disabled>請選擇</option>
+                            <option>United States</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            此欄位不可為空
+                        </div>
+                    </div>
+
+                    <div class="col-md-5 mb-2">
+                        <label for="dist" class="form-label">鄉鎮區</label>
+                        <select class="form-select" id="dist" required>
+                            <option value="" disabled>請選擇</option>
+                            <option>California</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            此欄位不可為空
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label for="availableTime" class="form-label">時間</label>
+                        <input type="text" class="form-control" id="availableTime" placeholder="請輸入時間"
+                           required>
+                        <div class="invalid-feedback">
+                            此欄位不可為空
+                        </div>
+                    </div>
+                    <hr class="my-4">
+
+                    <h6>發佈時間</h6>
+                    <div class="col-12">
+                        <input type="radio" name="postTime" id="timeNow" onchange="disableDate()" checked>
+                        <label for="timeNow">立即發佈</label>
+                        <br>
+                        <input type="radio" name="postTime" id="timeAppointment" onchange="ableDate()">
+                        <label for="timeAppointment">預約發佈時間</label>
+                        <br>
+                        <input type="date" name="" id="dateApp" onmouseout="updateDateRemind()">
+                        <input type="time" name="" id="timeApp">
+                    </div>
+                    <p id="dateP">貼文自動下架時間為 <span id="dateRemind"></span></p>
+
+                    <div class="col-12 text-center">
+                        <button class="postBtn w-25 mt-4" type="submit">
+                            送出
+                        </button>
+                    </div>
+            </form>
+        </div>
+    </section>
+@section Scripts{
+    <script src="~/js/PostCase.js"></script>
+}

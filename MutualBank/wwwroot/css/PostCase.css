@@ -1,0 +1,53 @@
+﻿#PostCase .container {
+    position: relative;
+    border-radius: 5px;
+    padding: 10px 40px 30px;
+    background: var(--white);
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.03);
+}
+
+#PostCase .postTitle {
+    font-weight: 700;
+}
+
+#PostCase input {
+    margin-bottom: 20px;
+}
+
+#PostCase .postBtn {
+    border: 0px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 18px;
+    background: var(--help);
+    font-weight: 700;
+}
+
+    #PostCase .postBtn:hover {
+        background: var(--help1);
+    }
+
+#PostCase h6 {
+    font-weight: 700;
+}
+
+    #PostCase h6::before {
+        content: '';
+        padding-right: 10px;
+        border-left: 5px solid var(--help);
+    }
+
+#PostCase #pic {
+    width: 50%;
+}
+
+#PostCase .dateP {
+    font-size: 14px;
+}
+
+
+@media(max-width:768px) {
+    #PostCase #pic {
+        width: 100%;
+    }
+}
