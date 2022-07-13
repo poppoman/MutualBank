@@ -1,9 +1,8 @@
 ﻿ @if (User.Identity.IsAuthenticated)
 {
 
-    @User.Identity.Name
-    <li><a><i class="fa-solid fa-plus"></i><span>新增貼文</span></a></li>
-    <li><a asp-action="ProfilePage1" asp-controller="Home">個人頁面</a></li>
+    <li><a class="btn login"><i class="fa-solid fa-plus"></i>新增貼文</a></li>
+    <li><a asp-action="ProfilePage1" asp-controller="Home" class="btn login">個人頁面</a></li>
     <li><a asp-controller="UserLogin" asp-action="Logout" class="btn login"><i class="fa-solid fa-right-to-bracket"></i> 登出</a></li>
     
 }
