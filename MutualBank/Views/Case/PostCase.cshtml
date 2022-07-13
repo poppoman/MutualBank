@@ -1,45 +1,6 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@section Styles{
-    <link rel="stylesheet" href="~/css/PostCase.css" asp-append-version="true" />
-}
-@section ScriptReady{
-        <script>
-        //-設定預約貼文可選取的時間(暫定14天內)
-        let currentDate = new Date();
-        function getDateString(date) {
-            let monthJs = date.getMonth();
-            let monthMd = (monthJs + 1) < 10 ? `0${monthJs + 1}` : monthJs + 1 > 12 ? monthJs : monthJs + 1;
-            let dateJs = date.getDate();
-            let dateMd = dateJs < 10 ? `0${dateJs}` : dateJs;
-            return `${date.getFullYear()}-${monthMd}-${dateMd}`;
-        }
-
-        //計算日曆可選取的最大時間
-        function FinalDate(dateBegin, intCounts) {
-            let selectedTimeStamp = new Date(dateBegin).getTime();
-            let resultTimeStamp = selectedTimeStamp + intCounts * 1000 * 60 * 60 * 24;
-            let finalDay = new Date(resultTimeStamp);
-            return getDateString(finalDay);
-        }
-
-        //初始化日曆
-        $(document).ready(function () {
-            //設定日期預設顯示與最大、小值
-            dateApp.min = dateApp.value = getDateString(currentDate);
-            dateApp.max = FinalDate(currentDate, 14);
-            //下架時間提醒
-            dateRemind.innerText = dateApp.max;
-
-            //預設關閉預約發佈時間
-            dateApp.setAttribute('disabled', 'disabled');
-            timeApp.setAttribute('disabled', 'disabled');
-        });
-
-
-
-    </script>
+﻿
+@section ScriptsReady{
+    <script src="~/js/PostCaseReady.js"></script>
 }
     <section id="PostCase">
         <div class="container mb-5">
@@ -144,45 +105,13 @@
                     <p id="dateP">貼文自動下架時間為 <span id="dateRemind"></span></p>
 
                     <div class="col-12 text-center">
-                        <button class="postBtn w-25 mt-4"
-                            type="submit">
+                        <button class="postBtn w-25 mt-4" type="submit">
                             送出
                         </button>
                     </div>
             </form>
         </div>
     </section>
-
-    @section Scripts{
-    <script>
-        //toggle 開放選擇預約時開
-        function disableDate() {
-            dateApp.setAttribute('disabled', 'disabled');
-            timeApp.setAttribute('disabled', 'disabled');
-            dateRemind.innerText = FinalDate(new Date(), 14);
-        }
-        //toggle 開放選擇預約時開
-        function ableDate() {
-            dateApp.removeAttribute('disabled');
-            timeApp.removeAttribute('disabled');
-        }
-        //選擇日期後更新提醒時間
-        function updateDateRemind() {
-            dateRemind.innerText = FinalDate(dateApp.value, 14);
-        }
-        //預覽上傳圖片
-        function previewPic(e) {
-            maxSize_2MB = 1 * 1024 * 1024;
-
-            if (e.files[0].size > maxSize_2MB) {
-                alert('圖片大小超過2MB！無法上傳');
-                e.value = "";
-            }
-            else {
-                pic.src = URL.createObjectURL(e.files[0])
-
-            }
-        }
-
-    </script>
+@section Scripts{
+    <script src="~/js/PostCase.js"></script>
 }

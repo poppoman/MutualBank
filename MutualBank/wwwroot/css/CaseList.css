@@ -1,0 +1,39 @@
+﻿#CaseList .type {
+    position: relative;
+}
+
+#CaseList .butn {
+    position: relative;
+    margin: 0 15px 10px 0;
+    padding: 10px 18px;
+    border-radius: 5px;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    border: 0px;
+    background: var(--white);
+    transition: 0.5s;
+    white-space: nowrap;
+    color: var(--black);
+}
+
+#CaseList .type .butn.help::before {
+    content: '';
+    padding-right: 10px;
+    border-left: 15px solid var(--help);
+}
+
+#CaseList .type .butn.help:hover::before {
+    border-left: 15px solid var(--help1);
+}
+
+
+#CaseList .type .butn.skill::before {
+    content: '';
+    padding-right: 10px;
+    border-left: 15px solid var(--skill);
+}
+
+#CaseList .type .butn.skill:hover::before {
+    border-left: 15px solid var(--skill1);
+}
