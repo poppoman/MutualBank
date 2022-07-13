@@ -1,60 +1,10 @@
 ﻿
 @section Styles{
-    <style>
-        .card {
-            box-shadow: 5px 10px 25px rgba(0, 0, 0, 0.1);
-        }
-
-            .card span {
-                position: relative;
-                left: 0.5rem;
-                width: 40%;
-                border-radius: 5px;
-                color: var(--black);
-                background: var(--bg);
-                text-align: center;
-                font-weight: 500;
-                border: 2px solid #E0E0E8;
-                padding: 3px 5px;
-            }
-
-            .card .card-body {
-                position: relative;
-                bottom: 0.25rem;
-            }
-
-            .card .card-title {
-                border-bottom: 1px solid var(--gray);
-                transition: 0.2s;
-                font-size: 24px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                display: -webkit-box;
-                -webkit-line-clamp: 1;
-                -webkit-box-orient: vertical;
-            }
-
-            .card .card-text {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: normal;
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-                margin-top: 5px;
-            }
-
-            .card .btn {
-                background: var(--help);
-                font-size: 16px;
-                font-weight: 700;
-            }
-
-    </style>
+    <link rel="stylesheet" href="~/css/card.css" asp-append-version="true" />
 }
 
-    <div class="col ">
-        <div class="card  mb-2 " style="width: 16rem;">
+    <div class="col" >
+        <div class="card mb-2 w-100">
             <div class="imgBx">
                 <img src="https://picsum.photos/id/96/400/400" class="card-img-top p-2" alt="圖片">
             </div>

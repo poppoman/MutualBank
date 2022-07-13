@@ -17,7 +17,7 @@ body {
 }
 
 a {
-    color: var(--black);
+    color: var(--black) !important;
 }
 .toTop {
     position: fixed;
