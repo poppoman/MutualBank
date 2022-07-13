@@ -11,7 +11,6 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-
 var MutualBankconnectionString = builder.Configuration.GetConnectionString("MutualBank");
 builder.Services.AddDbContext<MutualBankContext>(options =>
     options.UseSqlServer(MutualBankconnectionString));
@@ -23,6 +22,9 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie();
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
 
 builder.Services.AddControllersWithViews();
 
@@ -40,6 +42,9 @@ else
     app.UseHsts();
 }
 
+
+app.UseSession();
+app.UseCookiePolicy();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
