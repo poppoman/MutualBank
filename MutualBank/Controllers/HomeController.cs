@@ -17,8 +17,30 @@ namespace MutualBank.Controllers
 
         public IActionResult Index()
         {
-            var cards = _mutualBankContext.Cases.ToList();
-            return View(cards);
+            var Cards = _mutualBankContext.Cases.ToList();
+
+            var Countys = _mutualBankContext.Areas.Select(x => x.AreaCity).Distinct().ToList();
+            ViewBag.countys = Countys;
+
+            return View(Cards);
+        }
+
+        [HttpGet]
+        public String GetSkillName(int SkillId)
+        {
+            var TagName = _mutualBankContext.Skills.Where(x => x.SkillId == SkillId).Select(x => x.SkillName).FirstOrDefault();
+            if (TagName == null)
+            {
+                TagName = "未分類";
+            }
+            return TagName;
+        }
+        public List<string> GetTown(string AreaCity)
+        {
+            var Town = _mutualBankContext.Areas.
+                Where(x => x.AreaCity == AreaCity).Select(x => x.AreaTown).ToList();
+
+            return Town;
         }
 
 

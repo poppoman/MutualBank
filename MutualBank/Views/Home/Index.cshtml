@@ -8,6 +8,35 @@
     <link rel="stylesheet" href="~/css/card.css" asp-append-version="true" />
 }
 
+    @section ScriptsReady{
+    <script>
+        //載入Case的導覽屬性(技能名稱)
+        $(document).ready(function() {
+            var SkillIds = document.getElementsByName('caseSkillId');
+            SkillIds.forEach(x => {
+                var skillId = parseInt(x.dataset.skillid);
+                $.ajax({
+                    url: "/Home/GetSkillName",
+                    type: "GET",
+                    data: {
+                        SkillId: skillId
+                    },
+                    success: function(res) {
+                        x.innerText = res;
+                    },
+                    error: function(res) {
+                    }
+                });
+            })
+
+        });
+
+    </script>
+
+}
+
+
+
     <div class="wrap" id="home">
         <div class="home">
             <div class="typeBar">
@@ -53,7 +82,7 @@
                             <div class="imgBx">
                                 <img src="https://picsum.photos/id/96/400/400" class="card-img-top p-2" alt="圖片">
                             </div>
-                            <span>分類標籤</span>
+                            <span name="caseSkillId" data-skillid="@item.CaseSkilId">test</span>
                             <div class="card-body">
                                 <h5 class="card-title">@item.CaseTitle</h5>
                                 <div style="height:50px;"><p class="card-text mt-1">@item.CaseIntroduction</p></div>
@@ -78,6 +107,5 @@
             iconSort.classList.toggle('fa-arrow-down-short-wide');
             iconSort.classList.toggle('fa-arrow-up-short-wide');
         });
-
     </script>
 }

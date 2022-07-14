@@ -15,6 +15,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
           integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">\
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+
     @await RenderSectionAsync("Styles", required: false)
     @await RenderSectionAsync("ScriptsReady",required:false)
 
@@ -202,7 +204,6 @@
 
     @*fontawesome*@
     <script src="https://kit.fontawesome.com/d0f99bafb2.js" crossorigin="anonymous"></script>
-    <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

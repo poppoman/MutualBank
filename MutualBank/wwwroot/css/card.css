@@ -4,8 +4,9 @@
 
     .card span {
         position: relative;
+        display: inline-block;
         left: 0.5rem;
-        width: 40%;
+        max-width: 92%;
         border-radius: 5px;
         color: var(--black);
         background: var(--bg);
@@ -13,6 +14,7 @@
         font-weight: 500;
         border: 2px solid #E0E0E8;
         padding: 3px 5px;
+        white-space: nowrap; 
     }
 
     .card .card-body {
