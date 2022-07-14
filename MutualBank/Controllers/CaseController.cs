@@ -14,13 +14,14 @@ namespace MutualBank.Controllers
         {
             return View();
         }
-        public IActionResult GetPartialPostCase() 
+        public IActionResult GetPostCase() 
         {
             return PartialView("PostCase");
         }
-        public IActionResult GetPartialCaseList()
+        public IActionResult GetCaseList()
         {
             return PartialView("CaseList");
         }
+        
     }
 }

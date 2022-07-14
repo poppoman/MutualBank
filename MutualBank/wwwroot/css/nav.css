@@ -93,11 +93,11 @@ a {
                         z-index: 5;
                     }
 
-                .navBar .topL .search .region .county.active {
+                .navBar .topL .search .region .city.active {
                     display: block;
                 }
 
-                .navBar .topL .search .region .county {
+                .navBar .topL .search .region .city {
                     display: none;
                     flex-wrap: wrap;
                     justify-content: start;
@@ -112,13 +112,13 @@ a {
                     background-color: rgba(255, 255, 255, 0.9);
                 }
 
-                    .navBar .topL .search .region .county li {
+                    .navBar .topL .search .region .city li {
                         position: relative;
                         display: flex;
                         margin: 0 0 10px;
                     }
 
-                    .navBar .topL .search .region .county span {
+                    .navBar .topL .search .region .city span {
                         position: relative;
                         height: 26px;
                         margin: 10px 10px;
@@ -129,7 +129,7 @@ a {
                         background: var(--help);
                     }
 
-                    .navBar .topL .search .region .county li ul {
+                    .navBar .topL .search .region .city li ul {
                         position: relative;
                         margin: 10px 5px;
                         padding: 5px;
@@ -140,11 +140,11 @@ a {
                         white-space: nowrap;
                     }
 
-                .navBar .topL .search .region .dist.active {
+                .navBar .topL .search .region .town.active {
                     display: flex;
                 }
 
-                .navBar .topL .search .region .dist {
+                .navBar .topL .search .region .town {
                     position: absolute;
                     left: 00px;
                     top: 150px;
@@ -161,7 +161,7 @@ a {
                     background-color: rgba(255, 255, 255, 0.9);
                 }
 
-                    .navBar .topL .search .region .dist span {
+                    .navBar .topL .search .region .town span {
                         white-space: nowrap;
                         margin: 2px;
                         padding: 5px;

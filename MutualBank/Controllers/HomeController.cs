@@ -36,5 +36,9 @@ namespace MutualBank.Controllers
         {
             return View();
         }
+        public IActionResult ProfilePageAjax()
+        {
+            return View();
+        }
     }
 }

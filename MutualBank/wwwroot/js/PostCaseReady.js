@@ -9,7 +9,7 @@
     return `${date.getFullYear()}-${monthMd}-${dateMd}`;
         }
 
-    //計算日曆可選取的最大時間
+    //計算日曆可選取時間的最大值
     function FinalDate(dateBegin, intCounts) {
         let selectedTimeStamp = new Date(dateBegin).getTime();
     let resultTimeStamp = selectedTimeStamp + intCounts * 1000 * 60 * 60 * 24;
@@ -22,7 +22,7 @@
         //設定日期預設顯示與最大、小值
         dateApp.min = dateApp.value = getDateString(currentDate);
     dateApp.max = FinalDate(currentDate, 14);
-    //下架時間提醒
+    //下架時間提醒文字
     dateRemind.innerText = dateApp.max;
 
     //預設關閉預約發佈時間

@@ -1,8 +1,4 @@
-﻿
-@section ScriptsReady{
-    <script src="~/js/PostCaseReady.js"></script>
-}
-    <section id="PostCase">
+﻿ <section id="PostCase">
         <div class="container mb-5">
             <form class="needs-validation" novalidate="" enctype="multipart/form-data">
                 <div class="row pt-3">
@@ -28,7 +24,7 @@
                         </div>
                     </div>
                     <div class="col-md-7">
-                        <label for="skill" class="form-label">內容分類</label>
+                        <label for="skill" class="form-label">內容</label>
                         <select class="form-select" id="skill" required>
                             <option value="" disabled>請選擇</option>
                             <option>料理</option>
@@ -42,7 +38,7 @@
                     <div class="col-12 mb-3 mt-3">
                         <label for="area" class="form-label">說明</label>
                         <textarea name="" class="form-control" id="area" cols="30" rows="5"
-                              placeholder="簡單描述一下吧！" required></textarea>
+                              placeholder="此欄位不可為空" required></textarea>
                         <div class="invalid-feedback">
                             此欄位不可為空
                         </div>
@@ -112,6 +108,3 @@
             </form>
         </div>
     </section>
-@section Scripts{
-    <script src="~/js/PostCase.js"></script>
-}

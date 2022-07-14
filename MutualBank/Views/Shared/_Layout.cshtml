@@ -15,7 +15,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
           integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">\
-          @await RenderSectionAsync("Styles", required: false)
+    @await RenderSectionAsync("Styles", required: false)
+    @await RenderSectionAsync("ScriptsReady",required:false)
+
 </head>
 
 <body>
@@ -26,7 +28,7 @@
                 <div class="search">
                     <div class="region">
                         <span>縣市 <i class="fa-solid fa-caret-down"></i></span>
-                        <div class="county">
+                        <div class="city">
                             <li>
                                 <span>北部</span>
                                 <ul>台北市</ul>
@@ -69,7 +71,7 @@
                             </li>
                         </div>
                         <span>區域 <i class="fa-solid fa-caret-down"></i></span>
-                        <div class="dist">
+                        <div class="town">
                             <span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span>
                             <span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span>
                             <span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span>
@@ -130,16 +132,16 @@
     </footer>
     <script>
         //-點選icon顯示區域面板
-        let iconCounty = document.querySelectorAll('.navBar .topL .search .region span i');
-        let panelCounty = document.querySelector('.navBar .topL .search .region .county');
-        iconCounty[0].addEventListener('click', function() {
-            panelCounty.classList.toggle('active');
+        let iconcity = document.querySelectorAll('.navBar .topL .search .region span i');
+        let panelcity = document.querySelector('.navBar .topL .search .region .city');
+        iconcity[0].addEventListener('click', function() {
+            panelcity.classList.toggle('active');
             //開啟背景的點擊關閉功能
             panelsToggle.classList.add('On');
         })
-        let panelDist = document.querySelector('.navBar .topL .search .region .dist');
-        iconCounty[1].addEventListener('click', function() {
-            panelDist.classList.toggle('active');
+        let panelTown = document.querySelector('.navBar .topL .search .region .town');
+        iconcity[1].addEventListener('click', function() {
+            panelTown.classList.toggle('active');
             //開啟背景的點擊關閉功能
             panelsToggle.classList.add('On');
         })
@@ -182,8 +184,8 @@
 
         //-點擊背景時關閉面板
         panelsToggle.addEventListener('click', function() {
-            panelCounty.classList.remove('active');
-            panelDist.classList.remove('active');
+            panelcity.classList.remove('active');
+            panelTown.classList.remove('active');
             panelPost.classList.remove('active');
             barManu.classList.remove('active');
             panelsToggle.classList.remove('On');

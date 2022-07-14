@@ -1,4 +1,23 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
+﻿var dynamicLoading = {
+    css: function (path) {
+        if (!path || path.length === 0) {
+            throw new Error('argument "path" is required !');
+        }
+        var head = document.getElementsByTagName('head')[0];
+        var link = document.createElement('link');
+        link.href = path;
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        head.appendChild(link);
+    },
+    js: function (path) {
+        if (!path || path.length === 0) {
+            throw new Error('argument "path" is required !');
+        }
+        var head = document.getElementsByTagName('head')[0];
+        var script = document.createElement('script');
+        script.src = path;
+        script.type = 'text/javascript';
+        head.appendChild(script);
+    }
+}
