@@ -1,4 +1,5 @@
-﻿var dynamicLoading = {
+﻿//動態載入css、js
+var dynamicLoading = {
     css: function (path) {
         if (!path || path.length === 0) {
             throw new Error('argument "path" is required !');
@@ -21,3 +22,23 @@
         head.appendChild(script);
     }
 }
+
+//載入首頁Case的導覽屬性(技能名稱)
+function GetSkillName() {
+    var SkillIds = document.getElementsByName('caseSkillId');
+    SkillIds.forEach(x => {
+        var skillId = parseInt(x.dataset.skillid);
+        $.ajax({
+            url: "/Home/GetSkillName",
+            type: "GET",
+            data: {
+                SkillId: skillId
+            },
+            success: function (res) {
+                x.innerText = res;
+            },
+            error: function (res) {
+            }
+        });
+    });
+};

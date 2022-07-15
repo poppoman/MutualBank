@@ -10,29 +10,24 @@
 
     @section ScriptsReady{
     <script>
-        //載入Case的導覽屬性(技能名稱)
         $(document).ready(function() {
-            var SkillIds = document.getElementsByName('caseSkillId');
-            SkillIds.forEach(x => {
-                var skillId = parseInt(x.dataset.skillid);
-                $.ajax({
-                    url: "/Home/GetSkillName",
-                    type: "GET",
-                    data: {
-                        SkillId: skillId
-                    },
-                    success: function(res) {
-                        x.innerText = res;
-                    },
-                    error: function(res) {
-                    }
-                });
-            })
+            //初始化卡片
+            $.ajax({
+                url: "/Home/InitCaseModel",
+                type: "GET"
 
+            }).done(function(res) {
+                $("#ajaxSection").html(res);
+                GetSkillName();
+            }).
+                fail(function(res) {
+                    console.log(res);
+                });
         });
 
-    </script>
 
+
+    </script>
 }
 
 
@@ -41,58 +36,34 @@
         <div class="home">
             <div class="typeBar">
 
-                <button type="button" class="butn help">需要幫忙</button>
-                <button type="button" class="butn skill">提供技能</button>
+                <button type="button" class="butn help" name="type" data-bit=true>需要幫忙</button>
+                <button type="button" class="butn skill" name="type" data-bit=false>提供技能</button>
 
             </div>
             <div class="tagBar">
-                <div class="tag">
-                    <div class="name"><span>音樂</span></div>
-                    <div class="name"><span>料理</span></div>
-                    <div class="name"><span>照護</span></div>
-                    <div class="name"><span>繪畫</span></div>
-                    <div class="name"><span>暑假作業</span></div>
-                    <div class="name"><span>運動</span></div>
-                    <div class="name"><span>交通</span></div>
-                    <div class="name"><span>工藝</span></div>
-                    <div class="name"><span>維修</span></div>
-                    <div class="name"><span>寵物</span></div>
-                    <div class="name"><span>陶藝</span></div>
-                    <div class="name"><span>其他</span></div>
-                </div>
-                <div class="sort">
-                    <span>排序：</span>
-                    <select class="sortSelect">
-                        <option value="">發佈時間</option>
-                        <option value="">留言數</option>
-                        <option value="">期限</option>
-                    </select>
-                    <div class="icon">
-                        <i class="fa-solid fa-arrow-down-short-wide"></i>
-                    </div>
-
-                </div>
-            </div>
-            <div class="container-fluid">
-                <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-4">
-                    @foreach (var item in Model)
-                {
-                    <div class="col ">
-                        <div class="card  mb-2 w-100">
-                            <div class="imgBx">
-                                <img src="https://picsum.photos/id/96/400/400" class="card-img-top p-2" alt="圖片">
-                            </div>
-                            <span name="caseSkillId" data-skillid="@item.CaseSkilId">test</span>
-                            <div class="card-body">
-                                <h5 class="card-title">@item.CaseTitle</h5>
-                                <div style="height:50px;"><p class="card-text mt-1">@item.CaseIntroduction</p></div>
-                                <div class="d-flex  justify-content-center">
-                                    <a class="btn">留言</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="tags">
+                    @{
+                    foreach (var item in (List<Skill>)ViewBag.Tags)
+                    {
+                        <div class="tagName" name="tagName" data-skillid="@item.SkillId"><span>@item.SkillName</span></div>
+                    }
                 }
+            </div>
+            <div class="sort">
+                <span>排序：</span>
+                <select class="sortSelect">
+                    <option value="">發佈時間</option>
+                    <option value="">留言數</option>
+                    <option value="">期限</option>
+                </select>
+                <div class="icon">
+                    <i class="fa-solid fa-arrow-down-short-wide"></i>
+                </div>
+
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-4" id="ajaxSection">
             </div>
         </div>
     </div>
@@ -107,5 +78,52 @@
             iconSort.classList.toggle('fa-arrow-down-short-wide');
             iconSort.classList.toggle('fa-arrow-up-short-wide');
         });
+
+        //點選技能或需求時更換模型
+        var types = document.getElementsByName("type");
+        types.forEach(
+            x => x.addEventListener("click", function() {
+                var bit = x.dataset.bit;
+                console.log(bit);
+                $.ajax({
+                    url: "/Home/GetTypeModel",
+                    type: "GET",
+                    data: {
+                        bit: bit
+                    }
+
+                }).done(function(res) {
+                    $("#ajaxSection").html(res);
+                    GetSkillName();
+                }).
+                    fail(function(res) {
+                        console.log(res);
+                    });
+            }));
+
+        //點選技能分類標籤時更換模型
+        var tags = document.getElementsByName("tagName");
+        tags.forEach(
+            x => x.addEventListener("click", function() {
+                var skillId = parseInt(x.dataset.skillid);
+                $.ajax({
+                    url: "/Home/GetTagModel",
+                    type: "GET",
+                    data: {
+                        SkillId: skillId
+                    }
+
+                }).done(function(res) {
+                    $("#ajaxSection").html(res);
+                    GetSkillName();
+                }).
+                    fail(function(res) {
+                        console.log(res);
+                    });
+            }));
+
+
+
+
     </script>
 }
