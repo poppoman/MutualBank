@@ -71,101 +71,11 @@ a {
             border-radius: 8px;
         }
 
-            .navBar .topL .search .region {
-                font-size: 16px;
-                padding: 5px;
-                color: var(--black);
-            }
-
-                .navBar .topL .search .region span {
+                .navBar .topL .search .area .btn {
                     position: relative;
-                    display: inline-block;
-                    margin: 5px 2px;
-                    font-weight: 500;
+                    font-size: 16px;
+                    color: var(--black);
                 }
-
-                    .navBar .topL .search .region span i {
-                        position: relative;
-                        left: 0;
-                        top: 2px;
-                        font-size: 18px;
-                        color: var(--black);
-                        z-index: 5;
-                    }
-
-                .navBar .topL .search .region .city.active {
-                    display: block;
-                }
-
-                .navBar .topL .search .region .city {
-                    display: none;
-                    flex-wrap: wrap;
-                    justify-content: start;
-                    align-items: center;
-                    border-radius: 5px;
-                    padding: 15px;
-                    position: absolute;
-                    left: -5px;
-                    top: 40px;
-                    width: 400px;
-                    height: 340px;
-                    background-color: rgba(255, 255, 255, 0.9);
-                }
-
-                    .navBar .topL .search .region .city li {
-                        position: relative;
-                        display: flex;
-                        margin: 0 0 10px;
-                    }
-
-                    .navBar .topL .search .region .city span {
-                        position: relative;
-                        height: 26px;
-                        margin: 10px 10px;
-                        padding: 2px 10px;
-                        border-radius: 5px;
-                        font-weight: 700;
-                        text-align: center;
-                        background: var(--help);
-                    }
-
-                    .navBar .topL .search .region .city li ul {
-                        position: relative;
-                        margin: 10px 5px;
-                        padding: 5px;
-                        top: 28px;
-                        left: -40px;
-                        font-size: 15px;
-                        font-weight: 500;
-                        white-space: nowrap;
-                    }
-
-                .navBar .topL .search .region .town.active {
-                    display: flex;
-                }
-
-                .navBar .topL .search .region .town {
-                    position: absolute;
-                    left: 00px;
-                    top: 150px;
-                    border-radius: 5px;
-                    padding: 15px;
-                    display: none;
-                    justify-content: space-evenly;
-                    align-items: flex-start;
-                    left: -5px;
-                    top: 40px;
-                    width: 360px;
-                    height: auto;
-                    flex-wrap: wrap;
-                    background-color: rgba(255, 255, 255, 0.9);
-                }
-
-                    .navBar .topL .search .region .town span {
-                        white-space: nowrap;
-                        margin: 2px;
-                        padding: 5px;
-                    }
 
             .navBar .topL .search input {
                 position: relative;
@@ -337,7 +247,6 @@ a {
             font-weight: 500;
             color: var(--black);
             background: var(--bg);
-            columns: var(--black);
             transition: 0.4s;
         }
             .postLink .link .butn:hover {

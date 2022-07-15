@@ -10,79 +10,44 @@
     <link rel="stylesheet" href="~/MutualBank.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/nav.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/root-color.css" asp-append-version="true" />
-
-    @*googlefont*@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
           integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">\
     <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 
     @await RenderSectionAsync("Styles", required: false)
     @await RenderSectionAsync("ScriptsReady",required:false)
-
 </head>
 
 <body>
     <header>
-        <div class="navBar">
+        <div class="navBar" id="navBar">
             <div class="topL">
                 <div class="logo"><a asp-action="Index" asp-controller="Home"><img src="~/Img/nav/logo.png"></a></div>
                 <div class="search">
-                    <div class="region">
-                        <span>縣市 <i class="fa-solid fa-caret-down"></i></span>
-                        <div class="city">
-                            <li>
-                                <span>北部</span>
-                                <ul>台北市</ul>
-                                <ul>台北市</ul>
-                                <ul>台北市</ul>
-                                <ul>台北市</ul>
-                                <ul>台北市</ul>
-                            </li>
-                            <li>
-                                <span>中部</span>
-                                <ul>台北市</ul>
-                                <ul>台北市</ul>
-                                <ul>台北市</ul>
-                                <ul>台北市</ul>
-                                <ul>台北市</ul>
-                            </li>
-                            <li>
-                                <span>南部</span>
-                                <ul>台北市</ul>
-                                <ul>台北市</ul>
-                                <ul>台北市</ul>
-                                <ul>台北市</ul>
-                                <ul>台北市</ul>
-                            </li>
-                            <li>
-                                <span>東部</span>
-                                <ul>台北市</ul>
-                                <ul>台北市</ul>
-                                <ul>台北市</ul>
-                                <ul>台北市</ul>
-                                <ul>台北市</ul>
-                            </li>
-                            <li>
-                                <span>離島</span>
-                                <ul>台北市</ul>
-                                <ul>台北市</ul>
-                                <ul>台北市</ul>
-                                <ul>台北市</ul>
-                                <ul>台北市</ul>
-                            </li>
+                    <div class="area">
+                        <div class="dropdown">
+                            <button class="btn dropdown-toggle" role="button" id="dropdownMenuLink"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                <span id="cityName">縣市</span>
+                            </button>
+
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                <li v-for="item in areaCity"><button class="dropdown-item" v-on:click="getAreaTown">{{item}}</button></li>
+                            </ul>
                         </div>
-                        <span>區域 <i class="fa-solid fa-caret-down"></i></span>
-                        <div class="town">
-                            <span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span>
-                            <span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span>
-                            <span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span>
-                            <span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span>
-                            <span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span>
-                            <span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span>
-                            <span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span>
-                            <span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span>
-                            <span>鄉鎮區</span><span>鄉鎮區</span><span>鄉鎮區</span>
+                    </div>
+                    <div class="city">
+                        <div class="dropdown">
+                            <a class="btn dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span id="townName">區域
+                            </a>
+
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                <li><button class="dropdown-item" type="button" v-show="isAreaSelected">請先選擇縣市</button></li>
+                                <li v-for="item in areaTown"><button class="dropdown-item" type="button" v-on:click="updateTownName">{{item}}</button></li>
+                            </ul>
                         </div>
                     </div>
                     <input type="text" placeholder="輸入關鍵字">
@@ -132,80 +97,12 @@
             &copy; 2022 - MutualBank - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script>
-        //-點選icon顯示區域面板
-        let iconcity = document.querySelectorAll('.navBar .topL .search .region span i');
-        let panelcity = document.querySelector('.navBar .topL .search .region .city');
-        iconcity[0].addEventListener('click', function() {
-            panelcity.classList.toggle('active');
-            //開啟背景的點擊關閉功能
-            panelsToggle.classList.add('On');
-        })
-        let panelTown = document.querySelector('.navBar .topL .search .region .town');
-        iconcity[1].addEventListener('click', function() {
-            panelTown.classList.toggle('active');
-            //開啟背景的點擊關閉功能
-            panelsToggle.classList.add('On');
-        })
 
-        //-RWD Manu控制
-        let panelsToggle = document.querySelector('.panelsToggle');
-
-        let barManu = document.querySelector('.topR .barManu ');
-        let iconManu = document.querySelector('.navBar .topR .iconMaun');
-        iconManu.addEventListener('click', function() {
-            barManu.classList.toggle('active');
-            //點選時切換icon
-            iconManu.classList.toggle('fa-bars');
-            iconManu.classList.toggle('fa-xmark');
-            //開啟背景關閉功能
-            panelsToggle.classList.add('bgOn');
-        })
-
-
-        //-postQuery 點選+號後顯示面板
-        let btnPost = document.querySelector('.topR .barManu li:first-child');
-        let panelPost = document.querySelector('.postLink');
-        btnPost.addEventListener('click', function() {
-            panelPost.classList.toggle('active');
-            //開啟背景的點擊關閉功能
-            panelsToggle.classList.add('bgOn');
-            //同時關閉barManu，並將X恢復為原icon
-            barManu.classList.remove('active');
-            iconManu.classList.toggle('fa-bars');
-            iconManu.classList.toggle('fa-xmark');
-
-        })
-        let iconPost = document.querySelector('.wrap-panel .iconPost');
-        iconPost.addEventListener('click', function() {
-            panelsToggle.classList.remove('On');
-            panelsToggle.classList.remove('bgOn');
-            panelPost.classList.remove('active');
-
-        });
-
-        //-點擊背景時關閉面板
-        panelsToggle.addEventListener('click', function() {
-            panelcity.classList.remove('active');
-            panelTown.classList.remove('active');
-            panelPost.classList.remove('active');
-            barManu.classList.remove('active');
-            panelsToggle.classList.remove('On');
-            panelsToggle.classList.remove('bgOn');
-            if (barManu.classList.contains('active')) {
-                //關閉barManu，並將X恢復為原icon
-                barManu.classList.remove('active');
-                iconManu.classList.toggle('fa-bars');
-                iconManu.classList.toggle('fa-xmark');
-            }
-
-        })
-    </script>
-
-    @*fontawesome*@
     <script src="https://kit.fontawesome.com/d0f99bafb2.js" crossorigin="anonymous"></script>
+    <script src="~/js/_Layout.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 
