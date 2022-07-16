@@ -1,5 +1,6 @@
 ﻿//初始化Area資料
-var vm = new Vue({
+var vmNav = new Vue({
+    el: "#navBar",
     data: {
         areaCity: [],
         areaTown: [],
@@ -12,7 +13,7 @@ var vm = new Vue({
                 type: "GET"
             }).
                 done(function (res) {
-                    vm.areaCity = res;
+                    vmNav.areaCity = res;
                 })
                 .fail(function (res) {
                     console.log(res);
@@ -29,8 +30,8 @@ var vm = new Vue({
                 }
             }).
                 done(function (res) {
-                    vm.isAreaSelected = false;
-                    vm.areaTown = res;
+                    vmNav.isAreaSelected = false;
+                    vmNav.areaTown = res;
                 })
                 .fail(function (res) {
                     console.log(res);
@@ -46,7 +47,6 @@ var vm = new Vue({
         this.getAreaCity();
     }
 });
-vm.$mount("#navBar");
 
 
 //-RWD Manu控制

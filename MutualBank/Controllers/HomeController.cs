@@ -17,23 +17,16 @@ namespace MutualBank.Controllers
 
         public IActionResult Index()
         {
-            //首頁初始資料
-            //分類標籤
             ViewBag.Tags = _mutualBankContext.Skills.OrderBy(x => x.SkillId).ToList();
-            //縣市
-            ViewBag.City = _mutualBankContext.Areas.Select(x => x.AreaCity).Distinct().ToList();
-
             return View();
         }
 
-
         [HttpGet]
-        public IActionResult InitCaseModel() {
+        public List<Case> InitCaseModel()
+        {
             var Model = _mutualBankContext.Cases.ToList();
-            return PartialView("_CasePartial", Model);
+            return Model;
         }
-
-
 
         [HttpGet]
         public String GetSkillName(int SkillId)
@@ -45,30 +38,22 @@ namespace MutualBank.Controllers
             }
             return TagName;
         }
-        [HttpGet]
-        public List<string> GetTown(string AreaCity)
-        {
-            //鄉鎮區
-            var Town = _mutualBankContext.Areas.
-                Where(x => x.AreaCity == AreaCity).Select(x => x.AreaTown).ToList();
-
-            return Town;
-        }
+        
 
         //篩選功能
         //根據需求或技能
         [HttpGet]
-        public IActionResult GetTypeModel(bool bit)
+        public List<Case> GetTypeModel(bool Bit)
         {
-            var Model = _mutualBankContext.Cases.Where(x => x.CaseNeedHelp == bit).ToList();
-            return PartialView("_CasePartial", Model);
+            var Model = _mutualBankContext.Cases.Where(x => x.CaseNeedHelp == Bit).ToList();
+            return Model;
         }
         //根據技能標籤
         [HttpGet]
-        public IActionResult GetTagModel(int SkillId)
+        public List<Case> GetTagModel(int SkillId)
         {
             var Model = _mutualBankContext.Cases.Where(x => x.CaseSkilId == SkillId).ToList();
-            return PartialView("_CasePartial", Model);
+            return Model;
         }
     
         public IActionResult Privacy()

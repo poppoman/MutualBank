@@ -1,5 +1,4 @@
-﻿@model IEnumerable<Case>
-
+﻿
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -8,47 +7,24 @@
     <link rel="stylesheet" href="~/css/card.css" asp-append-version="true" />
 }
 
-    @section ScriptsReady{
-    <script>
-        $(document).ready(function() {
-            //初始化卡片
-            $.ajax({
-                url: "/Home/InitCaseModel",
-                type: "GET"
-
-            }).done(function(res) {
-                $("#ajaxSection").html(res);
-                GetSkillName();
-            }).
-                fail(function(res) {
-                    console.log(res);
-                });
-        });
-
-
-
-    </script>
-}
-
-
 
     <div class="wrap" id="home">
         <div class="home">
             <div class="typeBar">
-
-                <button type="button" class="butn help" name="type" data-bit=true>需要幫忙</button>
-                <button type="button" class="butn skill" name="type" data-bit=false>提供技能</button>
-
+                <button type="button" class="butn help" name="type" data-bit=true v-on:click="getTypeModel">需要幫忙</button>
+                <button type="button" class="butn skill" name="type" data-bit=false v-on:click="getTypeModel">提供技能</button>
             </div>
+
             <div class="tagBar">
                 <div class="tags">
                     @{
                     foreach (var item in (List<Skill>)ViewBag.Tags)
                     {
-                        <div class="tagName" name="tagName" data-skillid="@item.SkillId"><span>@item.SkillName</span></div>
+                             <span class="tagName" v-on:click="getTagModel" data-skillid="@item.SkillId">@item.SkillName</span>
                     }
                 }
             </div>
+
             <div class="sort">
                 <span>排序：</span>
                 <select class="sortSelect">
@@ -63,7 +39,23 @@
             </div>
         </div>
         <div class="container-fluid">
-            <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-4" id="ajaxSection">
+            <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-4">
+                <div class="col" v-for="item in caseModel">
+                    <div class="card  mb-2 w-100">
+                        <div class="imgBx">
+                            <img src="https://picsum.photos/id/96/400/400" class="card-img-top p-2" alt="圖片">
+                        </div>
+                        <span>{{item.caseSkilId | showSkillName}}</span>
+
+                        <div class="card-body">
+                            <h5 class="card-title" id="CaseTitle">{{item.caseTitle}}</h5>
+                            <div style="height:50px;"><p class="card-text mt-1">{{item.caseIntroduction}}</p></div>
+                            <div class="d-flex  justify-content-center">
+                                <a class="btn" :data-caseid="item.caseId">留言</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -71,6 +63,97 @@
 
 @section Scripts{
     <script>
+        //Vue
+        var vmIndex = new Vue({
+            el: "#home",
+            data: {
+                caseModel: []
+            },
+            methods: {
+                initCaseModel: function() {
+                    $.ajax({
+                        url: "Home/InitCaseModel",
+                        type: "GET"
+                    })
+                        .done(function(res) {
+                            vmIndex.caseModel = res;
+                        })
+                        .fail(function(res) {
+                            alert("Fail");
+                        });
+
+
+                },
+                //依需求或技能拿模型
+                getTypeModel: function() {
+                    var bit = event.target.dataset.bit;
+                    $.ajax({
+                        url: "Home/GetTypeModel",
+                        type: "GET",
+                        data: {
+                            Bit:bit
+                        }
+                    })
+                        .done(function(res) {
+                            vmIndex.caseModel = res;
+
+                        })
+                        .fail(function(res) {
+                            console.log("fail");
+                        });
+                },
+                //依技能分類拿模型
+                getTagModel: function() {
+                    var skillid = event.target.dataset.skillid;
+                    $.ajax({
+                        url: "Home/GetTagModel",
+                        type: "GET",
+                        data: {
+                            SkillId:skillid
+                        }
+                    })
+                        .done(function(res) {
+                            vmIndex.caseModel = res;
+
+                        })
+                        .fail(function(res) {
+                            console.log("fail");
+                        });
+                },
+
+
+            },
+            filters: {
+                //顯示技能名稱，而非編號
+                showSkillName: function(id) {
+                    var skillName="X";
+                    $.ajax({
+                        url: "Home/GetSkillName",
+                        type: "GET",
+                        async: false,
+                        data: {
+                            SkillId: id
+                        }
+                    })
+                        .done(function(res) {
+                            skillName = res;
+                        })
+                        .fail(function(res) {
+                            skillName ="無分類"
+                        });
+                    return skillName;
+                }
+
+
+            },
+            created() {
+                this.initCaseModel();
+            },
+
+
+        });
+
+
         //點選排序icon時切換圖示
         let iconSort = document.querySelector('.tagBar .sort .icon i');
 
@@ -78,50 +161,6 @@
             iconSort.classList.toggle('fa-arrow-down-short-wide');
             iconSort.classList.toggle('fa-arrow-up-short-wide');
         });
-
-        //點選技能或需求時更換模型
-        var types = document.getElementsByName("type");
-        types.forEach(
-            x => x.addEventListener("click", function() {
-                var bit = x.dataset.bit;
-                console.log(bit);
-                $.ajax({
-                    url: "/Home/GetTypeModel",
-                    type: "GET",
-                    data: {
-                        bit: bit
-                    }
-
-                }).done(function(res) {
-                    $("#ajaxSection").html(res);
-                    GetSkillName();
-                }).
-                    fail(function(res) {
-                        console.log(res);
-                    });
-            }));
-
-        //點選技能分類標籤時更換模型
-        var tags = document.getElementsByName("tagName");
-        tags.forEach(
-            x => x.addEventListener("click", function() {
-                var skillId = parseInt(x.dataset.skillid);
-                $.ajax({
-                    url: "/Home/GetTagModel",
-                    type: "GET",
-                    data: {
-                        SkillId: skillId
-                    }
-
-                }).done(function(res) {
-                    $("#ajaxSection").html(res);
-                    GetSkillName();
-                }).
-                    fail(function(res) {
-                        console.log(res);
-                    });
-            }));
-
 
 
 
