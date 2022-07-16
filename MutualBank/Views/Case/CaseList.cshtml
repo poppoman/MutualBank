@@ -1,12 +1,12 @@
-﻿<section id="CaseList">
-    <div class="container">
+﻿<section id="caseList">
+    <div class="container" >
         <div class="row" id="card">
             <div class="type col-8">
-                <button type="button" class="butn help">我的需求</button>
-                <button type="button" class="butn skill">我的技能</button>
+                <button type="button" class="butn help" v-on:click="needCaseModel" data-bit=true>我的需求</button>
+                <button type="button" class="butn skill" v-on:click="needCaseModel" data-bit=false>我的技能</button>
             </div>
             <div class="col m-auto">
-                <button type="button" class="butn" id="postCaseBtn"><strong>+</strong> 新增貼文</button>
+                <button type="button" class="butn" v-on:click="getPostCase"><strong>+</strong> 新增貼文</button>
             </div>
         </div>
     </div>
@@ -14,73 +14,22 @@
 
     <div class="container">
         <div class="row row-cols-sm-1 row-cols-md-3 ">
-            <div class="col">
+            <div class="col" v-for="item in caseModel">
                 <div class="card mb-2 w-100 w-100">
                     <div class="imgBx">
-                        <img src="https://picsum.photos/id/96/400/400" class="card-img-top p-2"
-                             alt="圖片">
+                        <img src="https://picsum.photos/id/96/400/400" class="card-img-top p-2" alt="圖片">
                     </div>
-                    <span>CaseSkilId</span>
+                    <span>{{item.caseSkilId | showSkillName}}</span>
                     <div class="card-body">
-                        <h5 class="card-title">CaseTitle</h5>
-                        <p class="card-text mt-1">CaseIntroduction</p>
+                        <h5 class="card-title">{{item.caseTitle}}</h5>
+                        <p class="card-text mt-1">{{item.CaseIntroduction}}</p>
                         <div class="d-flex  justify-content-center">
-                            <a class="btn">詳細內容</a>
+                            <a class="btn" :data-caseid="item.caseId">詳細內容</a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col">
-                <div class="card mb-2 w-100">
-                    <div class="imgBx">
-                        <img src="https://picsum.photos/id/96/400/400" class="card-img-top p-2"
-                             alt="圖片">
-                    </div>
-                    <span>CaseSkilId</span>
-                    <div class="card-body">
-                        <h5 class="card-title">CaseTitle</h5>
-                        <p class="card-text mt-1">CaseIntroduction</p>
-
-                        <div class="d-flex  justify-content-center">
-                            <a class="btn">詳細內容</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card mb-2 w-100">
-                    <div class="imgBx">
-                        <img src="https://picsum.photos/id/96/400/400" class="card-img-top p-2"
-                             alt="圖片">
-                    </div>
-                    <span>CaseSkilId</span>
-                    <div class="card-body">
-                        <h5 class="card-title">CaseTitle</h5>
-                        <p class="card-text mt-1">CaseIntroduction</p>
-
-                        <div class="d-flex  justify-content-center">
-                            <a class="btn">詳細內容</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card mb-2 w-100">
-                    <div class="imgBx">
-                        <img src="https://picsum.photos/id/96/400/400" class="card-img-top p-2"
-                             alt="圖片">
-                    </div>
-                    <span>CaseSkilId</span>
-                    <div class="card-body">
-                        <h5 class="card-title">CaseTitle</h5>
-                        <p class="card-text mt-1">CaseIntroduction</p>
-
-                        <div class="d-flex  justify-content-center">
-                            <a class="btn">詳細內容</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
         </div>
     </div>
 </section>

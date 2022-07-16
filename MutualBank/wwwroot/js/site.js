@@ -22,23 +22,3 @@ var dynamicLoading = {
         head.appendChild(script);
     }
 }
-
-//載入首頁Case的導覽屬性(技能名稱)
-function GetSkillName() {
-    var SkillIds = document.getElementsByName('caseSkillId');
-    SkillIds.forEach(x => {
-        var skillId = parseInt(x.dataset.skillid);
-        $.ajax({
-            url: "/Home/GetSkillName",
-            type: "GET",
-            data: {
-                SkillId: skillId
-            },
-            success: function (res) {
-                x.innerText = res;
-            },
-            error: function (res) {
-            }
-        });
-    });
-};

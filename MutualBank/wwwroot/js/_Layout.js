@@ -9,7 +9,7 @@ var vmNav = new Vue({
     methods: {
         getAreaCity: function () {
             $.ajax({
-                url: "Nav/_LayoutApi/GetAreaCity",
+                url: "/Nav/_LayoutApi/GetAreaCity",
                 type: "GET"
             }).
                 done(function (res) {
@@ -23,7 +23,7 @@ var vmNav = new Vue({
             var SelectedCity = e.target.innerText;
             cityName.innerText = SelectedCity;
             $.ajax({
-                url: "Nav/_LayoutApi/GetAreaTown",
+                url: "/Nav/_LayoutApi/GetAreaTown",
                 type: "GET",
                 data: {
                     AreaCity: SelectedCity

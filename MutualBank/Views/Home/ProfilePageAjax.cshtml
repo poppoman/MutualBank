@@ -166,13 +166,11 @@
                 url: "/Case/GetCaseList",
                 success: function(res) {
                     $('#ajaxSection').html(res);
+                    $.getScript("/js/CaseList.js", function() {
+                    });
                 },
                 error: function(res) {
                     console.log(res);
-                },
-                complete: function() {
-                    $.getScript("/js/CaseList.js", function() {
-                    });
                 }
             });
         });
