@@ -1,4 +1,86 @@
-﻿//toggle 開放選擇預約時開
+﻿//Vue初始化表單選項
+vmPostCase = new Vue({
+    el: "#postCase",
+    data: {
+        areaCity: [],
+        areaTown: [],
+        isAreaSelected: true,
+        skillTags: []
+    },
+    methods: {
+        getAreaCity: function () {
+            $.ajax({
+                url: "/Nav/_LayoutApi/GetAreaCity",
+                type: "GET"
+            }).
+                done(function (res) {
+                    vmPostCase.areaCity = res;
+                })
+                .fail(function (res) {
+                    console.log(res);
+                });
+        },
+        getAreaTown: function (e) {
+            var SelectedCity = e.target.value;
+            $.ajax({
+                url: "/Nav/_LayoutApi/GetAreaTown",
+                type: "GET",
+                data: {
+                    AreaCity: SelectedCity
+                }
+            }).
+                done(function (res) {
+                    vmPostCase.isAreaSelected = false;
+                    vmPostCase.areaTown = res;
+                })
+                .fail(function (res) {
+                    console.log(res);
+                });
+        },
+        getSkillTags: function () {
+            $.ajax({
+                url: "/Case/GetSkillTags",
+                type: "POST",
+            }).done(function (res) {
+                vmPostCase.skillTags = res;
+            })
+                .fail(function (res) {
+                    console.log(res);
+                });
+        }
+
+    },
+    mounted: function () {
+        this.getAreaCity();
+        this.getSkillTags();
+    }
+});
+
+//表單送出Case
+btnSubmit.addEventListener("click", addCase);
+function addCase(e) {
+    var dataString = $("#caseForm").serialize();
+    $.ajax(
+        {
+            url: "/Case/AddCase",
+            type: "POST",
+            dataType: "text",
+            data: dataString
+        }
+    )
+        .done(function () {
+            $("#caseForm").html("<div id='successAdd'><h6>成功送出！</h6></div>");
+            $("#successAdd").append("<p>已新增貼文</p>").hide().fadeIn(500);
+        })
+        .fail(function (res) {
+            console.log(res);
+        });
+
+}
+
+
+
+//toggle 開放選擇預約時開
 function disableDate() {
     dateApp.setAttribute('disabled', 'disabled');
     timeApp.setAttribute('disabled', 'disabled');

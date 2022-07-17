@@ -1,4 +1,4 @@
-﻿#PostCase .container {
+﻿#postCase .container {
     position: relative;
     border-radius: 5px;
     padding: 10px 40px 30px;
@@ -6,15 +6,15 @@
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.03);
 }
 
-#PostCase .postTitle {
+#postCase .postTitle {
     font-weight: 700;
 }
 
-#PostCase input {
+#postCase input {
     margin-bottom: 20px;
 }
 
-#PostCase .postBtn {
+#postCase .postBtn {
     border: 0px;
     padding: 5px 10px;
     border-radius: 5px;
@@ -23,31 +23,31 @@
     font-weight: 700;
 }
 
-    #PostCase .postBtn:hover {
+    #postCase .postBtn:hover {
         background: var(--help1);
     }
 
-#PostCase h6 {
+#postCase h6 {
     font-weight: 700;
 }
 
-    #PostCase h6::before {
+    #postCase h6::before {
         content: '';
         padding-right: 10px;
         border-left: 5px solid var(--help);
     }
 
-#PostCase #pic {
+#postCase #pic {
     width: 50%;
 }
 
-#PostCase .dateP {
+#postCase .dateP {
     font-size: 14px;
 }
 
 
 @media(max-width:768px) {
-    #PostCase #pic {
+    #postCase #pic {
         width: 100%;
     }
 }

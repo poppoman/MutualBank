@@ -46,7 +46,7 @@
 
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                 <li><button class="dropdown-item" type="button" v-show="isAreaSelected">請先選擇縣市</button></li>
-                                <li v-for="item in areaTown"><button class="dropdown-item" type="button" v-on:click="updateTownName">{{item}}</button></li>
+                                <li v-for="item in areaTown"><button class="dropdown-item" type="button" v-on:click="updateTownName" v-bind:value="item.areaId">{{item.areaTown}}</button></li>
                             </ul>
                         </div>
                     </div>
