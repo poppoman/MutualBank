@@ -66,10 +66,15 @@ namespace MutualBank.Controllers.api
 					sVerify = HttpUtility.UrlEncode(sVerify);
 
 					// 網站網址
-					string webPath = "Https://localhost:65414/";
+					 string webPath = new StringBuilder()
+					 .Append(HttpContext.Request.Scheme)
+					 .Append("://")
+					 .Append(HttpContext.Request.Host)
+					 .Append('/')
+					 .ToString();
 
-					// 從信件連結回到重設密碼頁面
-					string receivePage = "UserLogin/resetPassword";
+				// 從信件連結回到重設密碼頁面
+				string receivePage = "UserLogin/resetPassword";
 
 					// 信件內容範本
 					string mailContent = "請點擊以下連結，返回網站重新設定密碼，逾期 30 分鐘後，此連結將會失效。<br><br>";
