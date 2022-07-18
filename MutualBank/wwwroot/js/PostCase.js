@@ -56,27 +56,37 @@ vmPostCase = new Vue({
     }
 });
 
-//表單送出Case
-btnSubmit.addEventListener("click", addCase);
-function addCase(e) {
-    var dataString = $("#caseForm").serialize();
-    $.ajax(
-        {
-            url: "/Case/AddCase",
-            type: "POST",
-            dataType: "text",
-            data: dataString
-        }
-    )
-        .done(function () {
+
+
+
+//傳送Case表單
+$("#caseForm").submit(function (e) {
+    e.preventDefault();
+    var formData = new FormData(this);
+    $.ajax({
+        url: "/Case/AddCase",
+        type: "POST",
+        data: formData,
+        async: false,
+        cache: false,
+        contentType: false,
+        enctype: 'multipart/form-data',
+        processData: false,
+    }).done(function (res) {
             $("#caseForm").html("<div id='successAdd'><h6>成功送出！</h6></div>");
             $("#successAdd").append("<p>已新增貼文</p>").hide().fadeIn(500);
         })
         .fail(function (res) {
             console.log(res);
-        });
+        });;
 
-}
+    return false;
+
+});
+
+
+
+
 
 
 

@@ -6,9 +6,11 @@ namespace MutualBank.Controllers
     public class CaseController : Controller
     {
         private readonly MutualBankContext _mutualBankContext;
-        public CaseController(MutualBankContext MutualBankContext)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public CaseController(MutualBankContext MutualBankContext,IWebHostEnvironment webHostEnvironment)
         {
             _mutualBankContext = MutualBankContext;
+            _webHostEnvironment = webHostEnvironment;
         }
         public IActionResult Index()
         {
@@ -32,7 +34,7 @@ namespace MutualBank.Controllers
             //TODO 暫時沒有登入者
             //var UserName = User.Identity.Name;
             //NewCase.CaseUserId = _mutualBankContext.Users.Where(x => x.UserNname == UserName).FirstOrDefault().UserId;
-
+            
             //整理資料
             NewCase.CaseTitle = NewCase.CaseTitle.Trim();
             NewCase.CaseIntroduction = NewCase.CaseIntroduction.Trim();
@@ -41,9 +43,18 @@ namespace MutualBank.Controllers
             NewCase.CaseReleaseDate = DateTime.Now;
             NewCase.CaseExpireDate = NewCase.CaseReleaseDate.AddDays(14);
             NewCase.CaseClosedDate = DateTime.Now;
-            //TODO 圖片未處理
-            _mutualBankContext.Cases.Add(NewCase);
-            _mutualBankContext.SaveChanges();
+
+            //取出表單圖片及名稱 
+            var InpitFile = HttpContext.Request.Form.Files[0];
+            NewCase.CasePhoto = InpitFile.FileName;
+            //TODO 檔案暫時儲存在wwwroot
+            var InpitFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Img","CasePhoto", NewCase.CasePhoto);
+            FileStream fs = new FileStream(InpitFilePath, FileMode.Create);
+            fs.CopyToAsync(fs);
+            fs.Close();
+
+            //_mutualBankContext.Cases.Add(NewCase);
+            //_mutualBankContext.SaveChanges();
         }
         public List<Case> UserCaseModel(bool NeedBit)
         {
