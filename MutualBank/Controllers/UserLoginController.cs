@@ -102,15 +102,22 @@ namespace MutualBank.Controllers
         }
         #endregion
         #region 修改密碼
+
+        public IActionResult changePwd()
+        {
+            return PartialView();
+        }
+
         [HttpPost]
         public IActionResult changePassword(string Password)
         {
-            var update = _mutualBankContext.Logins.Find(User.Identity.Name);
+            string user = User.Identity.Name;
+            var update = _mutualBankContext.Logins.FirstOrDefault(u => u.LoginName == User.Identity.Name);
             if (Password != null)
             {
                 update.LoginPwd = Password;
                 _mutualBankContext.SaveChanges();
-                return RedirectToAction("Login", "UserLogin");
+                return RedirectToAction("ProfilePageAjax", "Home");
             }
             else
             {
