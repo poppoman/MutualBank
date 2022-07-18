@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using MutualBank.Models;
+using MutualBank.Models.ViewModels;
 using System.Configuration;
 using System.Net;
 using System.Net.Mail;
@@ -27,16 +28,30 @@ namespace MutualBank.Controllers.api
         }
 
         [HttpGet]
-        public async Task<string> ConfirmAccount(string id)
+        public ActionResult<Error> ConfirmAccount(string id)
         {
+			
             var user = _mutualBankContext.Logins.FirstOrDefault(u => u.LoginName == id);
-            if (user == null) return "OK";
-            else return "有人使用";
-        }
+			Error err = new Error(); 
+			if (user == null)  err.Message = "OK2";  
+			else  err.Message = "此帳號已有人使用";
+			return err;
+		}
 
-		public async Task<string> SendMailToken(string id)
+        [HttpPost]
+		public ActionResult<Error> ConfirmAll(UserRegister userregister)
 		{
+			Error err = new Error();
+			if (string.IsNullOrEmpty(userregister.LoginName) || string.IsNullOrEmpty(userregister.ConfirmPwd) || string.IsNullOrEmpty(userregister.LoginPwd) || string.IsNullOrEmpty(userregister.LoginEmail))
+			{
+				err.Message = "請輸入完資料";
+			}
+			return err;
+		}
 
+		public ActionResult<Error> SendMailToken(string? id)
+		{
+			Error error = new Error();
 			// 檢查資料庫是否有這個帳號
 			var user = _mutualBankContext.Logins.FirstOrDefault(u => u.LoginName == id);
 			if (user !=null)
@@ -105,12 +120,14 @@ namespace MutualBank.Controllers.api
 						client.Credentials = new NetworkCredential(MailUserID, MailUserPwd);//寄信帳密 
 						client.Send(mms); //寄出信件
 					}
-				return "OK111";
+				error.Message = "已發送密碼變更信到您註冊的信箱，請到信箱確認。";
+				return error;
 			}
-				else
-				{
-				return " NOT OK2";
-				}
+			else
+			{
+				error.Message = "請輸入您的信箱";
+				return error;
+			}
 			
 		}
 
@@ -119,7 +136,7 @@ namespace MutualBank.Controllers.api
 
 		public async Task<string> DoResetPwd(string id)
 		{
-			//DoResetPwdOut outModel = new DoResetPwdOut();
+			Error error =  new Error();
 
 			//// 檢查是否有輸入密碼
 			//if (string.IsNullOrEmpty(inModel.NewUserPwd))
@@ -158,9 +175,6 @@ namespace MutualBank.Controllers.api
 				{
 					return "user = null";
 				}
-
-				
-				
 			}
 			
 		}

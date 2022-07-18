@@ -31,7 +31,7 @@ namespace MutualBank.Controllers
         {
 
             var user = _mutualBankContext.Logins.FirstOrDefault(u => u.LoginName == usergister.LoginName);
-            if (ModelState.IsValid && user == null)
+            if (user == null)
             {
                 var newuser = new Login
                 {
@@ -136,6 +136,7 @@ namespace MutualBank.Controllers
             }
 
             // 取得系統自定密鑰，在 Web.config 設定
+
             string SecretKey = _configuration.GetValue<string>("Email:SecretKey");
 
             try

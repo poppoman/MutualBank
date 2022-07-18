@@ -6,31 +6,27 @@
 <div class="container row" id="homeContent" style="background-image:">
     <div class="offset-3 col-6">
         <form method="post" action="/UserLogin/Register">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="LoginName" class="control-label">帳號</label>
-                <input asp-for="LoginName" class="form-control" v-on:change.lazy="ConfirmAccount" v-model="Account" />{{result}}
-                <span asp-validation-for="LoginName" class="text-danger"></span>
+                <input asp-for="LoginName" class="form-control" v-on:change.lazy="ConfirmAccount" v-model="Account" />
                 <span style="color:red">@ViewBag.message</span>
             </div>
             <div class="form-group">
                 <label asp-for="LoginPwd" class="control-label">密碼</label>
-                <input asp-for="LoginPwd" class="form-control" />
-                <span asp-validation-for="LoginPwd" class="text-danger"></span>
+                <input asp-for="LoginPwd" class="form-control" v-model="Password" />
             </div>
             <div class="form-group">
                 <label asp-for="ConfirmPwd" class="control-label">確認密碼</label>
-                <input asp-for="ConfirmPwd" class="form-control" />
-                <span asp-validation-for="ConfirmPwd" class="text-danger"></span>
+                <input asp-for="ConfirmPwd" class="form-control" v-model="ConfirmPwd"/>
             </div>
             <div class="form-group">
                 <label asp-for="LoginEmail" class="control-label">註冊信箱</label>
-                <input asp-for="LoginEmail" placeholder="例如: XXX@test.com" class="form-control" />
-                <span asp-validation-for="LoginEmail" class="text-danger"></span>
+                <input asp-for="LoginEmail" placeholder="例如: XXX@test.com" class="form-control" v-model="Email"/>
             </div>
             <div class="form-group">
                 </br>
-                <input type="submit" value="註冊" class="btn btn-primary col-6 offset-3" />
+                <input type="submit" value="註冊" class="btn btn-primary col-6 offset-3"/>
+                <div id="errormsg"></div>
             </div>
         </form>
     </div>
@@ -48,7 +44,10 @@
     data: 
     {
         Account:"",
-        result:"",
+        Password:"",
+        ConfirmPwd:"",
+        Email:"",
+
     },
     methods: 
     {
@@ -58,13 +57,44 @@
             //ajax=> es fetch
             fetch(`/api/Confirm/ConfirmAccount?id=${self.Account}`)
             .then(function (response) {
-                return response.text();
+                return response.json();
             })
             .then(function (res) {
                 console.log("m = ",res);
-                self.result = res;
+                $('#errormsg').text(res.message);
             });
-        }
+        },
+        //sub: function() 
+        //{
+        //    var data = 
+        //    {
+        //        LoginName: this.Account,
+        //        LoginPwd: this.Password,
+        //        LoginEmail:this.Email,
+        //        onfirmPwd:this.ConfirmPwd
+        //    }; 
+        //    console.log(data);
+            
+        //    fetch(`/api/Confirm/ConfirmAll`, {
+        //        method: 'POST',
+        //        headers:
+        //        {
+        //            'Accept': 'application/json',
+        //            'Content-Type': 'application/json'
+        //        },
+        //        body: JSON.stringify(data)
+        //    })
+        //    .then(function (response) {
+        //        return response.json();
+        //    })
+        //    .then(function (res) {
+        //        console.log("m = ",res);
+        //        $('#errormsg').text(res.message);
+        //    })
+        //    .catch(function(res) {  
+        //        console.log("err = ",res);
+        //    });
+        //}
     }
 });
     </script>
