@@ -1,211 +1,256 @@
-﻿@model IEnumerable<MutualBank.Models.Message>
+﻿@model MutualBank.Models.Case
 
 @{
     ViewData["Title"] = "Index";
 }
 
 @section Styles
-{
+    {
     <link rel="stylesheet" href="~/css/postpage.css" asp-append-version="true" />
 
 }
 
-<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
-
-<body id="postpagebody">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
-            crossorigin="anonymous"></script>
-    <div class="postpage">
-        <div class="page-top">
-            <div class="page-title">標題</div>
-            <div calss="need">需求</div>
-        </div>
-        <!-- 圖片與資訊 -->
-        <div class="page-botton">
-            <!-- 圖片 -->
-            <div class="author-pic">
-                <div class="pic-frame">
-                    <img src="background.jpg" alt="無此圖片">
-                </div>
+    <main id="postpage">
+        <div class="postpage">
+            <div class="page-top">
+                <div class="page-title"> @Html.DisplayFor(model => model.CaseTitle)</div>
+                
+                <div calss="need">{{@Html.DisplayFor(model => model.CaseSkilId) | showSkillName}}</div>
+              
             </div>
-            <!-- 資訊 -->
-            <div class="author">
-                <span class="author-pic-name">
-                    <div class="authorpicture-frame">
-                        <img src="background.jpg" alt="無此圖片" class="author-picture">
-                    </div>
-                    <div class="author-name">
-                        <h2 style="padding-left:20px; font-size:16px">陳曉明<h2>
-                    </div>
-                </span>
-                <div class="author-itemlist">
-                    <div calss="post-time">
-                        <span>
-                            <i class="fa-regular fa-calendar"></i>
-                        </span>
-                        <span style="padding-left:6px;">建立日期：<span>2022-07-03</span></span>
-                    </div>
-                    <div calss="end-time">
-                        <span style="padding-left: 2px;">
-                            <i class="fa-solid fa-hourglass-end"></i>
-                        </span>
-                        <span style="padding-left:5px ;">結案時間：<time datetime="">2022-07-13</time></span>
-                    </div>
-                    <div calss="need-time">
-                        <span>
-                            <i class="fa-regular fa-clock"></i>
-                        </span>
-                        <span style="padding-left:3px ">需求時間：<time datetime="">2022-07-10</time></span>
-                    </div>
-                    <div calss="need-location">
-                        <span>
-                            <i class="fa-solid fa-location-dot"></i>
-                        </span>
-                        <span style="padding-left:5px ">地點：<span>台北市士林區</span></span>
+            <!-- 圖片與資訊 -->
+            <div class="page-botton">
+                <!-- 圖片 -->
+                <div class="author-pic">
+                    <div class="pic-frame">
+                        <img src="@Html.DisplayFor(model => model.CasePhoto)" alt="無此圖片">
                     </div>
                 </div>
-            </div>
-
-        </div>
-
-        <!-- 介紹 -->
-        <div calss="atricle-content-frame">
-            <div class="article-contnt-title">
-                <span>簡介</span>
-            </div>
-            <div class="article-content">
-                <span class="article">還沒有寫任何東西喔....</span>
-            </div>
-        </div>
-
-        <!-- 留言板 -->
-        <div class="messageboard-frame">
-            <div class="messageboard-title"> 留言</div>
-            <!-- 輸入訊息 -->
-            <div class="comment-frame">
-                <div>
-                    <div class="user-pic">
-                        <img src="background.jpg" alt="無此圖片" class="author-picture">
+                <!-- 資訊 -->
+                <div class="author">
+                    <span class="author-pic-name">
+                        <span class="authorpicture-frame">
+                            <img src="background.jpg" alt="無此圖片" class="author-picture">
+                        </span>
+                        <span class="author-name">
+                            <h2 href="" style="padding-left:20px; font-size:16px" class="authorname">陳曉明</h2>
+                        </span>
+                    </span>
+                    <div class="author-itemlist">
+                        <div calss="post-time">
+                            <span>
+                                <i class="fa-regular fa-calendar"></i>
+                            </span>
+                            <span style="padding-left:6px;">建立日期：<span>@Html.DisplayFor(model => model.CaseAddDate)</span></span>
+                        </div>
+                        <div calss="end-time">
+                            <span style="padding-left: 2px;">
+                                <i class="fa-solid fa-hourglass-end"></i>
+                            </span>
+                            <span style="padding-left:5px ;">結案時間：<time datetime=""></time></span>
+                        </div>
+                        <div calss="need-time">
+                            <span>
+                                <i class="fa-regular fa-clock"></i>
+                            </span>
+                            <span style="padding-left:3px ">需求時間：<time datetime="">@Html.DisplayFor(model => model.CaseSerDate)</time></span>
+                        </div>
+                        <div calss="need-location">
+                            <span>
+                                <i class="fa-solid fa-location-dot"></i>
+                            </span>
+                            <span style="padding-left:5px ">地點：<span>@Html.DisplayFor(model => model.CaseSerArea)</span></span>
+                        </div>
                     </div>
                 </div>
-                <div class="textarea-box">
-                    <textarea type="text" class="form-control" id="exampleFormControlTextarea1" placeholder="請輸入你的訊息"
-                              maxlength="200" rows="3"></textarea>
-                    <div class="statics-text">0/200字</div>
+
+            </div>
+
+            <!-- 介紹 -->
+            <div calss="atricle-content-frame">
+                <div class="article-contnt-title">
+                    <span>簡介</span>
                 </div>
-                <div class="col-auto">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal" disabled>
-                        留言
-                    </button>
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                         aria-hidden="true" >
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-body">
-                                    <i class="fa-solid fa-thumbs-up"></i>
-                                    新增成功
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="article-content">
+                    <span class="article">@Html.DisplayFor(model => model.CaseIntroduction)</span>
+                </div>
+            </div>
+
+            <!-- 留言板 -->
+            <div class="messageboard-frame">
+                <div class="messageboard-title"> 留言</div>
+                <!-- 輸入訊息 -->
+                <form asp-action="AddComment" asp-controller="PostPage">
+                    <div class="comment-frame">
+                        <div>
+                            <div class="user-pic">
+                                <img src="background.jpg" alt="無此圖片" class="author-picture">
+                            </div>
+                        </div>
+
+                        <div class="textarea-box">
+                            <textarea type="text" class="form-control" id="exampleFormControlTextarea1" placeholder="請輸入你的訊息"
+                                  maxlength="200" rows="3" name="content"></textarea>
+                            <div class="statics-text">0/200字</div>
+                        </div>
+                        <div class="col-auto">
+                            <input type="button" class="btn btn-primary" data-bs-toggle="modal"
+                               data-bs-target="#exampleModal" id="commentbtn" disabled
+                               value="留言" />
+                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                             aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <i class="fa-solid fa-thumbs-up"></i>
+                                            新增成功
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
-                </div>
+                </form>
+                <!-- 回應1 -->
+                <div class="respone-mes-frame">
+                    <div class="responer-pic">
+                        <a href="">
+                            <div class="pad-avatar">
+                                <img src="background.jpg" alt="無此圖片" class="respons-picture">
+                            </div>
+                        </a>
+                    </div>
 
-
-
-            </div>
-            <!-- 回應1 -->
-            <div class="respone-mes-frame">
-                <div class="responer-pic">
-                    <a href="">
-                        <div class="pad-avatar">
-                            <img src="background.jpg" alt="無此圖片" class="respons-picture">
+                    <div class="pad-content">
+                        <div>
+                            <div class="responser-name">{{usercomment}}</div>
                         </div>
-                    </a>
-                </div>
-
-                <div class="pad-content">
-                    <div>
-                        <div class="responser-name">留言者1</div>
-                    </div>
-                    <div class="responser-context">
-                        <div class="text">
-                            1111111
+                        <div class="responser-context">
+                            <div class="text">
+                                1111111
+                            </div>
                         </div>
-                    </div>
-                    <div class="response-day-button">
-                        <i class="fa-regular fa-clock"></i>
-                        <span class="post-time">XX 天前</span>
-                        <span class="replay-btn">回覆</span>
+                        <div class="response-day-button">
+                            <i class="fa-regular fa-clock"></i>
+                            <span class="post-time">XX 天前</span>
+                            <span class="replay-btn">回覆</span>
 
-                    </div>
-                    <!-- 回應2 -->
-                    <div class="comment-bother-frame">
-                        <div class="comment-bother">
-                            <a href="" class="comment-pic-frame">
-                                <div style="width: 24px; height: 24px;" class="avatar-frame">
-                                    <img src="background.jpg" alt="無此圖片" class="comment-bother-pic">
-                                </div>
-                            </a>
-                            <div class="comment-brother-re">
-                                <div class="responser-name-frame">
-                                    <a class="responser-name" href="">回覆者的名字</a>
-                                    <div class="reply-user">
-                                        <span>回覆給：</span>
-                                        <div class="comment-bother">
-                                            <a href="">
-                                                <img src="background.jpg" alt="無此圖片" class="comment-bother-pic">
-                                            </a>
+                        </div>
+                        <!-- 回應2 -->
+                        <div class="comment-bother-frame">
+                            <div class="comment-bother">
+                                <a href="" class="comment-pic-frame">
+                                    <div style="width: 24px; height: 24px;" class="avatar-frame">
+                                        <img src="background.jpg" alt="無此圖片" class="comment-bother-pic">
+                                    </div>
+                                </a>
+                                <div class="comment-brother-re">
+                                    <div class="responser-name-frame">
+                                        <a class="responser-name" href="">回覆者的名字</a>
+                                        <div class="reply-user">
+                                            <span>回覆給：</span>
+                                            <div class="comment-bother">
+                                                <a href="">
+                                                    <img src="background.jpg" alt="無此圖片" class="comment-bother-pic">
+                                                </a>
+                                            </div>
+                                            <a>名稱</a>
                                         </div>
-                                        <a>名稱</a>
+
+                                    </div>
+                                    <div class="text">回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容</div>
+                                    <div class="response-day-button">
+                                        <i class="fa-regular fa-clock"></i>
+                                        <span class="post-time">XX 天前</span>
+                                        <span class="replay-btn">回覆</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 回應訊息輸入 -->
+                        <!-- <div class="comment-bother-frame-input">
+                            <div class="comment-bother-input">
+                                <a href="" class="comment-pic-frame">
+                                    <div style="width: 24px; height: 24px;" class="avatar-frame">
+                                        <img src="background.jpg" alt="無此圖片" class="comment-bother-pic">
+                                    </div>
+                                </a>
+                                    <div class="textarea-box">
+                                        <textarea type="text" class="form-control" id="exampleFormControlTextarea1" placeholder="請輸入你的訊息"
+                                            maxlength="200" rows="3"></textarea>
+                                        <div class="statics-text">0/200字</div>
+                                    </div>
+                                    <div class="col-auto-input">
+                                        <button type="button" class="btn btn-primary" disabled data-bs-toggle="button" id=commentbtmre>留言</button>
                                     </div>
 
                                 </div>
-                                <div class="text">回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容</div>
-                                <div class="response-day-button">
-                                    <i class="fa-regular fa-clock"></i>
-                                    <span class="post-time">XX 天前</span>
-                                    <span class="replay-btn">回覆</span>
-                                </div>
-                            </div>
-                        </div>
+                            </div> -->
+                        <!--  -->
                     </div>
-                    <!-- 回應訊息輸入 -->
-                    <!-- <div class="comment-bother-frame-input">
-                        <div class="comment-bother-input">
-                            <a href="" class="comment-pic-frame">
-                                <div style="width: 24px; height: 24px;" class="avatar-frame">
-                                    <img src="background.jpg" alt="無此圖片" class="comment-bother-pic">
-                                </div>
-                            </a>
-                                <div class="textarea-box">
-                                    <textarea type="text" class="form-control" id="exampleFormControlTextarea1" placeholder="請輸入你的訊息"
-                                        maxlength="200" rows="3"></textarea>
-                                    <div class="statics-text">0/200字</div>
-                                </div>
-                                <div class="col-auto-input">
-                                    <button type="button" class="btn btn-primary" disabled data-bs-toggle="button">留言</button>
-                                </div>
 
-                            </div>
-                        </div> -->
-                    <!--  -->
                 </div>
-
             </div>
         </div>
-    </div>
- 
+    </main>
 
-
-</body>
-@section Scripts
+    @section Scripts
     {
     <script src="~/js/PostPage.js"></script>
-}
+    
+    <script>
+        let vm = new Vue({
+            el: "#postpage",
+            data: {
+                caseModel: [],
+                usercomment:"",
+               
+            },
+            methods: {
+                initCaseModel: function() {
+                    $.ajax({
+                        url: "PostPage/InitCaseModel",
+                        type: "GET"
+                    })
+                        .done(function(res) {
+                            vmIndex.caseModel = res;
+                        })
+                        .fail(function(res) {
+                            alert("Fail");
+                        });
 
+
+                }
+            },
+            filters: {
+                //顯示技能名稱，而非編號
+                showSkillName: function(id) {
+                    var skillName = "X";
+                    $.ajax({
+                        url: "PostPage/GetSkillName",
+                        type: "GET",
+                        async: false,
+                        data: {
+                             SkillId:id,
+                        }
+                    })
+                        .done(function(res) {
+                            skillName = res;
+                        })
+                        .fail(function(res) {
+                            skillName = "無分類"
+                        });
+                    return skillName;
+                }
+            },
+            })
+
+
+
+    </script>
+}
     @*<p>
     <a asp-action="Create">Create New</a>
 </p>
