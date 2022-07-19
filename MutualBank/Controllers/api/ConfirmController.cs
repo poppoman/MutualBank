@@ -42,9 +42,19 @@ namespace MutualBank.Controllers.api
 		public ActionResult<Error> ConfirmAll(UserRegister userregister)
 		{
 			Error err = new Error();
+			var user = _mutualBankContext.Logins.FirstOrDefault(u => u.LoginName == userregister.LoginName);
+			//檢查欄位是否都有輸入
 			if (string.IsNullOrEmpty(userregister.LoginName) || string.IsNullOrEmpty(userregister.ConfirmPwd) || string.IsNullOrEmpty(userregister.LoginPwd) || string.IsNullOrEmpty(userregister.LoginEmail))
 			{
 				err.Message = "請輸入完資料";
+			}
+			else if (user != null)
+			{
+				err.Message = "此帳號已有人使用";
+			}
+			else if(userregister.LoginPwd != userregister.ConfirmPwd)
+			{
+				err.Message = "密碼與確認密碼不一致";
 			}
 			return err;
 		}
