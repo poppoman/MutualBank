@@ -10,7 +10,7 @@
     border-radius: 20%;
 }
 
-#Proitemsbtn{         /* 左方表單 按鈕色 */
+.Proitemsbtn{         /* 左方表單 按鈕色 */
     border-radius: 5%;
     background-color: #ffc9c2;   
 }

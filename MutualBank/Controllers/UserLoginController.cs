@@ -107,6 +107,10 @@ namespace MutualBank.Controllers
         {
             return PartialView();
         }
+        public IActionResult message()
+        {
+            return PartialView();
+        }
 
         [HttpPost]
         public IActionResult changePassword(string Password)
