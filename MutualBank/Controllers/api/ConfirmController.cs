@@ -26,8 +26,19 @@ namespace MutualBank.Controllers.api
             _mutualBankContext = mutualBankContext;
             _configuration = configuration;
         }
-
-        [HttpGet]
+		[HttpGet]
+		public ActionResult<MemberModel> message(string id)
+		{
+			var userid = _mutualBankContext.Logins.Where(x => x.LoginName == id).Select(x => x.LoginId).FirstOrDefault();
+			var casetitle =  (_mutualBankContext.Cases.Where(x => x.CaseUserId == userid).Select(x => x.CaseTitle)).AsEnumerable();
+			var caseNeed = _mutualBankContext.Cases.Where(x => x.CaseUserId == userid).Select(x => x.CaseNeedHelp);
+			MemberModel mm = new MemberModel();
+			mm.userid = userid;
+			mm.caseNeed = caseNeed;
+			mm.casetitle = casetitle;
+			return mm;
+		}
+		[HttpGet]
         public ActionResult<Error> ConfirmAccount(string id)
         {
 			
