@@ -20,22 +20,39 @@ namespace MutualBank.Controllers
             _mutualBankContext = MutualBankContext;
         }
 
-       
+
         // GET: PostPage
+
         public async Task<IActionResult> Index(int? id)
         {
-            
             if (id == null)
-            {
+            { 
                 return NotFound();
             }
-            var Case = await _mutualBankContext.Cases
-            .FirstOrDefaultAsync(m => m.CaseId == id);
+            var Case = await _mutualBankContext.Cases.Include("CaseSkil").Include("CaseSerAreaNavigation").FirstOrDefaultAsync(m => m.CaseId == id);
             if (Case == null)
             {
                 return NotFound();
             }
-            return View(Case);
+            var skillname = Case.CaseSkil.SkillName;
+            var Areaname = Case.CaseSerAreaNavigation == null ? "無" : Case.CaseSerAreaNavigation.AreaCity;
+
+            PostPageVM vm = new PostPageVM()
+            {
+                CaseId = Case.CaseId,
+                CaseTitle = Case.CaseTitle,
+                CasePhoto = Case.CasePhoto,
+                CasesAddDate = Case.CaseAddDate,
+                CaseSerDate = Case.CaseSerDate ==null? "無": Case.CaseSerDate,
+                CaseIntroduction = Case.CaseIntroduction,
+                SkillName = skillname,
+                Areacity = Areaname,
+              
+              };
+
+            
+            return View(vm);
+       
         }
 
         [HttpGet]
@@ -65,7 +82,7 @@ namespace MutualBank.Controllers
         //[Authorize]
         public async Task<IActionResult> AddComment(string content)
         {
-            PostPageViewModel dvm = new PostPageViewModel();
+           
             //var userid = HttpContext.User.Identity.;
             var comment = new Message()
             {

@@ -1,4 +1,4 @@
-﻿@model MutualBank.Models.Case
+﻿@model MutualBank.Models.PostPageVM
 
 @{
     ViewData["Title"] = "Index";
@@ -13,17 +13,15 @@
     <main id="postpage">
         <div class="postpage">
             <div class="page-top">
-                <div class="page-title"> @Html.DisplayFor(model => model.CaseTitle)</div>
-                
-                <div calss="need">{{@Html.DisplayFor(model => model.CaseSkilId) | showSkillName}}</div>
-              
+                <div class="page-title"> @Html.DisplayFor(Model=>Model.CaseTitle) </div>
+                <div calss="need">@Html.DisplayFor(Model=>Model.SkillName)</div>
             </div>
             <!-- 圖片與資訊 -->
             <div class="page-botton">
                 <!-- 圖片 -->
                 <div class="author-pic">
                     <div class="pic-frame">
-                        <img src="@Html.DisplayFor(model => model.CasePhoto)" alt="無此圖片">
+                        <img src="@Html.DisplayFor(Model=>Model.CasePhoto)" alt="無此圖片">
                     </div>
                 </div>
                 <!-- 資訊 -->
@@ -41,25 +39,19 @@
                             <span>
                                 <i class="fa-regular fa-calendar"></i>
                             </span>
-                            <span style="padding-left:6px;">建立日期：<span>@Html.DisplayFor(model => model.CaseAddDate)</span></span>
-                        </div>
-                        <div calss="end-time">
-                            <span style="padding-left: 2px;">
-                                <i class="fa-solid fa-hourglass-end"></i>
-                            </span>
-                            <span style="padding-left:5px ;">結案時間：<time datetime=""></time></span>
+                            <span style="padding-left:6px;">建立日期：<span>@Html.DisplayFor(Model=>Model.CasesAddDate)</span></span>
                         </div>
                         <div calss="need-time">
                             <span>
                                 <i class="fa-regular fa-clock"></i>
                             </span>
-                            <span style="padding-left:3px ">需求時間：<time datetime="">@Html.DisplayFor(model => model.CaseSerDate)</time></span>
+                            <span style="padding-left:3px ">需求時間：<span>@Html.DisplayFor(Model=>Model.CaseSerDate)</span></span>
                         </div>
                         <div calss="need-location">
                             <span>
                                 <i class="fa-solid fa-location-dot"></i>
                             </span>
-                            <span style="padding-left:5px ">地點：<span>@Html.DisplayFor(model => model.CaseSerArea)</span></span>
+                            <span style="padding-left:5px ">地點：<span>@Html.DisplayFor(Model=>Model.Areacity)</span></span>
                         </div>
                     </div>
                 </div>
@@ -72,7 +64,7 @@
                     <span>簡介</span>
                 </div>
                 <div class="article-content">
-                    <span class="article">@Html.DisplayFor(model => model.CaseIntroduction)</span>
+                    <span class="article">@Html.DisplayFor(Model=>Model.CaseIntroduction)</span>
                 </div>
             </div>
 
@@ -201,6 +193,7 @@
     <script src="~/js/PostPage.js"></script>
     
     <script>
+        
         let vm = new Vue({
             el: "#postpage",
             data: {

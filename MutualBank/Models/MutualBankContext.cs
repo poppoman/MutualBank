@@ -96,6 +96,23 @@ namespace MutualBank.Models
                     .HasColumnName("Case_Title");
 
                 entity.Property(e => e.CaseUserId).HasColumnName("Case_UserID");
+
+                entity.HasOne(d => d.CaseSerAreaNavigation)
+                    .WithMany(p => p.Cases)
+                    .HasForeignKey(d => d.CaseSerArea)
+                    .HasConstraintName("FK_Case_Area");
+
+                entity.HasOne(d => d.CaseSkil)
+                    .WithMany(p => p.Cases)
+                    .HasForeignKey(d => d.CaseSkilId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Case_Skill");
+
+                entity.HasOne(d => d.CaseUser)
+                    .WithMany(p => p.Cases)
+                    .HasForeignKey(d => d.CaseUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Case_Users");
             });
 
             modelBuilder.Entity<Login>(entity =>

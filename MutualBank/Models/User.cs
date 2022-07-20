@@ -5,6 +5,10 @@ namespace MutualBank.Models
 {
     public partial class User
     {
+        public User()
+        {
+            Cases = new HashSet<Case>();
+        }
         public int UserId { get; set; }
         public string UserLname { get; set; } = null!;
         public string UserFname { get; set; } = null!;
@@ -20,5 +24,7 @@ namespace MutualBank.Models
         public string? UserSchool { get; set; }
         public string? UserFaculty { get; set; }
         public int UserPoint { get; set; }
+
+        public virtual ICollection<Case> Cases { get; set; }
     }
 }
