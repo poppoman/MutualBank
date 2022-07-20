@@ -1,0 +1,36 @@
+﻿@model IEnumerable<MutualBank.Models.Skill>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "技能管理";
+}
+
+<h1>技能管理</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SkillName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SkillName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.SkillId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.SkillId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.SkillId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

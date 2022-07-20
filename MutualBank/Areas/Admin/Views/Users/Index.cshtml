@@ -1,0 +1,119 @@
+﻿@model IEnumerable<MutualBank.Models.User>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+    <h1>使用者資料管理 - 首頁</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<div class="table-responsive">
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserLname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserFname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserNname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserSex)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserHphoto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserBirthday)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserSkillId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserAreaId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserCv)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserResume)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserSchool)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserFaculty)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserPoint)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserLname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserFname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserNname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserSex)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserHphoto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserBirthday)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserSkillId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserAreaId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserCv)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserResume)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserSchool)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserFaculty)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserPoint)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.UserId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+</div>
+
