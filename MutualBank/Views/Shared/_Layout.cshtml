@@ -26,35 +26,26 @@
         <div class="navBar" id="navBar">
             <div class="topL">
                 <div class="logo"><a asp-action="Index" asp-controller="Home"><img src="~/Img/nav/logo.png"></a></div>
-                <div class="search">
-                    <div class="area">
-                        <div class="dropdown">
-                            <button class="btn dropdown-toggle" role="button" id="dropdownMenuLink"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                <span id="cityName">縣市</span>
-                            </button>
-
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <li v-for="item in areaCity"><button class="dropdown-item" v-on:click="getAreaTown" >{{item}}</button></li>
-                            </ul>
+                <form method="get" action="@Url.Action("Search","Home")">
+                    <div class="search">
+                        <div class="area m-1 me-0">
+                                <select class="selectList" id="AreaCity" name="AreaCity" v-on:change="getAreaTown">
+                                    <option class="selectOption" v-for="item in areaCity" >{{item}}</option>
+                                </select>
                         </div>
-                    </div>
-                    <div class="city">
-                        <div class="dropdown">
-                            <a class="btn dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span id="townName" data-areaid="">區域
-                            </a>
-
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <li><button class="dropdown-item" type="button" v-show="isAreaSelected">請先選擇縣市</button></li>
-                                <li v-for="item in areaTown" v-on:click="updateTownName"><button class="dropdown-item" type="button"  v-bind:data-areaid="item.areaId">{{item.areaTown}}</button></li>
-                            </ul>
+                        <div class="city m-1">
+                                <select class="selectList" id="AreaTown" name="AreaTown">
+                                    <option class="selectOption" v-show="isDefaultShow">區域</option>
+                                    <option class="selectOption" v-for="item in areaTown" v-bind:data-areaid="item.areaId">{{item.areaTown}}</option>
+                                </select>
                         </div>
+                        <input type="text" id="KeyWord" name="KeyWord" placeholder="輸入關鍵字">
+                        <button class="searchBtn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </div>
-                    <input type="text" placeholder="輸入關鍵字">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </div>
+                </form>
+
             </div>
+
             <div class="topR">
                 <i class="iconMaun fa-solid fa-bars"></i>
                 <div class="barManu">

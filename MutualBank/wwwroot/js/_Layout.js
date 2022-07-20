@@ -4,7 +4,7 @@ var vmNav = new Vue({
     data: {
         areaCity: [],
         areaTown: [],
-        isAreaSelected: true
+        isDefaultShow: true
     },
     methods: {
         getAreaCity: function () {
@@ -20,8 +20,7 @@ var vmNav = new Vue({
                 });
         },
         getAreaTown: function (e) {
-            var SelectedCity = e.target.innerText;
-            cityName.innerText = SelectedCity;
+            var SelectedCity = e.target.value;
             $.ajax({
                 url: "/Nav/_LayoutApi/GetAreaTown",
                 type: "GET",
@@ -30,21 +29,13 @@ var vmNav = new Vue({
                 }
             }).
                 done(function (res) {
-                    vmNav.isAreaSelected = false;
+                    vmNav.isDefaultShow = false;
+
                     vmNav.areaTown = res;
                 })
                 .fail(function (res) {
                     console.log(res);
                 });
-        },
-        updateTownName: function (e) {
-            console.log("顯示區域");
-            var selectedTown = e.target.innerText;
-            townName.innerText = selectedTown;
-
-            //填入id
-            var selectedId = e.target.dataset.areaid;
-            townName.dataset.areaid = selectedId;
         }
         
     },

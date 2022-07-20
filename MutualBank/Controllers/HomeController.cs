@@ -18,15 +18,41 @@ namespace MutualBank.Controllers
         public IActionResult Index()
         {
             ViewBag.Tags = _mutualBankContext.Skills.OrderBy(x => x.SkillId).ToList();
-            ViewBag.CaseModel = _mutualBankContext.Cases.ToList();
-            return View();
-        }
-
-        [HttpGet]
-        public List<Case> InitCaseModel()
-        {
             var Model = _mutualBankContext.Cases.ToList();
-            return Model;
+            return View(Model);
+        }
+        public IActionResult Search(SearchKeyword Search)
+        {
+            ViewBag.Tags = _mutualBankContext.Skills.OrderBy(x => x.SkillId).ToList();
+            var Model = new List<Case> { };
+
+            var AreaId = -1;
+            if (Search.AreaTown == null | Search.AreaTown=="區域")
+            {
+                AreaId = _mutualBankContext.Areas.Where(x => x.AreaCity == Search.AreaCity).Select(x => x.AreaId).FirstOrDefault();
+            }
+            else 
+            {
+                AreaId = _mutualBankContext.Areas.Where(x => x.AreaTown == Search.AreaTown).Select(x => x.AreaId).FirstOrDefault();
+            }
+            var AreaCase = _mutualBankContext.Cases.Where(x => x.CaseSerArea == AreaId).ToList();
+
+            if (Search.Keyword == null)
+            {
+                Model = AreaCase;
+            }
+            else 
+            {
+                foreach (var c in AreaCase)
+                {
+                    if (c.CaseTitle.Contains(Search.Keyword) | c.CaseIntroduction.Contains(Search.Keyword))
+                    {
+                        Model.Add(c);
+                    }
+                }
+            }
+
+            return View("Index", Model);
         }
 
         [HttpGet]

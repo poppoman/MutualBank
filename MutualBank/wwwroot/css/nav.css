@@ -70,13 +70,23 @@ a {
             background: var(--bg);
             border-radius: 8px;
         }
-
-                .navBar .topL .search .area .btn {
-                    position: relative;
-                    font-size: 16px;
-                    color: var(--black);
-                }
-
+            .navBar .topL .search .selectList {
+                background: var(--bg);
+                color: var(--black);
+                border: 0px;
+                width:85px;
+                text-align:center;
+            }
+            .navBar .topL .search .selectOption {
+                background: var(--white);
+                color: var(--black);
+                border: 0px;
+                margin: 10px;
+            }
+            .navBar .topL .search .searchBtn {
+                color:transparent;
+                border:0px;
+            }
             .navBar .topL .search input {
                 position: relative;
                 width: 70%;
@@ -89,8 +99,8 @@ a {
 
             .navBar .topL .search i {
                 position: absolute;
-                left: 89%;
-                top: 23%;
+                left: 90%;
+                top: 15%;
                 font-size: 24px;
                 color: var(--gray);
                 cursor: pointer;

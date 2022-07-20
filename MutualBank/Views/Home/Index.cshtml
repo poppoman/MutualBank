@@ -1,10 +1,10 @@
-﻿@{
+﻿
+@{
     ViewData["Title"] = "Home Page";
 }
 @{
     //初始化Case
-    var dataModel = ViewBag.CaseModel as List<Case>;
-    var dataString = Json.Serialize(dataModel);
+    var dataString = Json.Serialize(@Model);
 }
 
 @section Styles{
@@ -25,7 +25,7 @@
                     @{
                     foreach (var item in (List<Skill>)ViewBag.Tags)
                     {
-                        <span class="tagName" v-on:click="getTagModel" data-skillid="@item.SkillId">@item.SkillName</span>
+                                   <span class="tagName" v-on:click="getTagModel" data-skillid="@item.SkillId">@item.SkillName</span>
                     }
                 }
             </div>
@@ -66,35 +66,25 @@
     </div>
 </div>
 
+
+
 @section Scripts{
+    
     <script>
-        var viewModel = @Html.Raw(dataString);
+        var caseModel = @Html.Raw(dataString);
+
         //Vue
         var vmIndex = new Vue({
             el: "#home",
             data: {
-                caseModel: viewModel
+                caseModel: []
             },
             methods: {
-                //initCaseModel: function() {
-                //    $.ajax({
-                //        url: "Home/InitCaseModel",
-                //        type: "GET"
-                //    })
-                //        .done(function(res) {
-                //            vmIndex.caseModel = res;
-                //        })
-                //        .fail(function(res) {
-                //            alert("Fail");
-                //        });
-
-
-                //},
                 //依需求或技能拿模型
-                getTypeModel: function() {
-                    var bit = event.target.dataset.bit;
+                getTypeModel: function(e) {
+                    var bit = e.target.dataset.bit;
                     $.ajax({
-                        url: "Home/GetTypeModel",
+                        url: "@Url.Action("GetTypeModel","Home")",
                         type: "GET",
                         data: {
                             Bit: bit
@@ -102,17 +92,17 @@
                     })
                         .done(function(res) {
                             vmIndex.caseModel = res;
-
+                            console.log(res);
                         })
                         .fail(function(res) {
                             console.log("fail");
                         });
                 },
                 //依技能分類拿模型
-                getTagModel: function() {
-                    var skillid = event.target.dataset.skillid;
+                getTagModel: function(e) {
+                    var skillid = e.target.dataset.skillid;
                     $.ajax({
-                        url: "Home/GetTagModel",
+                        url: "@Url.Action("GetTagModel","Home")",
                         type: "GET",
                         data: {
                             SkillId: skillid
@@ -120,6 +110,7 @@
                     })
                         .done(function(res) {
                             vmIndex.caseModel = res;
+                            console.log(res);
 
                         })
                         .fail(function(res) {
@@ -134,7 +125,8 @@
                 showSkillName: function(id) {
                     var skillName = "X";
                     $.ajax({
-                        url: "Home/GetSkillName",
+
+                        url: "@Url.Action("GetSkillName","Home")",
                         type: "GET",
                         async: false,
                         data: {
@@ -153,7 +145,7 @@
 
             },
             created() {
-                //this.initCaseModel();
+                this.caseModel = caseModel;
             },
 
 
@@ -167,8 +159,9 @@
             iconSort.classList.toggle('fa-arrow-down-short-wide');
             iconSort.classList.toggle('fa-arrow-up-short-wide');
         });
-
+        
 
 
     </script>
+
 }
