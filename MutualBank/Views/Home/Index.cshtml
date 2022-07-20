@@ -1,7 +1,12 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Home Page";
 }
+@{
+    //初始化Case
+    var dataModel = ViewBag.CaseModel as List<Case>;
+    var dataString = Json.Serialize(dataModel);
+}
+
 @section Styles{
     <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/card.css" asp-append-version="true" />
@@ -20,7 +25,7 @@
                     @{
                     foreach (var item in (List<Skill>)ViewBag.Tags)
                     {
-                             <span class="tagName" v-on:click="getTagModel" data-skillid="@item.SkillId">@item.SkillName</span>
+                        <span class="tagName" v-on:click="getTagModel" data-skillid="@item.SkillId">@item.SkillName</span>
                     }
                 }
             </div>
@@ -63,27 +68,28 @@
 
 @section Scripts{
     <script>
+        var viewModel = @Html.Raw(dataString);
         //Vue
         var vmIndex = new Vue({
             el: "#home",
             data: {
-                caseModel: []
+                caseModel: viewModel
             },
             methods: {
-                initCaseModel: function() {
-                    $.ajax({
-                        url: "Home/InitCaseModel",
-                        type: "GET"
-                    })
-                        .done(function(res) {
-                            vmIndex.caseModel = res;
-                        })
-                        .fail(function(res) {
-                            alert("Fail");
-                        });
+                //initCaseModel: function() {
+                //    $.ajax({
+                //        url: "Home/InitCaseModel",
+                //        type: "GET"
+                //    })
+                //        .done(function(res) {
+                //            vmIndex.caseModel = res;
+                //        })
+                //        .fail(function(res) {
+                //            alert("Fail");
+                //        });
 
 
-                },
+                //},
                 //依需求或技能拿模型
                 getTypeModel: function() {
                     var bit = event.target.dataset.bit;
@@ -91,7 +97,7 @@
                         url: "Home/GetTypeModel",
                         type: "GET",
                         data: {
-                            Bit:bit
+                            Bit: bit
                         }
                     })
                         .done(function(res) {
@@ -109,7 +115,7 @@
                         url: "Home/GetTagModel",
                         type: "GET",
                         data: {
-                            SkillId:skillid
+                            SkillId: skillid
                         }
                     })
                         .done(function(res) {
@@ -126,7 +132,7 @@
             filters: {
                 //顯示技能名稱，而非編號
                 showSkillName: function(id) {
-                    var skillName="X";
+                    var skillName = "X";
                     $.ajax({
                         url: "Home/GetSkillName",
                         type: "GET",
@@ -139,7 +145,7 @@
                             skillName = res;
                         })
                         .fail(function(res) {
-                            skillName ="無分類"
+                            skillName = "無分類"
                         });
                     return skillName;
                 }
@@ -147,7 +153,7 @@
 
             },
             created() {
-                this.initCaseModel();
+                //this.initCaseModel();
             },
 
 

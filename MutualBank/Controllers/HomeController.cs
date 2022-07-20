@@ -18,6 +18,7 @@ namespace MutualBank.Controllers
         public IActionResult Index()
         {
             ViewBag.Tags = _mutualBankContext.Skills.OrderBy(x => x.SkillId).ToList();
+            ViewBag.CaseModel = _mutualBankContext.Cases.ToList();
             return View();
         }
 
@@ -55,7 +56,7 @@ namespace MutualBank.Controllers
             var Model = _mutualBankContext.Cases.Where(x => x.CaseSkilId == SkillId).ToList();
             return Model;
         }
-    
+
         public IActionResult Privacy()
         {
             return View();

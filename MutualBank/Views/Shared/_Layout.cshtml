@@ -18,6 +18,7 @@
 
     @await RenderSectionAsync("Styles", required: false)
     @await RenderSectionAsync("ScriptsReady",required:false)
+
 </head>
 
 <body>
@@ -34,25 +35,24 @@
                             </button>
 
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <li v-for="item in areaCity"><button class="dropdown-item" v-on:click="getAreaTown">{{item}}</button></li>
+                                <li v-for="item in areaCity"><button class="dropdown-item" v-on:click="getAreaTown" >{{item}}</button></li>
                             </ul>
                         </div>
                     </div>
                     <div class="city">
                         <div class="dropdown">
                             <a class="btn dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span id="townName">區域
+                                <span id="townName" data-areaid="">區域
                             </a>
 
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                 <li><button class="dropdown-item" type="button" v-show="isAreaSelected">請先選擇縣市</button></li>
-                                <li v-for="item in areaTown"><button class="dropdown-item" type="button" v-on:click="updateTownName" v-bind:value="item.areaId">{{item.areaTown}}</button></li>
+                                <li v-for="item in areaTown" v-on:click="updateTownName"><button class="dropdown-item" type="button"  v-bind:data-areaid="item.areaId">{{item.areaTown}}</button></li>
                             </ul>
                         </div>
                     </div>
                     <input type="text" placeholder="輸入關鍵字">
-                    <i class="fa-solid fa-magnifying-glass">
-                    </i>
+                    <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
             </div>
             <div class="topR">

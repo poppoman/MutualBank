@@ -5,7 +5,10 @@ vmPostCase = new Vue({
         areaCity: [],
         areaTown: [],
         isAreaSelected: true,
-        skillTags: []
+        skillTags: [],
+        title: "",
+        intro: "",
+        serDate: ""
     },
     methods: {
         getAreaCity: function () {
@@ -49,6 +52,25 @@ vmPostCase = new Vue({
                 });
         }
 
+
+    },
+    computed: {
+        titleValid: function () {
+            return this.title.length > 0 ? false : true;
+        },
+        introValid: function () {
+            return this.intro.length > 0 ? false : true;
+        },
+        serDateValid: function () {
+            return this.serDate.length > 0 ? false : true;
+        },
+        isSubmitAble: function () {
+            if (this.title.length > 0 && this.intro.length > 0 && this.serDate.length > 0)
+            {
+                return  false;
+            }
+            return true;
+        }
     },
     mounted: function () {
         this.getAreaCity();
@@ -90,16 +112,15 @@ $("#caseForm").submit(function (e) {
 
 
 
-//toggle 開放選擇預約時開
+//toggle 關閉選擇預約時開
 function disableDate() {
     dateApp.setAttribute('disabled', 'disabled');
-    timeApp.setAttribute('disabled', 'disabled');
-    dateRemind.innerText = FinalDate(new Date(), 14);
+    dateApp.value = getDateString(currentDate);//時間恢復為當天
+    dateRemind.innerText = FinalDate(new Date(), 14);//預告下假日期
 }
 //toggle 開放選擇預約時開
 function ableDate() {
     dateApp.removeAttribute('disabled');
-    timeApp.removeAttribute('disabled');
 }
 //選擇日期後更新提醒時間
 function updateDateRemind() {

@@ -36,11 +36,11 @@ namespace MutualBank.Controllers
             //NewCase.CaseUserId = _mutualBankContext.Users.Where(x => x.UserNname == UserName).FirstOrDefault().UserId;
             
             //整理資料
+            //文字
             NewCase.CaseTitle = NewCase.CaseTitle.Trim();
             NewCase.CaseIntroduction = NewCase.CaseIntroduction.Trim();
+            //日期
             NewCase.CaseAddDate = DateTime.Now;
-            //TODO 未有預約發佈功能，暫時設定為立即發佈
-            NewCase.CaseReleaseDate = DateTime.Now;
             NewCase.CaseExpireDate = NewCase.CaseReleaseDate.AddDays(14);
             NewCase.CaseClosedDate = DateTime.Now;
 
@@ -53,8 +53,8 @@ namespace MutualBank.Controllers
             fs.CopyToAsync(fs);
             fs.Close();
 
-            //_mutualBankContext.Cases.Add(NewCase);
-            //_mutualBankContext.SaveChanges();
+            _mutualBankContext.Cases.Add(NewCase);
+            _mutualBankContext.SaveChanges();
         }
         public List<Case> UserCaseModel(bool NeedBit)
         {
