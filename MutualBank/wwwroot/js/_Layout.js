@@ -38,15 +38,22 @@ var vmNav = new Vue({
                 });
         },
         updateTownName: function (e) {
-            var SelectedTown = e.target.innerText;
-            townName.innerText = SelectedTown;
+            console.log("顯示區域");
+            var selectedTown = e.target.innerText;
+            townName.innerText = selectedTown;
+
+            //填入id
+            var selectedId = e.target.dataset.areaid;
+            townName.dataset.areaid = selectedId;
         }
+        
     },
     mounted: function () {
         //初始化縣市
         this.getAreaCity();
     }
 });
+
 
 
 //-RWD Manu控制

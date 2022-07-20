@@ -18,18 +18,16 @@ namespace MutualBank.Controllers
 
         //縣市
         [HttpGet]
-        public List<string> GetAreaCity()
+        public IQueryable<string> GetAreaCity()
         {
 
-            var AreaCity = _mutualBankContext.Areas.Select(x => x.AreaCity).Distinct().ToList();
+            var AreaCity = _mutualBankContext.Areas.Select(x => x.AreaCity).Distinct();
             return AreaCity;
         }
         [HttpGet]
-        public List<Area> GetAreaTown(string AreaCity)
+        public IQueryable<Area> GetAreaTown(string AreaCity)
         {
-            //var AreaTown = _mutualBankContext.Areas.Where(x => x.AreaCity == AreaCity).Select(x => x.AreaTown).ToList();
-            var AreaTown = _mutualBankContext.Areas.Where(x => x.AreaCity == AreaCity).ToList();
-
+            var AreaTown = _mutualBankContext.Areas.Where(x => x.AreaCity == AreaCity);
             return AreaTown;
         }
 
