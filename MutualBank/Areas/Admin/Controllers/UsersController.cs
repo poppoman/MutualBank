@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MutualBank.Areas.Admin.Models;
 using MutualBank.Models;
 
 namespace MutualBank.Areas.Admin.Controllers
@@ -23,10 +24,11 @@ namespace MutualBank.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
               return _context.Users != null ? 
-                          View(await _context.Users.ToListAsync()) :
+                          View( _context.Users) :
                           Problem("Entity set 'MutualBankContext.Users'  is null.");
         }
 
+        
         // GET: Admin/Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -41,7 +43,7 @@ namespace MutualBank.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.Id = id;
             return View(user);
         }
 
@@ -70,18 +72,30 @@ namespace MutualBank.Areas.Admin.Controllers
         // GET: Admin/Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var vm = new UserVM();
+            vm.UserSex = new List<Models.ViewModel.BooltoDrop>
+            {
+                new Models.ViewModel.BooltoDrop { isTrue=false, Text="女" },
+                new Models.ViewModel.BooltoDrop { isTrue=true, Text="男" }
+            };
             if (id == null || _context.Users == null)
             {
                 return NotFound();
             }
-
             var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
                 return NotFound();
             }
-            return View(user);
+            return View(vm);
         }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, UserVM vm)
+        //{
+
+        //}
 
         // POST: Admin/Users/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.

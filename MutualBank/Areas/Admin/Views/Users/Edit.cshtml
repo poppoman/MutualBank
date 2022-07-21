@@ -1,4 +1,5 @@
-﻿@model MutualBank.Models.User    //User型別
+﻿@*@model MutualBank.Areas.Admin.Models.UserVM;    //User型別*@
+@model MutualBank.Models.User;
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
@@ -35,13 +36,9 @@
                 <input asp-for="UserNname" class="form-control" />
                 <span asp-validation-for="UserNname" class="text-danger"></span>
             </div>
-            <div id="gender" class="form-group form-check">                
-                <label asp-for="UserSex" class="form-check-label"></label>           
-                    <select v-model="d1">
-                        <option v-for="item in gender" :value="item.bool">{{item.text}}</option>
-                    </select>
-                    @*@Html.Raw*@
-                <input asp-for="UserSex" v-model="d1" class="visually-hidden"/>
+            <div id="gender" class="form-group form-check">         
+                <label asp-for="UserSex" class="form-check-label"></label>
+                @*@Html.DropDownListFor(model => model.UserSex, SelectList, new { @class = "form-control"})*@
             </div>
             <div class="form-group">
                 <label asp-for="UserHphoto" class="control-label"></label>
@@ -105,33 +102,5 @@
 </div>
 
 @section Scripts{
-    <script>
-        var a = "@Newtonsoft.Json.JsonConvert.SerializeObject(Model)";
-        var vm = new Vue({
-            el: '#gender',
-            data:{
-                d1:"",
-                inp1: "",
-                gender:[
-                    {val: 0, bool: false, text:"女"},
-                    {val: 1, bool: true, text:"男"}
-                ]
-            },
-            methods:{
-                chinput:function(e){
-                    console.log("changed");
-                    // var x = e.target.value;
-                    // this.inp1 = x;
-                    // $('#gender input').prop('checked', x);
-                }
-            },
-            watch: {
-                d1: function(nval,oval) { 
-                    if(nval != oval) {
-                        console.log(d1);
-                    }
-                },
-            }
-        })
-    </script>
+    
 }
