@@ -39,6 +39,12 @@ namespace MutualBank.Controllers
                     LoginPwd = usergister.LoginPwd,
                     LoginEmail = usergister.LoginEmail
                 };
+                var newuser2 = new User
+                {
+                    UserEmail = usergister.LoginEmail,
+                    UserNname = usergister.LoginName,
+                    UserId = user.LoginId
+                };
                 if (usergister.LoginPwd != usergister.ConfirmPwd)
                 {
                     ViewBag.message = "確認密碼不一致";

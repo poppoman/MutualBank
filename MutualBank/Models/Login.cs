@@ -10,5 +10,7 @@ namespace MutualBank.Models
         public string LoginPwd { get; set; } = null!;
         public string LoginEmail { get; set; } = null!;
         public bool LoginLevel { get; set; }
+        public DateTime LoginAddDate { get; set; }
+        public bool LoginActive { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MutualBank.Models;
 using System.Diagnostics;
 
@@ -18,69 +19,78 @@ namespace MutualBank.Controllers
         public IActionResult Index()
         {
             ViewBag.Tags = _mutualBankContext.Skills.OrderBy(x => x.SkillId).ToList();
-            var Model = _mutualBankContext.Cases.ToList();
+            var Model = _mutualBankContext.Cases.Include("CaseSkil")
+                .Select(x => new CaseViewModel
+                {
+                    CaseId = x.CaseId,
+                    CaseNeedHelp = x.CaseNeedHelp,
+                    CaseReleaseDate = x.CaseReleaseDate,
+                    CaseExpireDate = x.CaseExpireDate,
+                    CaseTitle = x.CaseTitle,
+                    CaseIntroduction = x.CaseIntroduction,
+                    CasePhoto = x.CasePhoto,
+                    CaseSerDate = x.CaseSerDate,
+                    CaseSerArea = x.CaseSerArea,
+                    CaseSkillId = x.CaseSkil.SkillId,
+                    CaseSkillName = x.CaseSkil.SkillName,
+                    CaseUserId = x.CaseUser.UserId,
+                    CaseUserName = x.CaseUser.UserFname.Concat(x.CaseUser.UserLname).ToString(),
+
+                });
             return View(Model);
         }
         public IActionResult Search(SearchKeyword Search)
         {
             ViewBag.Tags = _mutualBankContext.Skills.OrderBy(x => x.SkillId).ToList();
-            var Model = new List<Case> { };
+            ViewBag.Area = $"{Search.AreaCity} {Search.AreaTown}";
+            var Model = new List<CaseViewModel>{ };
 
             var AreaId = -1;
-            if (Search.AreaTown == null | Search.AreaTown=="區域")
+            if (Search.AreaTown == null | Search.AreaTown == "區域")
             {
+                ViewBag.Area = $"{Search.AreaCity}";
                 AreaId = _mutualBankContext.Areas.Where(x => x.AreaCity == Search.AreaCity).Select(x => x.AreaId).FirstOrDefault();
             }
-            else 
+            else
             {
+                ViewBag.Area = $"{Search.AreaCity} {Search.AreaTown}";
                 AreaId = _mutualBankContext.Areas.Where(x => x.AreaTown == Search.AreaTown).Select(x => x.AreaId).FirstOrDefault();
             }
-            var AreaCase = _mutualBankContext.Cases.Where(x => x.CaseSerArea == AreaId).ToList();
+            var AreaModel = _mutualBankContext.Cases.Include("CaseSkil").Where(x => x.CaseSerArea == AreaId).Select(x => new CaseViewModel
+            {
+                CaseId = x.CaseId,
+                CaseNeedHelp = x.CaseNeedHelp,
+                CaseReleaseDate = x.CaseReleaseDate,
+                CaseExpireDate = x.CaseExpireDate,
+                CaseTitle = x.CaseTitle,
+                CaseIntroduction = x.CaseIntroduction,
+                CasePhoto = x.CasePhoto,
+                CaseSerDate = x.CaseSerDate,
+                CaseSerArea = x.CaseSerArea,
+                CaseSkillId = x.CaseSkil.SkillId,
+                CaseSkillName = x.CaseSkil.SkillName,
+                CaseUserId = x.CaseUser.UserId,
+                CaseUserName = x.CaseUser.UserFname.Concat(x.CaseUser.UserLname).ToString(),
+
+            }).ToList();
 
             if (Search.Keyword == null)
             {
-                Model = AreaCase;
+                Model = AreaModel;
             }
             else 
             {
-                foreach (var c in AreaCase)
+                foreach (var c in AreaModel)
                 {
                     if (c.CaseTitle.Contains(Search.Keyword) | c.CaseIntroduction.Contains(Search.Keyword))
                     {
                         Model.Add(c);
                     }
                 }
+
             }
 
             return View("Index", Model);
-        }
-
-        [HttpGet]
-        public String GetSkillName(int SkillId)
-        {
-            var TagName = _mutualBankContext.Skills.Where(x => x.SkillId == SkillId).Select(x => x.SkillName).FirstOrDefault();
-            if (TagName == null)
-            {
-                TagName = "未分類";
-            }
-            return TagName;
-        }
-        
-
-        //篩選功能
-        //根據需求或技能
-        [HttpGet]
-        public List<Case> GetTypeModel(bool Bit)
-        {
-            var Model = _mutualBankContext.Cases.Where(x => x.CaseNeedHelp == Bit).ToList();
-            return Model;
-        }
-        //根據技能標籤
-        [HttpGet]
-        public List<Case> GetTagModel(int SkillId)
-        {
-            var Model = _mutualBankContext.Cases.Where(x => x.CaseSkilId == SkillId).ToList();
-            return Model;
         }
 
         public IActionResult Privacy()

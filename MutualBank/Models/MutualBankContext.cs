@@ -24,14 +24,14 @@ namespace MutualBank.Models
         public virtual DbSet<Skill> Skills { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
 
-//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//        {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//                optionsBuilder.UseSqlServer("Data Source=61.216.13.147,18349;Initial Catalog=MutualBank;Persist Security Info=True;User ID=TGM101;Password=TGM@5832");
-//            }
-//        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Data Source=61.216.13.147,18349;Initial Catalog=MutualBank;Persist Security Info=True;User ID=TGM101;Password=TGM@5832");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -58,7 +58,8 @@ namespace MutualBank.Models
 
                 entity.Property(e => e.CaseAddDate)
                     .HasColumnType("datetime")
-                    .HasColumnName("Case_AddDate");
+                    .HasColumnName("Case_AddDate")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.CaseClosedDate)
                     .HasColumnType("datetime")
@@ -121,6 +122,13 @@ namespace MutualBank.Models
 
                 entity.Property(e => e.LoginId).HasColumnName("Login_ID");
 
+                entity.Property(e => e.LoginActive).HasColumnName("Login_Active");
+
+                entity.Property(e => e.LoginAddDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("Login_AddDate")
+                    .HasDefaultValueSql("(getdate())");
+
                 entity.Property(e => e.LoginEmail)
                     .HasMaxLength(50)
                     .HasColumnName("Login_Email");
@@ -146,7 +154,8 @@ namespace MutualBank.Models
 
                 entity.Property(e => e.MsgAddDate)
                     .HasColumnType("datetime")
-                    .HasColumnName("Msg_AddDate");
+                    .HasColumnName("Msg_AddDate")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.MsgCaseId).HasColumnName("Msg_CaseID");
 
@@ -155,6 +164,16 @@ namespace MutualBank.Models
                     .HasColumnName("Msg_Content");
 
                 entity.Property(e => e.MsgUserId).HasColumnName("Msg_UserID");
+
+                entity.HasOne(d => d.MsgCase)
+                    .WithMany(p => p.Messages)
+                    .HasForeignKey(d => d.MsgCaseId)
+                    .HasConstraintName("FK_Message_Case");
+
+                entity.HasOne(d => d.MsgUser)
+                    .WithMany(p => p.Messages)
+                    .HasForeignKey(d => d.MsgUserId)
+                    .HasConstraintName("FK_Message_Users");
             });
 
             modelBuilder.Entity<Point>(entity =>
@@ -163,7 +182,8 @@ namespace MutualBank.Models
 
                 entity.Property(e => e.PointAddDate)
                     .HasColumnType("datetime")
-                    .HasColumnName("Point_AddDate");
+                    .HasColumnName("Point_AddDate")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.PointCaseId).HasColumnName("Point_CaseID");
 
@@ -189,7 +209,9 @@ namespace MutualBank.Models
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.Property(e => e.UserId).HasColumnName("User_ID");
+                entity.Property(e => e.UserId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("User_ID");
 
                 entity.Property(e => e.UserAreaId).HasColumnName("User_AreaID");
 
@@ -204,14 +226,15 @@ namespace MutualBank.Models
                 entity.Property(e => e.UserEmail)
                     .HasMaxLength(30)
                     .IsUnicode(false)
-                    .HasColumnName("User_Email");
+                    .HasColumnName("User_Email")
+                    .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.UserFaculty)
                     .HasMaxLength(20)
                     .HasColumnName("User_Faculty");
 
                 entity.Property(e => e.UserFname)
-                    .HasMaxLength(5)
+                    .HasMaxLength(20)
                     .HasColumnName("User_FName");
 
                 entity.Property(e => e.UserHphoto)
@@ -220,7 +243,7 @@ namespace MutualBank.Models
                     .HasColumnName("User_HPhoto");
 
                 entity.Property(e => e.UserLname)
-                    .HasMaxLength(5)
+                    .HasMaxLength(20)
                     .HasColumnName("User_LName");
 
                 entity.Property(e => e.UserNname)

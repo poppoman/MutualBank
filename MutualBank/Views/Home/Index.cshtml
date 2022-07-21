@@ -1,10 +1,10 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Home Page";
 }
 @{
     //初始化Case
-    var dataString = Json.Serialize(@Model);
+    var dataString = Newtonsoft.Json.JsonConvert.SerializeObject(@Model);
+    var tagString = Newtonsoft.Json.JsonConvert.SerializeObject((List<Skill>)ViewBag.Tags);
 }
 
 @section Styles{
@@ -14,28 +14,34 @@
 
 
     <div class="wrap" id="home">
-        <div class="home">
-            <div class="typeBar">
-                <button type="button" class="butn help" name="type" data-bit=true v-on:click="getTypeModel">需要幫忙</button>
-                <button type="button" class="butn skill" name="type" data-bit=false v-on:click="getTypeModel">提供技能</button>
-            </div>
+        <div id="searchLabel">
+            <div id="areaLabel">
+                @if (@ViewBag.Area != null)
+            {
+                <span class="searchLabel">@ViewBag.Area<button class="searchLabelClose">x</button></span>
+            }
+        </div>
+        <div id="typeLabel"></div>
+        <div id="tagLabel"></div>
 
-            <div class="tagBar">
-                <div class="tags">
-                    @{
-                    foreach (var item in (List<Skill>)ViewBag.Tags)
-                    {
-                                   <span class="tagName" v-on:click="getTagModel" data-skillid="@item.SkillId">@item.SkillName</span>
-                    }
-                }
+    </div>
+    <div class="home">
+        <div class="typeBar">
+            <button type="button" class="butn help" name="type" data-bit=true v-on:click="getTypeModel">需要幫忙</button>
+            <button type="button" class="butn skill" name="type" data-bit=false v-on:click="getTypeModel">提供技能</button>
+        </div>
+
+        <div class="tagBar">
+            <div class="tags">
+                <span class="tagName" v-for="item in tags" v-on:click="getTagModel" v-bind:data-skillid="item.SkillId">{{item.SkillName}}</span>
             </div>
 
             <div class="sort">
                 <span>排序：</span>
-                <select class="sortSelect">
-                    <option value="">發佈時間</option>
-                    <option value="">留言數</option>
-                    <option value="">期限</option>
+                <select class="sortSelect" id="sortModel">
+                    <option>發佈時間</option>
+                    <option>留言數</option>
+                    <option>期限</option>
                 </select>
                 <div class="icon">
                     <i class="fa-solid fa-arrow-down-short-wide"></i>
@@ -45,18 +51,18 @@
         </div>
         <div class="container-fluid">
             <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-4">
-                <div class="col" v-for="item in caseModel">
+                <div class="col" v-for="item in caseViewModel">
                     <div class="card  mb-2 w-100">
                         <div class="imgBx">
                             <img src="https://picsum.photos/id/96/400/400" class="card-img-top p-2" alt="圖片">
                         </div>
-                        <span>{{item.caseSkilId | showSkillName}}</span>
+                        <span>{{item.CaseSkillName}}</span>
 
                         <div class="card-body">
-                            <h5 class="card-title" id="CaseTitle">{{item.caseTitle}}</h5>
-                            <div style="height:50px;"><p class="card-text mt-1">{{item.caseIntroduction}}</p></div>
+                            <h5 class="card-title">{{item.CaseTitle}}</h5>
+                            <div style="height:50px;"><p class="card-text mt-1">{{item.CaseIntroduction}}</p></div>
                             <div class="d-flex  justify-content-center">
-                                <a class="btn" :data-caseid="item.caseId">留言</a>
+                                <a class="btn" :data-caseid="item.CaseId">留言</a>
                             </div>
                         </div>
                     </div>
@@ -69,83 +75,65 @@
 
 
 @section Scripts{
-    
-    <script>
-        var caseModel = @Html.Raw(dataString);
 
+    <script>
+        //初始化標籤綁定監聽事件
+        //var closeLabels = document.querySelectorAll(".searchLabelClose");
+        //closeLabels.forEach(x => x.addEventListener("click", closeLabel()));
+
+        var caseModel = @Html.Raw(dataString);
+        var tags = @Html.Raw(tagString);
+console.log(tags);
         //Vue
         var vmIndex = new Vue({
             el: "#home",
             data: {
-                caseModel: []
+                caseViewModel: caseModel,
+                caseResModel: caseModel,
+                tags:tags
             },
             methods: {
+                //建立篩選標籤到畫面
+                appendSortLabel: function(posId, txt) {
+                    posId.innerHTML = "";
+                    //posId.innerHTML =
+                    //    `<span class='searchLabel'>${txt}<button class='searchLabelClose'>x</button></span>`;
+                    var span = document.createElement("span");
+                    span.classList.add("searchLabel");
+                    span.innerText = txt;
+                    var button = document.createElement("button");
+                    button.classList.add("searchLabelClose");
+                    button.addEventListener("click", vmIndex.closeLabel);
+                    button.innerText = "x";
+                    span.append(button);
+                    posId.append(span);
+                },
+                closeLabel: function(e) {
+                    var parentDiv = e.target.parentElement.parentElement;
+                    parentDiv.innerHTML = "";
+                },
+                filterTypeModel: function(b) {
+                    return vmIndex.caseResModel.filter(x => x.CaseNeedHelp == b);
+                },
                 //依需求或技能拿模型
                 getTypeModel: function(e) {
-                    var bit = e.target.dataset.bit;
-                    $.ajax({
-                        url: "@Url.Action("GetTypeModel","Home")",
-                        type: "GET",
-                        data: {
-                            Bit: bit
-                        }
-                    })
-                        .done(function(res) {
-                            vmIndex.caseModel = res;
-                            console.log(res);
-                        })
-                        .fail(function(res) {
-                            console.log("fail");
-                        });
+                    var bitString = e.target.dataset.bit;
+                    var bit = bitString == "true" ? true : false;
+                    vmIndex.appendSortLabel(typeLabel, e.target.innerText);
+                    vmIndex.caseViewModel = vmIndex.filterTypeModel(bit);
+                },
+                filterTagModel: function(n) {
+                    return vmIndex.caseResModel.filter(x => x.CaseSkillId == n);
                 },
                 //依技能分類拿模型
                 getTagModel: function(e) {
                     var skillid = e.target.dataset.skillid;
-                    $.ajax({
-                        url: "@Url.Action("GetTagModel","Home")",
-                        type: "GET",
-                        data: {
-                            SkillId: skillid
-                        }
-                    })
-                        .done(function(res) {
-                            vmIndex.caseModel = res;
-                            console.log(res);
-
-                        })
-                        .fail(function(res) {
-                            console.log("fail");
-                        });
+                    vmIndex.appendSortLabel(tagLabel, e.target.innerText);
+                    vmIndex.caseViewModel = vmIndex.filterTagModel(skillid);
                 },
-
-
-            },
-            filters: {
-                //顯示技能名稱，而非編號
-                showSkillName: function(id) {
-                    var skillName = "X";
-                    $.ajax({
-
-                        url: "@Url.Action("GetSkillName","Home")",
-                        type: "GET",
-                        async: false,
-                        data: {
-                            SkillId: id
-                        }
-                    })
-                        .done(function(res) {
-                            skillName = res;
-                        })
-                        .fail(function(res) {
-                            skillName = "無分類"
-                        });
-                    return skillName;
-                }
-
 
             },
             created() {
-                this.caseModel = caseModel;
             },
 
 
@@ -159,7 +147,7 @@
             iconSort.classList.toggle('fa-arrow-down-short-wide');
             iconSort.classList.toggle('fa-arrow-up-short-wide');
         });
-        
+
 
 
     </script>

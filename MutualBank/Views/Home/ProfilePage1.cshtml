@@ -21,7 +21,7 @@
    
       <!-- 個人主頁  -->
       <section class="profileBackground" >
-        <div class="container py-4">     <!-- 主頁與標頭距離 -->
+        <div class="container py-4" id="userDetails">     <!-- 主頁與標頭距離 -->
           <div class="row">
             <div class="col">
             </div>
@@ -31,12 +31,14 @@
             <div class="col-lg-4" >
               <div class="card mb-4" id="namecard1" >
                 <div class="card-body text-center " id="namecard2"  >
-                  <img src="~/Img/nav/ana3.png" alt="avatar"
-                    class="rounded-circle img-fluid" style="width: 150px;">
-                  <h5 class="my-3">{ User_LName } { User_FName }</h5>
-                  <p class="text-muted mb-1">{ 暱稱 }</p>
-                  <p class="text-muted mb-4">{ 座 右 銘 }</p>
-                  <button type="button" class="btn btn-primary">編輯</button>
+                  <img src="~/Img/nav/ana3.png" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+                  <h5 class="my-3">{{user.userLname}}{{user.userFname}}  </h5>
+                  <label for="UserNname" class="form-label text-muted mb-1">{{user.userNname}}</label>
+                  @* <input type="text" class="form-control" id="UserNname" placeholder="" v-model="user.UserNname" required="">  *@
+                  @* <p class="text-muted mb-1"  > 暱稱 </p> *@
+                  @* <p class="text-muted mb-4">{ 座 右 銘 }</p> *@
+                  <hr>
+                  <button type="button" class="btn btn-primary"> 編輯 </button>
                 </div>
               </div>
               <!-- 左方 選單 -->
@@ -46,7 +48,7 @@
                   <ul id="profileitems" class="list-group list-group-flush rounded-3"   >
                     
                     <li class="list-group-item d-flex justify-content-center align-items-center p-3 "   >                    
-                      <button  id="" class="mb-0 Proitemsbtn"    >   
+                      <button  id="Proitemsbtn" class="mb-0 "    >   
                         <svg xmlns="http://www.w3.org/2000/svg" width="50" height="25"  fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
                         <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                         <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z"/>
@@ -54,7 +56,7 @@
                     </li>
 
                     <li class="list-group-item d-flex justify-content-center align-items-center p-3 "   >
-                        <button  id="" class="mb-0 Proitemsbtn" >
+                        <button  id="Proitemsbtn" class="mb-0" >
                           <svg xmlns="http://www.w3.org/2000/svg" width="50" height="25" fill="currentColor" class="bi bi-palette" viewBox="0 0 16 16">
                             <path d="M8 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm4 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM5.5 7a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
                             <path d="M16 8c0 3.15-1.866 2.585-3.567 2.07C11.42 9.763 10.465 9.473 10 10c-.603.683-.475 1.819-.351 2.92C9.826 14.495 9.996 16 8 16a8 8 0 1 1 8-8zm-8 7c.611 0 .654-.171.655-.176.078-.146.124-.464.07-1.119-.014-.168-.037-.37-.061-.591-.052-.464-.112-1.005-.118-1.462-.01-.707.083-1.61.704-2.314.369-.417.845-.578 1.272-.618.404-.038.812.026 1.16.104.343.077.702.186 1.025.284l.028.008c.346.105.658.199.953.266.653.148.904.083.991.024C14.717 9.38 15 9.161 15 8a7 7 0 1 0-7 7z"/>
@@ -62,7 +64,7 @@
                       </li>
 
                       <li class="list-group-item d-flex justify-content-center align-items-center p-3 " >
-                        <button  id="" class="mb-0 Proitemsbtn" >
+                        <button  id="Proitemsbtn" class="mb-0" >
                             <svg xmlns="http://www.w3.org/2000/svg" width="50" height="25" fill="currentColor" class="bi bi-question-octagon" viewBox="0 0 16 16">
                                 <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353L4.54.146zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1H5.1z"/>
                                 <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
@@ -70,7 +72,7 @@
                       </li>
 
                       <li class="list-group-item d-flex justify-content-center align-items-center p-3 " >
-                        <button  id="" class="mb-0 Proitemsbtn" >
+                        <button  id="Proitemsbtn" class="mb-0" >
                             <svg xmlns="http://www.w3.org/2000/svg" width="50" height="25" fill="currentColor" class="bi bi-chat-dots" viewBox="0 0 16 16">
                                 <path d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
                                 <path d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9.06 9.06 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.437 10.437 0 0 1-.524 2.318l-.003.011a10.722 10.722 0 0 1-.244.637c-.079.186.074.394.273.362a21.673 21.673 0 0 0 .693-.125zm.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6c0 3.193-3.004 6-7 6a8.06 8.06 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a10.97 10.97 0 0 0 .398-2z"/>
@@ -78,7 +80,7 @@
                       </li>
 
                       <li class="list-group-item d-flex justify-content-center align-items-center p-3 "  >
-                        <button  id="" class="mb-0 Proitemsbtn">
+                        <button  id="Proitemsbtn" class="mb-0">
                             <svg xmlns="http://www.w3.org/2000/svg" width="50" height="25" fill="currentColor" class="bi bi-shield-lock" viewBox="0 0 16 16">
                                 <path d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z"/>
                                 <path d="M9.5 6.5a1.5 1.5 0 0 1-1 1.415l.385 1.99a.5.5 0 0 1-.491.595h-.788a.5.5 0 0 1-.49-.595l.384-1.99a1.5 1.5 0 1 1 2-1.415z"/>
@@ -100,7 +102,7 @@
                       <p class="mb-0">性別</p>
                     </div>
                     <div class="col-sm-9">
-                      <p class="text-muted mb-0">男</p>
+                      <label class="text-muted mb-0">{{user.userSex}}  </label>
                     </div>
                   </div>
                   <hr>
@@ -109,7 +111,7 @@
                       <p class="mb-0">電子信箱</p>
                     </div>
                     <div class="col-sm-9">
-                      <p class="text-muted mb-0">MVC+API.gmail.com</p>
+                      <label class="text-muted mb-0">{{user.userEmail}} </label>
                     </div>
                   </div>
 
@@ -119,7 +121,7 @@
                       <p class="mb-0">出生 年/月/日</p>
                     </div>
                     <div class="col-sm-9">
-                      <p class="text-muted mb-0">1995/01/31</p>
+                      <label class="text-muted mb-0">{{user.userBirthday}} </label>
                     </div>
                   </div>
 
@@ -129,7 +131,7 @@
                       <p class="mb-0">居住地</p>
                     </div>
                     <div class="col-sm-9">
-                      <p class="text-muted mb-0">台北市</p>  
+                      <label class="text-muted mb-0">{{user.userAreaId}} </label>  
                     </div>
                   </div>
 
@@ -139,7 +141,7 @@
                       <p class="mb-0">工作經歷</p>
                     </div>
                     <div class="col-sm-9">
-                      <p class="text-muted mb-0">洗累股份有限公司</p>
+                      <label class="text-muted mb-0">{{user.userCv}} </label>
                     </div>
                   </div>
                   <hr>
@@ -149,16 +151,13 @@
                       <p class="mb-0">個人簡介</p>
                     </div>
                     <div class="col-sm-9">
-                      <p class="text-muted mb-0">晶圓代工大廠台積電(2330)公布2022年6月自結合併營收1758.74億元，雖月減5.29％、仍年增18.46％，改寫歷史次高。第二季合併營收5341.4億元，季增8.77％、年增達43.53％，連8季改寫新高。累計上半年合併營收1.02兆元、年增達39.57％，續創同期新高。</p>
+                      <label class="text-muted mb-0">晶圓代工大廠台積電(2330)公布2022年6月自結合併營收1758.74億元，雖月減5.29％、仍年增18.46％，改寫歷史次高。第二季合併營收5341.4億元，季增8.77％、年增達43.53％，連8季改寫新高。累計上半年合併營收1.02兆元、年增達39.57％，續創同期新高。</label>
                     </div>
                   </div>
                 </div>
               </div>           
             </div>
-
-
-              
-               
+                        
             </div>
           </div>
         </div>
@@ -168,5 +167,41 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
   
 </body>
+
+  <script>
+    var ve = new Vue({
+      data:{
+        user:[],
+        apple: "123"
+      },
+      created: function(){
+        let self = this;
+        fetch("/api/UsersController/getusers").then(function (result) {
+                console.log("result =", result)
+                    return result.json();
+                })
+                .then(function (mydata) {
+                    console.log("api");
+                    console.log(self);
+                    self.user = mydata;
+                })
+        },
+        /* methods:{
+          UpdateUserDetails:function(){
+            var newData ={
+              UserLname : this.user.UserLname,
+
+            }
+          }
+        } */
+
+    }).$mount('#userDetails')
+  
+  
+  </script>
+
+
+
+
 
 </html>

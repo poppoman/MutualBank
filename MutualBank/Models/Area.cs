@@ -9,6 +9,7 @@ namespace MutualBank.Models
         {
             Cases = new HashSet<Case>();
         }
+
         public int AreaId { get; set; }
         public string AreaCity { get; set; } = null!;
         public string AreaTown { get; set; } = null!;

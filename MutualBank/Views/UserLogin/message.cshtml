@@ -1,27 +1,27 @@
 ﻿<section id="message">
-    <div class="container">
+    <div id="mes" class="container">
         <div class="row">
             <div class="col-3">
-                <div class="bg-white" ">
+                <div class="bg-white">
                     <ul>
                         <li>
-                            <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+                            <button v-on:click="getHelpyou" class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
                                 提供技能
                             </button>
                             <div class="collapse" id="dashboard-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                    <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">技能1</a></li>
+                                    <li v-for="item in helpyou"><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">{{item}}</a></li>
 
                                 </ul>
                             </div>
                         </li>
-                        <li >
-                            <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+                        <li>
+                            <button v-on:click="getHelpme" class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
                                 需要幫忙
                             </button>
                             <div class="collapse" id="orders-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                    <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">需求1</a></li>
+                                    <li  v-for="item in helpme"><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">{{item}}</a></li>
 
                                 </ul>
                             </div>
@@ -55,6 +55,44 @@
             </div>
         </div>
     </div>
-    </div>
-
 </section>
+
+<script>
+    let vm = new Vue({
+    el: "#mes",
+    data:
+    {
+        helpme: [],
+        helpyou: [],
+    },
+    methods:
+    {
+        getHelpme: function ()
+        {
+            let self = this;
+            fetch(`/api/Confirm/helpme?id=${@User.Identity.Name}`)
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(res) {
+                console.log("m = ", res);
+                self.helpme = res.casetitle;
+            });
+        },
+        getHelpyou: function() 
+        {
+            let self = this;
+            fetch(`/api/Confirm/helpyou?id=${@User.Identity.Name}`)
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(res) {
+                console.log("m = ", res);
+                self.helpyou = res.casetitle;
+            });
+        }
+     },
+   
+    });
+
+</script>

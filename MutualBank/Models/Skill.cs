@@ -9,10 +9,10 @@ namespace MutualBank.Models
         {
             Cases = new HashSet<Case>();
         }
+
         public int SkillId { get; set; }
         public string SkillName { get; set; } = null!;
 
         public virtual ICollection<Case> Cases { get; set; }
-
     }
 }
