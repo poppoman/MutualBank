@@ -2,9 +2,9 @@
 {
     public class MemberModel
     {
-        public int userid { get; set; }
         public IEnumerable<string> casetitle { get; set; }
-        public IQueryable<bool> caseNeed { get; set; }
+
+        public IQueryable<int> caseid { get; set; }
     }
 }
 

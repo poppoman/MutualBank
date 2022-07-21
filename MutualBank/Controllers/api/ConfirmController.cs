@@ -27,16 +27,27 @@ namespace MutualBank.Controllers.api
             _configuration = configuration;
         }
 		[HttpGet]
-		public ActionResult<MemberModel> message(string id)
+		public ActionResult<MemberModel> helpme(string id)
 		{
 			var userid = _mutualBankContext.Logins.Where(x => x.LoginName == id).Select(x => x.LoginId).FirstOrDefault();
-			var casetitle =  (_mutualBankContext.Cases.Where(x => x.CaseUserId == userid).Select(x => x.CaseTitle)).AsEnumerable();
-			var caseNeed = _mutualBankContext.Cases.Where(x => x.CaseUserId == userid).Select(x => x.CaseNeedHelp);
-			MemberModel mm = new MemberModel();
-			mm.userid = userid;
-			mm.caseNeed = caseNeed;
-			mm.casetitle = casetitle;
-			return mm;
+			var casetitle = (_mutualBankContext.Cases.Where(x => x.CaseUserId == userid && x.CaseNeedHelp==true).Select(x => x.CaseTitle));
+			var caseid = (_mutualBankContext.Cases.Where(x => x.CaseUserId == userid && x.CaseNeedHelp == true).Select(x => x.CaseId));
+			MemberModel helpme = new MemberModel();
+			helpme.casetitle = casetitle;
+			helpme.caseid = caseid;
+			return helpme;
+		}
+
+		[HttpGet]
+		public ActionResult<MemberModel> helpyou(string id)
+		{
+			var userid = _mutualBankContext.Logins.Where(x => x.LoginName == id).Select(x => x.LoginId).FirstOrDefault();
+			var casetitle = (_mutualBankContext.Cases.Where(x => x.CaseUserId == userid && x.CaseNeedHelp==false).Select(x => x.CaseTitle));
+			var caseid = (_mutualBankContext.Cases.Where(x => x.CaseUserId == userid && x.CaseNeedHelp == false).Select(x => x.CaseId));
+			MemberModel helpyou = new MemberModel();
+			helpyou.casetitle = casetitle;
+			helpyou.caseid = caseid;
+			return helpyou;
 		}
 		[HttpGet]
         public ActionResult<Error> ConfirmAccount(string id)
