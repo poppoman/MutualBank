@@ -5,7 +5,10 @@ namespace MutualBank.Models
 {
     public partial class Case
     {
-
+        public Case()
+        {
+            Messages = new HashSet<Message>();
+        }
         public int CaseId { get; set; }
         public int CaseUserId { get; set; }
         public bool CaseNeedHelp { get; set; }
@@ -24,5 +27,7 @@ namespace MutualBank.Models
         public virtual Area? CaseSerAreaNavigation { get; set; }
         public virtual Skill CaseSkil { get; set; } = null!;
         public virtual User CaseUser { get; set; } = null!;
+
+        public virtual ICollection<Message> Messages { get; set; }
     }
 }

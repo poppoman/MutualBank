@@ -8,6 +8,7 @@ namespace MutualBank.Models
         public User()
         {
             Cases = new HashSet<Case>();
+            Messages = new HashSet<Message>();
         }
         public int UserId { get; set; }
         public string UserLname { get; set; } = null!;
@@ -26,5 +27,6 @@ namespace MutualBank.Models
         public int UserPoint { get; set; }
 
         public virtual ICollection<Case> Cases { get; set; }
+        public virtual ICollection<Message> Messages { get; set; }
     }
 }

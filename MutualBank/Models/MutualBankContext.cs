@@ -155,6 +155,16 @@ namespace MutualBank.Models
                     .HasColumnName("Msg_Content");
 
                 entity.Property(e => e.MsgUserId).HasColumnName("Msg_UserID");
+
+                entity.HasOne(d => d.MsgCase)
+                    .WithMany(p => p.Messages)
+                    .HasForeignKey(d => d.MsgCaseId)
+                    .HasConstraintName("FK_Message_Case");
+
+                entity.HasOne(d => d.MsgUser)
+                    .WithMany(p => p.Messages)
+                    .HasForeignKey(d => d.MsgUserId)
+                    .HasConstraintName("FK_Message_Users");
             });
 
             modelBuilder.Entity<Point>(entity =>
