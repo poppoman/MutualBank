@@ -1,11 +1,9 @@
-﻿@*@model MutualBank.Areas.Admin.Models.UserVM;    //User型別*@
-@model MutualBank.Models.User;
+﻿@model MutualBank.Models.User;
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     ViewData["Title"] = "Edit";
 }
-<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 
 <h1>Edit</h1>
 
@@ -17,13 +15,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="UserId" />
             <div class="form-group">
-                <label  class="control-label"></label>
-                <input  class="form-control" />
-                <div>@Model.UserLname</div>
-                @{
-
-                    Model.UserLname.ToString();
-                }
+                <div>@Model.UserId</div>                
                 <span asp-validation-for="UserLname" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -38,7 +30,8 @@
             </div>
             <div id="gender" class="form-group form-check">         
                 <label asp-for="UserSex" class="form-check-label"></label>
-                @*@Html.DropDownListFor(model => model.UserSex, SelectList, new { @class = "form-control"})*@
+                <select asp-for="UserSex" class="form-control" />
+                <span asp-validation-for="UserSex" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="UserHphoto" class="control-label"></label>

@@ -87,7 +87,7 @@ namespace MutualBank.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            return View(vm);
+            return View(user);
         }
 
         //[HttpPost]
