@@ -1,0 +1,51 @@
+﻿@model IEnumerable<MutualBank.Models.Point>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1>點數管理 - 首頁</h1>
+</div>
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.PointId)</th>                
+                <th>@Html.DisplayNameFor(model => model.PointCaseId)</th>
+                <th>@Html.DisplayNameFor(model => model.PointUserId)</th>
+                <th>@Html.DisplayNameFor(model => model.PointAddDate)</th>
+                <th>@Html.DisplayNameFor(model => model.PointNeedHelp)</th>
+                <th>@Html.DisplayNameFor(model => model.PointQuantity)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PointId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PointCaseId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PointUserId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PointAddDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PointNeedHelp)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PointQuantity)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
