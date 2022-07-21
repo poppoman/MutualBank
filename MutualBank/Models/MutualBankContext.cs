@@ -73,7 +73,9 @@ namespace MutualBank.Models
                     .HasMaxLength(200)
                     .HasColumnName("Case_Introduction");
 
-                entity.Property(e => e.CaseNeedHelp).HasColumnName("Case_NeedHelp");
+                entity.Property(e => e.CaseNeedHelp)
+                    .HasColumnName("Case_NeedHelp")
+                    .HasComment("0提供 1需要");
 
                 entity.Property(e => e.CasePhoto)
                     .HasMaxLength(50)
@@ -178,7 +180,9 @@ namespace MutualBank.Models
 
             modelBuilder.Entity<Point>(entity =>
             {
-                entity.HasNoKey();
+                entity.Property(e => e.PointId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("Point_ID");
 
                 entity.Property(e => e.PointAddDate)
                     .HasColumnType("datetime")
@@ -187,13 +191,17 @@ namespace MutualBank.Models
 
                 entity.Property(e => e.PointCaseId).HasColumnName("Point_CaseID");
 
-                entity.Property(e => e.PointId).HasColumnName("Point_ID");
-
                 entity.Property(e => e.PointNeedHelp).HasColumnName("Point_NeedHelp");
 
                 entity.Property(e => e.PointQuantity).HasColumnName("Point_Quantity");
 
                 entity.Property(e => e.PointUserId).HasColumnName("Point_UserID");
+
+                entity.HasOne(d => d.PointCase)
+                    .WithMany(p => p.Points)
+                    .HasForeignKey(d => d.PointCaseId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Points_Case");
             });
 
             modelBuilder.Entity<Skill>(entity =>
@@ -220,7 +228,7 @@ namespace MutualBank.Models
                     .HasColumnName("User_Birthday");
 
                 entity.Property(e => e.UserCv)
-                    .HasMaxLength(50)
+                    .HasMaxLength(200)
                     .HasColumnName("User_CV");
 
                 entity.Property(e => e.UserEmail)
@@ -253,16 +261,24 @@ namespace MutualBank.Models
                 entity.Property(e => e.UserPoint).HasColumnName("User_Point");
 
                 entity.Property(e => e.UserResume)
-                    .HasMaxLength(50)
+                    .HasMaxLength(200)
                     .HasColumnName("User_Resume");
 
                 entity.Property(e => e.UserSchool)
                     .HasMaxLength(20)
                     .HasColumnName("User_School");
 
-                entity.Property(e => e.UserSex).HasColumnName("User_Sex");
+                entity.Property(e => e.UserSex)
+                    .HasColumnName("User_Sex")
+                    .HasComment("0-女 1-男");
 
                 entity.Property(e => e.UserSkillId).HasColumnName("User_SkillID");
+
+                entity.HasOne(d => d.UserNavigation)
+                    .WithOne(p => p.User)
+                    .HasForeignKey<User>(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Users_Login");
             });
 
             OnModelCreatingPartial(modelBuilder);
