@@ -15,6 +15,9 @@ namespace MutualBank.Models
         public string? UserLname { get; set; }
         public string? UserFname { get; set; }
         public string? UserNname { get; set; }
+        /// <summary>
+        /// 0-女 1-男
+        /// </summary>
         public bool? UserSex { get; set; }
         public string? UserHphoto { get; set; }
         public string? UserEmail { get; set; }
@@ -27,6 +30,7 @@ namespace MutualBank.Models
         public string? UserFaculty { get; set; }
         public int UserPoint { get; set; }
 
+        public virtual Login UserNavigation { get; set; } = null!;
         public virtual ICollection<Case> Cases { get; set; }
         public virtual ICollection<Message> Messages { get; set; }
     }

@@ -12,5 +12,7 @@ namespace MutualBank.Models
         public bool LoginLevel { get; set; }
         public DateTime LoginAddDate { get; set; }
         public bool LoginActive { get; set; }
+
+        public virtual User User { get; set; } = null!;
     }
 }
