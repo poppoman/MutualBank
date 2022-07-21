@@ -72,12 +72,7 @@ namespace MutualBank.Areas.Admin.Controllers
         // GET: Admin/Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            var vm = new UserVM();
-            vm.UserSex = new List<Models.ViewModel.BooltoDrop>
-            {
-                new Models.ViewModel.BooltoDrop { isTrue=false, Text="女" },
-                new Models.ViewModel.BooltoDrop { isTrue=true, Text="男" }
-            };
+            
             if (id == null || _context.Users == null)
             {
                 return NotFound();
@@ -89,13 +84,6 @@ namespace MutualBank.Areas.Admin.Controllers
             }
             return View(user);
         }
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, UserVM vm)
-        //{
-
-        //}
 
         // POST: Admin/Users/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
