@@ -1,0 +1,101 @@
+﻿@model IEnumerable<MutualBank.Models.Case>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CaseNeedHelp)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CaseAddDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CaseReleaseDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CaseExpireDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CaseClosedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CaseTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CaseIntroduction)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CasePhoto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CaseSerDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CaseSerAreaNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CaseSkil)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CaseUser)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CaseNeedHelp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CaseAddDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CaseReleaseDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CaseExpireDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CaseClosedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CaseTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CaseIntroduction)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CasePhoto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CaseSerDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CaseSerAreaNavigation.AreaId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CaseSkil.SkillId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CaseUser.UserId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CaseId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CaseId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CaseId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

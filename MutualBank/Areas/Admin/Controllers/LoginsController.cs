@@ -23,7 +23,7 @@ namespace MutualBank.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
               return _context.Logins != null ? 
-                          View(await _context.Logins.ToListAsync()) :
+                          View( _context.Logins) :
                           Problem("Entity set 'MutualBankContext.Logins'  is null.");
         }
 

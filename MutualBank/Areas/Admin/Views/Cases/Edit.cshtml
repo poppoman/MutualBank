@@ -1,0 +1,89 @@
+﻿@model MutualBank.Models.Case
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Case</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CaseId" />
+            <div class="form-group">
+                <label asp-for="CaseUserId" class="control-label"></label>
+                <select asp-for="CaseUserId" class="form-control" asp-items="ViewBag.CaseUserId"></select>
+                <span asp-validation-for="CaseUserId" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="CaseNeedHelp" /> @Html.DisplayNameFor(model => model.CaseNeedHelp)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="CaseSkilId" class="control-label"></label>
+                <select asp-for="CaseSkilId" class="form-control" asp-items="ViewBag.CaseSkilId"></select>
+                <span asp-validation-for="CaseSkilId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CaseAddDate" class="control-label"></label>
+                <input asp-for="CaseAddDate" class="form-control" />
+                <span asp-validation-for="CaseAddDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CaseReleaseDate" class="control-label"></label>
+                <input asp-for="CaseReleaseDate" class="form-control" />
+                <span asp-validation-for="CaseReleaseDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CaseExpireDate" class="control-label"></label>
+                <input asp-for="CaseExpireDate" class="form-control" />
+                <span asp-validation-for="CaseExpireDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CaseClosedDate" class="control-label"></label>
+                <input asp-for="CaseClosedDate" class="form-control" />
+                <span asp-validation-for="CaseClosedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CaseTitle" class="control-label"></label>
+                <input asp-for="CaseTitle" class="form-control" />
+                <span asp-validation-for="CaseTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CaseIntroduction" class="control-label"></label>
+                <input asp-for="CaseIntroduction" class="form-control" />
+                <span asp-validation-for="CaseIntroduction" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CasePhoto" class="control-label"></label>
+                <input asp-for="CasePhoto" class="form-control" />
+                <span asp-validation-for="CasePhoto" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CaseSerDate" class="control-label"></label>
+                <input asp-for="CaseSerDate" class="form-control" />
+                <span asp-validation-for="CaseSerDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CaseSerArea" class="control-label"></label>
+                <select asp-for="CaseSerArea" class="form-control" asp-items="ViewBag.CaseSerArea"></select>
+                <span asp-validation-for="CaseSerArea" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

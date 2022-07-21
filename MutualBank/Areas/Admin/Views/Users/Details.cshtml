@@ -3,13 +3,14 @@
 
 @{
     ViewData["Title"] = "Details";
+    var id = ViewBag.Id;
 }
-
-<h1>Details</h1>
+<link rel="stylesheet" type="text/css" href="~/css/DataList.css"/>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1>使用者 id: @ViewBag.Id - 詳細資料</h1>
+</div>
 
 <div>
-    <h4>User</h4>
-    <hr />
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.UserLname)
@@ -97,7 +98,12 @@
         </dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.UserId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div class="row">
+    <div class="col-lg-2">
+        <a class="btn btn-lg btn-backtolist" asp-action="Index">Back to List</a>
+
+    </div>
+    <div class="col-lg-2">
+        <a class="btn btn-lg btn-saveyellow" asp-action="Edit" asp-route-id="@Model?.UserId">Edit</a>
+    </div>
 </div>

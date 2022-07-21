@@ -1,0 +1,33 @@
+:root {
+    --white: #fff;
+    --black: #222;
+    --gray: #808080;
+    --help: #FFC54D;
+    --help1: #ffb625;
+    --skill: #5179cf;
+    --skill1: #406ac4;
+    --tag: #67dd55;
+    --bg: #ececec;
+}
+
+.btn-saveyellow {
+  color: #000;
+  background-color: #f39412;
+  border-color: #f39412;
+}
+.btn-saveyellow:hover{
+    color: #fff;
+    background-color: #6e6e6e;
+    border-color: #6e6e6e;
+}
+
+.btn-backtolist {
+    color: #fff;
+    background-color: #878787;
+    border-color: #878787;
+}
+.btn-backtolist:hover{
+    color: #fff;
+    background-color: #6e6e6e;
+    border-color: #6e6e6e;
+}
