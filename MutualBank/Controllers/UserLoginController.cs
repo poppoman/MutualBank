@@ -39,28 +39,21 @@ namespace MutualBank.Controllers
                     LoginPwd = usergister.LoginPwd,
                     LoginEmail = usergister.LoginEmail
                 };
+                _mutualBankContext.Logins.Add(newuser);
+                _mutualBankContext.SaveChanges();
+                var user2 = _mutualBankContext.Logins.Where(u => u.LoginName == usergister.LoginName).Select(u => u.LoginId).FirstOrDefault();
                 var newuser2 = new User
                 {
                     UserEmail = usergister.LoginEmail,
                     UserNname = usergister.LoginName,
-                    UserId = user.LoginId
+                    UserId = user2
                 };
-                if (usergister.LoginPwd != usergister.ConfirmPwd)
-                {
-                    ViewBag.message = "確認密碼不一致";
-                    return View();
-                }
-                else
-                {
-                    _mutualBankContext.Logins.Add(newuser);
+                    _mutualBankContext.Users.Add(newuser2);
                     _mutualBankContext.SaveChanges();
                     return RedirectToAction("Login", "UserLogin");
-                }
-
             }
             else
             {
-                ViewBag.message = "此帳號有人使用過囉";
                 return View();
             }
 
