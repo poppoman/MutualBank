@@ -20,7 +20,7 @@ namespace MutualBank.Models
         public int CaseSkilId { get; set; }
         public DateTime CaseAddDate { get; set; }
         public DateTime CaseReleaseDate { get; set; }
-        public DateTime? CaseExpireDate { get; set; }
+        public DateTime CaseExpireDate { get; set; }
         public DateTime? CaseClosedDate { get; set; }
         public string CaseTitle { get; set; } = null!;
         public string CaseIntroduction { get; set; } = null!;

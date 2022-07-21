@@ -8,7 +8,7 @@
         public int CaseSkillId { get; set; }
         public string CaseSkillName { get; set; }
         public DateTime CaseReleaseDate { get; set; }
-        public DateTime? CaseExpireDate { get; set; }
+        public DateTime CaseExpireDate { get; set; }
         public DateTime? CaseClosedDate { get; set; }
         public string CaseTitle { get; set; } = null!;
         public string CaseIntroduction { get; set; } = null!;
