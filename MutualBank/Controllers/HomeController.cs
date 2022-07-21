@@ -89,8 +89,31 @@ namespace MutualBank.Controllers
                 }
 
             }
-
             return View("Index", Model);
+        }
+
+        public string GetAllCaseModel()
+        {
+            var Model = _mutualBankContext.Cases.Include("CaseSkil")
+                .Select(x => new CaseViewModel
+                {
+                    CaseId = x.CaseId,
+                    CaseNeedHelp = x.CaseNeedHelp,
+                    CaseReleaseDate = x.CaseReleaseDate,
+                    CaseExpireDate = x.CaseExpireDate,
+                    CaseTitle = x.CaseTitle,
+                    CaseIntroduction = x.CaseIntroduction,
+                    CasePhoto = x.CasePhoto,
+                    CaseSerDate = x.CaseSerDate,
+                    CaseSerArea = x.CaseSerArea,
+                    CaseSkillId = x.CaseSkil.SkillId,
+                    CaseSkillName = x.CaseSkil.SkillName,
+                    CaseUserId = x.CaseUser.UserId,
+                    CaseUserName = x.CaseUser.UserFname.Concat(x.CaseUser.UserLname).ToString(),
+
+                });
+            var ModelJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model);
+            return ModelJson;
         }
 
         public IActionResult Privacy()

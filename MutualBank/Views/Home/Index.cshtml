@@ -3,8 +3,8 @@
 }
 @{
     //初始化Case
-    var dataString = Newtonsoft.Json.JsonConvert.SerializeObject(@Model);
-    var tagString = Newtonsoft.Json.JsonConvert.SerializeObject((List<Skill>)ViewBag.Tags);
+    var modelDataString = Newtonsoft.Json.JsonConvert.SerializeObject(@Model);
+    var tagDataString = Newtonsoft.Json.JsonConvert.SerializeObject((List<Skill>)ViewBag.Tags);
 }
 
 @section Styles{
@@ -12,13 +12,12 @@
     <link rel="stylesheet" href="~/css/card.css" asp-append-version="true" />
 }
 
-
     <div class="wrap" id="home">
         <div id="searchLabel">
             <div id="areaLabel">
                 @if (@ViewBag.Area != null)
             {
-                <span class="searchLabel">@ViewBag.Area<button class="searchLabelClose">x</button></span>
+                <span class="searchLabel">@ViewBag.Area<button class="searchLabelClose" id="areaLabelCloseBtn">x</button></span>
             }
         </div>
         <div id="typeLabel"></div>
@@ -57,7 +56,6 @@
                             <img src="https://picsum.photos/id/96/400/400" class="card-img-top p-2" alt="圖片">
                         </div>
                         <span>{{item.CaseSkillName}}</span>
-
                         <div class="card-body">
                             <h5 class="card-title">{{item.CaseTitle}}</h5>
                             <div style="height:50px;"><p class="card-text mt-1">{{item.CaseIntroduction}}</p></div>
@@ -77,66 +75,129 @@
 @section Scripts{
 
     <script>
-        //初始化標籤綁定監聽事件
-        //var closeLabels = document.querySelectorAll(".searchLabelClose");
-        //closeLabels.forEach(x => x.addEventListener("click", closeLabel()));
-
-        var caseModel = @Html.Raw(dataString);
-        var tags = @Html.Raw(tagString);
-console.log(tags);
+        var caseModel = @Html.Raw(modelDataString);
+        var tagList = @Html.Raw(tagDataString);
         //Vue
         var vmIndex = new Vue({
             el: "#home",
             data: {
                 caseViewModel: caseModel,
                 caseResModel: caseModel,
-                tags:tags
+                tags: tagList,
+                selectedType: "null",
+                selectedTag: -1
             },
             methods: {
-                //建立篩選標籤到畫面
-                appendSortLabel: function(posId, txt) {
+                //建立篩選標籤到畫面(通用)
+                addLabel: function(posId, txt, clickEvent) {
                     posId.innerHTML = "";
-                    //posId.innerHTML =
-                    //    `<span class='searchLabel'>${txt}<button class='searchLabelClose'>x</button></span>`;
                     var span = document.createElement("span");
                     span.classList.add("searchLabel");
                     span.innerText = txt;
                     var button = document.createElement("button");
                     button.classList.add("searchLabelClose");
-                    button.addEventListener("click", vmIndex.closeLabel);
                     button.innerText = "x";
                     span.append(button);
                     posId.append(span);
+                    button.addEventListener("click", clickEvent);
                 },
+                //關閉篩選標籤(通用)
                 closeLabel: function(e) {
                     var parentDiv = e.target.parentElement.parentElement;
                     parentDiv.innerHTML = "";
                 },
-                filterTypeModel: function(b) {
-                    return vmIndex.caseResModel.filter(x => x.CaseNeedHelp == b);
+                closeTypeLabel: function(e) {
+                    //移除標籤並清除對應data(恢復初始值)
+                    vmIndex.closeLabel(e);
+                    vmIndex.selectedType = "null";
+                    //更新畫面模型
+
+                    if (vmIndex.selectedTag != -1) {
+                        vmIndex.caseViewModel = vmIndex.filterTagModel(vmIndex.caseResModel, vmIndex.selectedTag);
+                    }
+                    else {
+                        vmIndex.caseViewModel = vmIndex.caseResModel;
+                    }
+                },
+                closeTagLabel: function(e) {
+                    //移除標籤並清除對應data(恢復初始值)
+                    vmIndex.closeLabel(e);
+                    vmIndex.selectedTag = -1;
+                    //更新畫面模型
+                    if (typeof (vmIndex.selectedType) == Boolean) {
+                        vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseResModel, vmIndex.selectedType);
+                    }
+                    else {
+                        vmIndex.caseViewModel = vmIndex.caseResModel;
+
+                    }
+                },
+                //依需求或技能拿模型(通用)
+                filterTypeModel: function(vmModel, b) {
+                    return vmModel.filter(x => x.CaseNeedHelp == b);
                 },
                 //依需求或技能拿模型
                 getTypeModel: function(e) {
                     var bitString = e.target.dataset.bit;
                     var bit = bitString == "true" ? true : false;
-                    vmIndex.appendSortLabel(typeLabel, e.target.innerText);
-                    vmIndex.caseViewModel = vmIndex.filterTypeModel(bit);
+                    vmIndex.selectedType = bit;
+                    vmIndex.addLabel(typeLabel, e.target.innerText, vmIndex.closeTypeLabel);
+
+                    vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseResModel, bit);
+
+                    //技能分類
+                    if (vmIndex.selectedTag != -1) {
+                        vmIndex.caseViewModel = vmIndex.filterTagModel(vmIndex.caseViewModel, vmIndex.selectedTag);
+                    }
+                    //篩出需求或技能
+
                 },
-                filterTagModel: function(n) {
-                    return vmIndex.caseResModel.filter(x => x.CaseSkillId == n);
+                //依技能分類拿模型(通用)
+                filterTagModel: function(vmModel, n) {
+                    return vmModel.filter(x => x.CaseSkillId == n);
                 },
                 //依技能分類拿模型
                 getTagModel: function(e) {
                     var skillid = e.target.dataset.skillid;
-                    vmIndex.appendSortLabel(tagLabel, e.target.innerText);
-                    vmIndex.caseViewModel = vmIndex.filterTagModel(skillid);
+                    vmIndex.selectedTag = skillid;
+                    vmIndex.addLabel(tagLabel, e.target.innerText, vmIndex.closeTagLabel);
+
+                    vmIndex.caseViewModel = vmIndex.filterTagModel(vmIndex.caseResModel, skillid);
+
+                    if (typeof (vmIndex.selectedType) == Boolean) {
+                        vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseViewModel, vmIndex.selectedType);
+                    }
                 },
-
             },
-            created() {
-            },
+            mounted: function() {
+                //地區標籤綁定關閉標籤事件
+                var areaLabelCloseBtn = document.getElementById("areaLabelCloseBtn");
+                if (areaLabelCloseBtn != null) {
+                    areaLabelCloseBtn.addEventListener("click", function(e) {
+                        vmIndex.closeLabel(e);
+                        //畫面Model顯示全部資料
+                        $.ajax({
+                            url: "@Url.Action("GetAllCaseModel","Home")",
+                            type: "GET"
+                        })
+                            .done(function(res) {
+                                var nval = JSON.parse(res);
+                                vmIndex.caseResModel = vmIndex.caseViewModel = nval;
+                                if (typeof (vmIndex.selectedType) == Boolean) {
+                                    vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseResModel, vmIndex.selectedType);
+                                }
+                                if (vmIndex.selectedTag != -1) {
+                                    vmIndex.caseViewModel = vmIndex.filterTagModel(vmIndex.caseViewModel, vmIndex.selectedTag);
+                                }
+                            })
+                            .fail(function(res) {
+                                console.log(res);
+                            });
 
 
+                    });
+                }
+            }
         });
 
 
@@ -148,8 +209,16 @@ console.log(tags);
             iconSort.classList.toggle('fa-arrow-up-short-wide');
         });
 
+                                ////地區標籤綁定關閉標籤事件
+                                //var areaLabelCloseBtn = document.getElementById("areaLabelCloseBtn");
+                                //if (areaLabelCloseBtn != null) {
+                                //    areaLabelCloseBtn.addEventListener("click", function(e) {
+                                //        console.log(e);
+                                //        console.log(e.target);
+                                //        console.log(e.target.parentElement.parentElement);
 
-
+                                //    });
+                                //}
     </script>
 
 }
