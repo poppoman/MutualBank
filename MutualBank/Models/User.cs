@@ -10,16 +10,17 @@ namespace MutualBank.Models
             Cases = new HashSet<Case>();
             Messages = new HashSet<Message>();
         }
+
         public int UserId { get; set; }
-        public string UserLname { get; set; } = null!;
-        public string UserFname { get; set; } = null!;
-        public string UserNname { get; set; } = null!;
-        public bool UserSex { get; set; }
+        public string? UserLname { get; set; }
+        public string? UserFname { get; set; }
+        public string? UserNname { get; set; }
+        public bool? UserSex { get; set; }
         public string? UserHphoto { get; set; }
-        public string UserEmail { get; set; } = null!;
+        public string? UserEmail { get; set; }
         public DateTime? UserBirthday { get; set; }
-        public int UserSkillId { get; set; }
-        public int UserAreaId { get; set; }
+        public int? UserSkillId { get; set; }
+        public int? UserAreaId { get; set; }
         public string? UserCv { get; set; }
         public string? UserResume { get; set; }
         public string? UserSchool { get; set; }
