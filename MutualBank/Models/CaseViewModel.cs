@@ -16,5 +16,6 @@
         public string CaseSerDate { get; set; } = null!;
         public int? CaseSerArea { get; set; }
         public string CaseUserName { get; set; } = null!;
+        public int? MessageCount { get; set; }
     }
 }

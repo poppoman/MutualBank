@@ -37,12 +37,12 @@
 
             <div class="sort">
                 <span>排序：</span>
-                <select class="sortSelect" id="sortModel">
-                    <option>發佈時間</option>
-                    <option>留言數</option>
-                    <option>期限</option>
+                <select class="sortSelect" id="orderModel" v-on:change="orderModel">
+                    <option value="releaseDate">發佈時間</option>
+                    <option value="messageCount">留言數</option>
+                    <option value="expireDate">期限</option>
                 </select>
-                <div class="icon">
+                <div class="icon" v-on:click="orderAscOrDesc">
                     <i class="fa-solid fa-arrow-down-short-wide"></i>
                 </div>
 
@@ -85,9 +85,13 @@
                 caseResModel: caseModel,
                 tags: tagList,
                 selectedType: "null",
-                selectedTag: -1
+                selectedTag: -1,
+                orderBy: "releaseDate",//預設值為貼文日期
+                orderDesc: 1
             },
             methods: {
+                //=====
+                //Sort
                 //建立篩選標籤到畫面(通用)
                 addLabel: function(posId, txt, clickEvent) {
                     posId.innerHTML = "";
@@ -129,7 +133,6 @@
                     }
                     else {
                         vmIndex.caseViewModel = vmIndex.caseResModel;
-
                     }
                 },
                 //依需求或技能拿模型(通用)
@@ -145,12 +148,10 @@
 
                     vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseResModel, bit);
 
-                    //技能分類
                     if (vmIndex.selectedTag != -1) {
                         vmIndex.caseViewModel = vmIndex.filterTagModel(vmIndex.caseViewModel, vmIndex.selectedTag);
                     }
-                    //篩出需求或技能
-
+                    vmIndex.orderModelForSort();
                 },
                 //依技能分類拿模型(通用)
                 filterTagModel: function(vmModel, n) {
@@ -167,7 +168,91 @@
                     if (typeof (vmIndex.selectedType) == Boolean) {
                         vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseViewModel, vmIndex.selectedType);
                     }
+                    vmIndex.orderModelForSort();
                 },
+                orderModelForSort: function() {
+                    var para = vmIndex.orderBy;
+                    var isDesc = vmIndex.orderDesc;
+                   
+                    switch (para) {
+                        case "releaseDate":
+                            vmIndex.orderByReleaseDate(isDesc);
+                            break;
+                        case "messageCount":
+                            vmIndex.orderByMessageCount(isDesc);
+                            break;
+                        case "expireDate":
+                            vmIndex.orderByExpireDate(isDesc);
+                            dafault:
+                            break;
+                    }
+                },
+                //=====
+                //Order
+                orderModel: function(e) {
+                    var para = vmIndex.orderBy = e.target.value;
+                    //升序或降序
+                    var isDesc = vmIndex.orderDesc;
+
+                    switch (para) {
+                        case "releaseDate":
+                            vmIndex.orderByReleaseDate(isDesc);
+                            break;
+                        case "messageCount":
+                            vmIndex.orderByMessageCount(isDesc);
+                            break;
+                        case "expireDate":
+                            vmIndex.orderByExpireDate(isDesc);
+                            dafault:
+                            break;
+                    }
+                },
+                orderAscOrDesc: function() {
+                    var isDesc = vmIndex.orderDesc = -vmIndex.orderDesc;
+                    //根據Order紀錄值的資料傳回排列陣列
+                    var para = vmIndex.orderBy;
+                    switch (para) {
+                        case "releaseDate":
+                            vmIndex.orderByReleaseDate(isDesc);
+                            break;
+                        case "messageCount":
+                            vmIndex.orderByMessageCount(isDesc);
+                            break;
+                        case "expireDate":
+                            vmIndex.orderByExpireDate(isDesc);
+                            dafault:
+                            break;
+                    }
+                },
+                //排序
+                orderByReleaseDate: function(intDesc) {
+                    //紀錄降升序狀態
+                    intDesc == 1 ? vmIndex.orderDesc = 1 : vmIndex.orderDesc = -1;
+                    return vmIndex.caseViewModel.sort(function(a, b) {
+                        return b.CaseReleaseDate > a.CaseReleaseDate ? intDesc : -intDesc
+                    });
+                },
+                orderByExpireDate: function(intDesc) {
+                    //紀錄降升序狀態
+                    intDesc == 1 ? vmIndex.orderDesc = 1 : vmIndex.orderDesc = -1;
+                    return vmIndex.caseViewModel.sort(function(a, b) {
+                        return b.CaseExpireDate > a.CaseReleaseDate ? intDesc : -intDesc
+                    });
+                },
+                orderByMessageCount: function(intDesc) {
+                    if (intDesc == 1) {
+                        vmIndex.orderDesc = 1;
+                        return vmIndex.caseViewModel.sort(function(a, b) {
+                            return b.MessageCount - a.MessageCount
+                        });
+                    }
+                    else {
+                        vmIndex.orderDesc = -1;
+                        return vmIndex.caseViewModel.sort(function(a, b) {
+                            return a.MessageCount - b.MessageCount
+                        });
+                    }
+                }
             },
             mounted: function() {
                 //地區標籤綁定關閉標籤事件
@@ -194,31 +279,18 @@
                                 console.log(res);
                             });
 
-
                     });
                 }
+
+                //點選order icon時切換圖示
+                var iconSort = document.querySelector('.tagBar .sort .icon i');
+                    iconSort.addEventListener('click', function() {
+                        iconSort.classList.toggle('fa-arrow-down-short-wide');
+                        iconSort.classList.toggle('fa-arrow-up-short-wide');
+                    });
             }
         });
 
-
-        //點選排序icon時切換圖示
-        let iconSort = document.querySelector('.tagBar .sort .icon i');
-
-        iconSort.addEventListener('click', function() {
-            iconSort.classList.toggle('fa-arrow-down-short-wide');
-            iconSort.classList.toggle('fa-arrow-up-short-wide');
-        });
-
-                                ////地區標籤綁定關閉標籤事件
-                                //var areaLabelCloseBtn = document.getElementById("areaLabelCloseBtn");
-                                //if (areaLabelCloseBtn != null) {
-                                //    areaLabelCloseBtn.addEventListener("click", function(e) {
-                                //        console.log(e);
-                                //        console.log(e.target);
-                                //        console.log(e.target.parentElement.parentElement);
-
-                                //    });
-                                //}
     </script>
 
 }

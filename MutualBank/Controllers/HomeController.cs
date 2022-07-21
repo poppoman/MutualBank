@@ -94,7 +94,7 @@ namespace MutualBank.Controllers
 
         public string GetAllCaseModel()
         {
-            var Model = _mutualBankContext.Cases.Include("CaseSkil")
+            var Model = _mutualBankContext.Cases.Include("CaseSkil").Include("Messages")
                 .Select(x => new CaseViewModel
                 {
                     CaseId = x.CaseId,
@@ -110,8 +110,8 @@ namespace MutualBank.Controllers
                     CaseSkillName = x.CaseSkil.SkillName,
                     CaseUserId = x.CaseUser.UserId,
                     CaseUserName = x.CaseUser.UserFname.Concat(x.CaseUser.UserLname).ToString(),
-
-                });
+                    MessageCount = x.Messages.Count
+                }) ;
             var ModelJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model);
             return ModelJson;
         }
