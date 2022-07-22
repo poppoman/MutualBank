@@ -28,9 +28,9 @@
                 </div>
             </div>
             <div class="col-9">
-                <ul class="list-group">
+                <ul  class="list-group">
                     <li class="list-group-item" v-for="item in helpmessage">{{item}}</li>
-                    <li class="list-group-item"><input type="text"/><button class="btn">回復</button></li>
+                    <li id="contentli" class="list-group-item" style="display:none"><input id="content" type="text" /><button v-on:click="conmsg" class="btn">回復</button><span class="ms-5" id="err"></span></li>
                 </ul>
             </div>
         </div>
@@ -46,7 +46,8 @@
             helpyou: [],
             helpmecaseid: [],
             helpyoucaseid: [],
-            helpmessage:[]
+            helpmessage: [],
+            caseid:""
         },
         methods:
         {
@@ -76,6 +77,7 @@
             },
             retrunmeid: function(e) {
                 let self = this;
+                this.caseid=this.helpmecaseid[e];
                 fetch(`/api/Confirm/message?id=${self.helpmecaseid[e]}`)
                     .then(function(response) {
                         return response.json();
@@ -83,10 +85,12 @@
                     .then(function(res) {
                         console.log("m = ", res);
                         self.helpmessage = res;
+                        document.getElementById("contentli").removeAttribute("style");
                     });
             },
             retrunyouid: function(e) {
                 let self = this;
+                this.caseid=this.helpyoucaseid[e];
                 fetch(`/api/Confirm/message?id=${self.helpyoucaseid[e]}`)
                     .then(function(response) {
                         return response.json();
@@ -94,7 +98,34 @@
                     .then(function(res) {
                         console.log("m = ", res);
                         self.helpmessage = res;
+                        document.getElementById("contentli").removeAttribute("style");
                     });
+            },
+            conmsg: function() {
+                var data =
+                {
+                    CaseId: this.caseid,
+                    MsgContent: document.getElementById("content").value,
+                };
+                console.log(data);
+
+                fetch(`/api/Confirm/Msgresponse`, {
+                    method: 'POST',
+                    headers:
+                    {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(res) 
+                    {
+                        $("#err").text(res.message);
+                        document.getElementById("content").value =null;
+                    })
             }
         },
 
