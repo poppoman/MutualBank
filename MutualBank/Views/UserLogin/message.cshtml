@@ -10,8 +10,7 @@
                             </button>
                             <div class="collapse" id="dashboard-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                    <li v-for="item in helpyou"><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">{{item}}</a></li>
-
+                                    <li v-for="(item,index) in helpyou"><button v-on:click="retrunyouid(index)" class="btn btn-toggle link-dark d-inline-flex text-decoration-none rounded">{{item}}</button></li>
                                 </ul>
                             </div>
                         </li>
@@ -21,8 +20,7 @@
                             </button>
                             <div class="collapse" id="orders-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                    <li  v-for="item in helpme"><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">{{item}}</a></li>
-
+                                    <li v-for="(item,index) in helpme"><button v-on:click="retrunmeid(index)" class="btn btn-toggle link-dark d-inline-flex text-decoration-none rounded">{{item}}</button></li>
                                 </ul>
                             </div>
                         </li>
@@ -30,28 +28,10 @@
                 </div>
             </div>
             <div class="col-9">
-                <!-- Left-aligned media object -->
-                <div class="media">
-                    <div class="media-left">
-                        <img src="~/Img/nav/ana3.png" class="media-object" style="width:60px">
-                    </div>
-                    <div class="media-left">
-                        <h4 class="media-heading">Left-aligned</h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                    </div>
-                </div>
-                <hr>
-
-                <!-- Right-aligned media object -->
-                <div class="media">
-                    <div class="media-right">
-                        <h4 class="media-heading">Right-aligned</h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                    </div>
-                    <div class="media-right">
-                        <img src="~/Img/nav/ana3.png" class="media-object" style="width:60px">
-                    </div>
-                </div>
+                <ul class="list-group">
+                    <li class="list-group-item" v-for="item in helpmessage">{{item}}</li>
+                    <li class="list-group-item"><input type="text"/><button class="btn">回復</button></li>
+                </ul>
             </div>
         </div>
     </div>
@@ -59,40 +39,65 @@
 
 <script>
     let vm = new Vue({
-    el: "#mes",
-    data:
-    {
-        helpme: [],
-        helpyou: [],
-    },
-    methods:
-    {
-        getHelpme: function ()
+        el: "#mes",
+        data:
         {
-            let self = this;
-            fetch(`/api/Confirm/helpme?id=${@User.Identity.Name}`)
-            .then(function(response) {
-                return response.json();
-            })
-            .then(function(res) {
-                console.log("m = ", res);
-                self.helpme = res.casetitle;
-            });
+            helpme: [],
+            helpyou: [],
+            helpmecaseid: [],
+            helpyoucaseid: [],
+            helpmessage:[]
         },
-        getHelpyou: function() 
+        methods:
         {
-            let self = this;
-            fetch(`/api/Confirm/helpyou?id=${@User.Identity.Name}`)
-            .then(function(response) {
-                return response.json();
-            })
-            .then(function(res) {
-                console.log("m = ", res);
-                self.helpyou = res.casetitle;
-            });
-        }
-     },
-   
+            getHelpme: function() {
+                let self = this;
+                fetch(`/api/Confirm/helpme?id=${@User.Identity.Name}`)
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(res) {
+                        console.log("m = ", res);
+                        self.helpme = res.casetitle;
+                        self.helpmecaseid = res.caseid;
+                    });
+            },
+            getHelpyou: function() {
+                let self = this;
+                fetch(`/api/Confirm/helpyou?id=${@User.Identity.Name}`)
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(res) {
+                        console.log("m = ", res);
+                        self.helpyou = res.casetitle;
+                        self.helpyoucaseid = res.caseid;
+                    });
+            },
+            retrunmeid: function(e) {
+                let self = this;
+                fetch(`/api/Confirm/message?id=${self.helpmecaseid[e]}`)
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(res) {
+                        console.log("m = ", res);
+                        self.helpmessage = res;
+                    });
+            },
+            retrunyouid: function(e) {
+                let self = this;
+                fetch(`/api/Confirm/message?id=${self.helpyoucaseid[e]}`)
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(res) {
+                        console.log("m = ", res);
+                        self.helpmessage = res;
+                    });
+            }
+        },
+
     });
 
 </script>
