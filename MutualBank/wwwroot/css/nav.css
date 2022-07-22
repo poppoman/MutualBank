@@ -173,7 +173,7 @@ a {
     opacity: 100;
 }
 
-.postLink.active {
+/*.postLink.active {
     opacity: 100;
     top: 0;
     pointer-events: auto;
@@ -261,7 +261,7 @@ a {
         }
             .postLink .link .butn:hover {
                 background: var(--help);
-            }
+            }*/
 
 
 /* RWD */

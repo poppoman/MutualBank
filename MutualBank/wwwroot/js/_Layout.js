@@ -63,31 +63,32 @@ iconManu.addEventListener('click', function () {
 
 
 //-postQuery 點選+號後顯示面板
-let btnPost = document.querySelector('.topR .barManu li:first-child');
-let panelPost = document.querySelector('.postLink');
-btnPost.addEventListener('click', function () {
-    panelPost.classList.toggle('active');
-    //開啟背景的點擊關閉功能
-    panelsToggle.classList.add('bgOn');
-    //同時關閉barManu，並將X恢復為原icon
-    barManu.classList.remove('active');
-    iconManu.classList.toggle('fa-bars');
-    iconManu.classList.toggle('fa-xmark');
+//let btnPost = document.querySelector('.topR .barManu li:first-child');
+//let panelPost = document.querySelector('.postLink');
+//btnPost.addEventListener('click', function () {
+//    panelPost.classList.toggle('active');
+//    開啟背景的點擊關閉功能
+//    panelsToggle.classList.add('bgOn');
+//    同時關閉barManu，並將X恢復為原icon
+//    barManu.classList.remove('active');
+//    iconManu.classList.toggle('fa-bars');
+//    iconManu.classList.toggle('fa-xmark');
 
-})
-let iconPost = document.querySelector('.wrap-panel .iconPost');
-iconPost.addEventListener('click', function () {
-    panelsToggle.classList.remove('On');
-    panelsToggle.classList.remove('bgOn');
-    panelPost.classList.remove('active');
+//})
+////點擊x關閉面板
+//let iconPost = document.querySelector('.wrap-panel .iconPost');
+//iconPost.addEventListener('click', function () {
+//    panelsToggle.classList.remove('On');
+//    panelsToggle.classList.remove('bgOn');
+//    panelPost.classList.remove('active');
 
-});
+//});
 
 //-點擊背景時關閉面板
 panelsToggle.addEventListener('click', function () {
     panelcity.classList.remove('active');
     panelTown.classList.remove('active');
-    panelPost.classList.remove('active');
+    //panelPost.classList.remove('active');
     barManu.classList.remove('active');
     panelsToggle.classList.remove('On');
     panelsToggle.classList.remove('bgOn');

@@ -26,7 +26,7 @@
         <div class="navBar" id="navBar">
             <div class="topL">
                 <div class="logo"><a asp-action="Index" asp-controller="Home"><img src="~/Img/nav/logo.png"></a></div>
-                <form method="get" action="@Url.Action("Search","Home")">
+                <form class="m-auto" method="get" action="@Url.Action("Search","Home")">
                     <div class="search">
                         <div class="area m-1 me-0">
                                 <select class="selectList" id="AreaCity" name="AreaCity" v-on:change="getAreaTown">

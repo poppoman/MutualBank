@@ -151,15 +151,15 @@
                         </div>
                     </div>
 
-
-
-
                 </div>
             </div>
             </div>
         </section>
 
-
+        @*用於querystring轉換頁面內容*@
+        <section id="displayNone" style="display:none">
+            <button id="btnPostCase" onclick="getPoseCaseForm()"></button>
+        </section>
 
     </body>
     @section Scripts{
@@ -196,8 +196,7 @@
         });
 
         var message = document.getElementById("message");
-        message.addEventListener("click", function() 
-        {
+        message.addEventListener("click", function() {
             $.ajax({
                 type: "POST",
                 url: "/UserLogin/message",
@@ -209,8 +208,30 @@
                 }
             });
         })
-    </script>
 
+        function getPoseCaseForm() {
+            dynamicLoading.css("/css/PostCase.css");
+            $.ajax({
+                url: "/Case/GetPostCase",
+                type: "GET"
+            })
+                .done(function(res) {
+                    $("#ajaxSection").html(res);
+                    $.getScript("/js/PostCaseReady.js", function() { });
+                    $.getScript("/js/PostCase.js", function() { });
+                })
+                .fail(function(res) {
+                    console.log(res);
+                });
+        }
+    </script>
+    <script>
+        var queryString = location.search.split("=")[1];
+        var btnPostCase = document.getElementById("btnPostCase");
+        if (queryString == "postcase") {
+            btnPostCase.click();
+        }
+    </script>
 }
 
 
