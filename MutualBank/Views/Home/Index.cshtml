@@ -32,7 +32,7 @@
 
         <div class="tagBar">
             <div class="tags">
-                <span class="tagName" v-for="item in tags" v-on:click="getTagModel" v-bind:data-skillid="item.SkillId">{{item.SkillName}}</span>
+                <span class="tagName" v-for="item in tagList" :data-skillid="item.SkillId" v-on:click="getTagModel">{{item.SkillName}}</span>
             </div>
 
             <div class="sort">
@@ -48,6 +48,7 @@
 
             </div>
         </div>
+
         <div class="container-fluid">
             <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-4">
                 <div class="col" v-for="item in caseViewModel">
@@ -55,18 +56,19 @@
                         <div class="imgBx">
                             <img src="https://picsum.photos/id/96/400/400" class="card-img-top p-2" alt="圖片">
                         </div>
-                        <span>{{item.CaseSkillName}}</span>
+                        <span style="cursor:pointer" :data-skillid="item.CaseSkillId" v-on:click="getTagModel">{{item.CaseSkillName}}</span>
                         <div class="card-body">
                             <h5 class="card-title">{{item.CaseTitle}}</h5>
                             <div style="height:50px;"><p class="card-text mt-1">{{item.CaseIntroduction}}</p></div>
                             <div class="d-flex  justify-content-center">
-                                <a class="btn" :data-caseid="item.CaseId">留言</a>
+                                <a name="temp" class="btn" :data-caseid="item.CaseId" v-on:click="redirectToCasePage">留言</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 
@@ -76,18 +78,19 @@
 
     <script>
         var caseModel = @Html.Raw(modelDataString);
-        var tagList = @Html.Raw(tagDataString);
+        var tagListData = @Html.Raw(tagDataString);
+        var orderByDafult = document.getElementById("orderModel").value;
         //Vue
         var vmIndex = new Vue({
             el: "#home",
             data: {
                 caseViewModel: caseModel,
-                caseResModel: caseModel,
-                tags: tagList,
-                selectedType: "null",
-                selectedTag: -1,
-                orderBy: "releaseDate",//預設值為貼文日期
-                orderDesc: 1
+                caseDataModel: caseModel,
+                tagList: tagListData,
+                sortByType: "null",
+                sortByTag: -1,
+                orderByOption: orderByDafult,
+                isOrderByDesc: 1
             },
             methods: {
                 //=====
@@ -113,67 +116,68 @@
                 closeTypeLabel: function(e) {
                     //移除標籤並清除對應data(恢復初始值)
                     vmIndex.closeLabel(e);
-                    vmIndex.selectedType = "null";
+                    vmIndex.sortByType = "null";
                     //更新畫面模型
 
-                    if (vmIndex.selectedTag != -1) {
-                        vmIndex.caseViewModel = vmIndex.filterTagModel(vmIndex.caseResModel, vmIndex.selectedTag);
+                    if (vmIndex.sortByTag != -1) {
+                        vmIndex.caseViewModel = vmIndex.filterTagModel(vmIndex.caseDataModel, vmIndex.sortByTag);
                     }
                     else {
-                        vmIndex.caseViewModel = vmIndex.caseResModel;
+                        vmIndex.caseViewModel = vmIndex.caseDataModel;
                     }
                 },
                 closeTagLabel: function(e) {
                     //移除標籤並清除對應data(恢復初始值)
                     vmIndex.closeLabel(e);
-                    vmIndex.selectedTag = -1;
+                    vmIndex.sortByTag = -1;
                     //更新畫面模型
-                    if (typeof (vmIndex.selectedType) == Boolean) {
-                        vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseResModel, vmIndex.selectedType);
+                    if (typeof (vmIndex.sortByType) == Boolean) {
+                        vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseDataModel, vmIndex.sortByType);
                     }
                     else {
-                        vmIndex.caseViewModel = vmIndex.caseResModel;
+                        vmIndex.caseViewModel = vmIndex.caseDataModel;
                     }
                 },
-                //依需求或技能拿模型(通用)
+                //依需求或技能篩選Model(通用)
                 filterTypeModel: function(vmModel, b) {
+                    //vmModel can be DataModel or ViewModel
                     return vmModel.filter(x => x.CaseNeedHelp == b);
                 },
                 //依需求或技能拿模型
                 getTypeModel: function(e) {
                     var bitString = e.target.dataset.bit;
                     var bit = bitString == "true" ? true : false;
-                    vmIndex.selectedType = bit;
+                    vmIndex.sortByType = bit;
                     vmIndex.addLabel(typeLabel, e.target.innerText, vmIndex.closeTypeLabel);
 
-                    vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseResModel, bit);
+                    vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseDataModel, bit);
 
-                    if (vmIndex.selectedTag != -1) {
-                        vmIndex.caseViewModel = vmIndex.filterTagModel(vmIndex.caseViewModel, vmIndex.selectedTag);
+                    if (vmIndex.sortByTag != -1) {
+                        vmIndex.caseViewModel = vmIndex.filterTagModel(vmIndex.caseViewModel, vmIndex.sortByTag);
                     }
                     vmIndex.orderModelForSort();
                 },
-                //依技能分類拿模型(通用)
+                //依技能分類篩選Model(通用)
                 filterTagModel: function(vmModel, n) {
                     return vmModel.filter(x => x.CaseSkillId == n);
                 },
                 //依技能分類拿模型
                 getTagModel: function(e) {
                     var skillid = e.target.dataset.skillid;
-                    vmIndex.selectedTag = skillid;
+                    vmIndex.sortByTag = skillid;
                     vmIndex.addLabel(tagLabel, e.target.innerText, vmIndex.closeTagLabel);
 
-                    vmIndex.caseViewModel = vmIndex.filterTagModel(vmIndex.caseResModel, skillid);
+                    vmIndex.caseViewModel = vmIndex.filterTagModel(vmIndex.caseDataModel, skillid);
 
-                    if (typeof (vmIndex.selectedType) == Boolean) {
-                        vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseViewModel, vmIndex.selectedType);
+                    if (typeof (vmIndex.sortByType) == Boolean) {
+                        vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseViewModel, vmIndex.sortByType);
                     }
                     vmIndex.orderModelForSort();
                 },
                 orderModelForSort: function() {
-                    var para = vmIndex.orderBy;
-                    var isDesc = vmIndex.orderDesc;
-                   
+                    var para = vmIndex.orderByOption;
+                    var isDesc = vmIndex.isOrderByDesc;
+
                     switch (para) {
                         case "releaseDate":
                             vmIndex.orderByReleaseDate(isDesc);
@@ -190,9 +194,9 @@
                 //=====
                 //Order
                 orderModel: function(e) {
-                    var para = vmIndex.orderBy = e.target.value;
+                    var para = vmIndex.orderByOption = e.target.value;
                     //升序或降序
-                    var isDesc = vmIndex.orderDesc;
+                    var isDesc = vmIndex.isOrderByDesc;
 
                     switch (para) {
                         case "releaseDate":
@@ -208,9 +212,9 @@
                     }
                 },
                 orderAscOrDesc: function() {
-                    var isDesc = vmIndex.orderDesc = -vmIndex.orderDesc;
+                    var isDesc = vmIndex.isOrderByDesc = -vmIndex.isOrderByDesc;
                     //根據Order紀錄值的資料傳回排列陣列
-                    var para = vmIndex.orderBy;
+                    var para = vmIndex.orderByOption;
                     switch (para) {
                         case "releaseDate":
                             vmIndex.orderByReleaseDate(isDesc);
@@ -227,31 +231,36 @@
                 //排序
                 orderByReleaseDate: function(intDesc) {
                     //紀錄降升序狀態
-                    intDesc == 1 ? vmIndex.orderDesc = 1 : vmIndex.orderDesc = -1;
+                    intDesc == 1 ? vmIndex.isOrderByDesc = 1 : vmIndex.isOrderByDesc = -1;
                     return vmIndex.caseViewModel.sort(function(a, b) {
                         return b.CaseReleaseDate > a.CaseReleaseDate ? intDesc : -intDesc
                     });
                 },
                 orderByExpireDate: function(intDesc) {
                     //紀錄降升序狀態
-                    intDesc == 1 ? vmIndex.orderDesc = 1 : vmIndex.orderDesc = -1;
+                    intDesc == 1 ? vmIndex.isOrderByDesc = 1 : vmIndex.isOrderByDesc = -1;
                     return vmIndex.caseViewModel.sort(function(a, b) {
                         return b.CaseExpireDate > a.CaseReleaseDate ? intDesc : -intDesc
                     });
                 },
                 orderByMessageCount: function(intDesc) {
                     if (intDesc == 1) {
-                        vmIndex.orderDesc = 1;
+                        vmIndex.isOrderByDesc = 1;
                         return vmIndex.caseViewModel.sort(function(a, b) {
                             return b.MessageCount - a.MessageCount
                         });
                     }
                     else {
-                        vmIndex.orderDesc = -1;
+                        vmIndex.isOrderByDesc = -1;
                         return vmIndex.caseViewModel.sort(function(a, b) {
                             return a.MessageCount - b.MessageCount
                         });
                     }
+                },
+                //跳轉到Case主頁
+                redirectToCasePage: function(e) {
+                    var href = "/PostPage/Index/" + e.target.dataset.caseid;
+                    e.target.href = href;
                 }
             },
             mounted: function() {
@@ -267,12 +276,12 @@
                         })
                             .done(function(res) {
                                 var nval = JSON.parse(res);
-                                vmIndex.caseResModel = vmIndex.caseViewModel = nval;
-                                if (typeof (vmIndex.selectedType) == Boolean) {
-                                    vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseResModel, vmIndex.selectedType);
+                                vmIndex.caseDataModel = vmIndex.caseViewModel = nval;
+                                if (typeof (vmIndex.sortByType) == Boolean) {
+                                    vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseDataModel, vmIndex.sortByType);
                                 }
-                                if (vmIndex.selectedTag != -1) {
-                                    vmIndex.caseViewModel = vmIndex.filterTagModel(vmIndex.caseViewModel, vmIndex.selectedTag);
+                                if (vmIndex.sortByTag != -1) {
+                                    vmIndex.caseViewModel = vmIndex.filterTagModel(vmIndex.caseViewModel, vmIndex.sortByTag);
                                 }
                             })
                             .fail(function(res) {
@@ -284,10 +293,10 @@
 
                 //點選order icon時切換圖示
                 var iconSort = document.querySelector('.tagBar .sort .icon i');
-                    iconSort.addEventListener('click', function() {
-                        iconSort.classList.toggle('fa-arrow-down-short-wide');
-                        iconSort.classList.toggle('fa-arrow-up-short-wide');
-                    });
+                iconSort.addEventListener('click', function() {
+                    iconSort.classList.toggle('fa-arrow-down-short-wide');
+                    iconSort.classList.toggle('fa-arrow-up-short-wide');
+                });
             }
         });
 

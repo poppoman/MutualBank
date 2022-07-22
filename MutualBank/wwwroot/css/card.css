@@ -1,8 +1,8 @@
-﻿.card {
+﻿ .card {
     box-shadow: 5px 10px 25px rgba(0, 0, 0, 0.1);
 }
 
-    .card span {
+     .card span {
         position: relative;
         display: inline-block;
         left: 0.5rem;
@@ -14,15 +14,16 @@
         font-weight: 500;
         border: 2px solid #E0E0E8;
         padding: 3px 5px;
-        white-space: nowrap; 
+        white-space: nowrap;
     }
 
     .card .card-body {
         position: relative;
         bottom: 0.25rem;
+        background:rgba(0,0,0,0);
     }
 
-    .card .card-title {
+     .card .card-title {
         border-bottom: 1px solid var(--gray);
         transition: 0.2s;
         font-size: 24px;
@@ -33,7 +34,7 @@
         -webkit-box-orient: vertical;
     }
 
-    .card .card-text {
+     .card .card-text {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: normal;
@@ -41,9 +42,10 @@
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         margin-top: 5px;
+        height:48px;
     }
 
-    .card .btn {
+     .card .btn {
         background: var(--help);
         font-size: 16px;
         font-weight: 700;

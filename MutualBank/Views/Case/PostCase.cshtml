@@ -19,8 +19,8 @@
 
                 <div class="col-md-5 mb-2">
                     <label for="CaseNeedHelp" class="form-label">貼文分類</label>
-                    <select class="form-select" id="CaseNeedHelp" required>
-                        <option disabled>請選擇</option>
+                    <select class="form-select" id="CaseNeedHelp" v-model="CaseNeedHelp" required>
+                        <option selected="selected" value=-1 disabled>請選擇</option>
                         <option value=true>需要幫助</option>
                         <option value=false>提供技能</option>
                     </select>
@@ -30,8 +30,8 @@
                 </div>
                 <div class="col-md-7">
                     <label for="CaseSkilId" class="form-label">內容</label>
-                    <select class="form-select" id="CaseSkilId" name="CaseSkilId" required>
-                        <option disabled>請選擇</option>
+                    <select class="form-select" id="CaseSkilId" name="CaseSkilId" v-model="CaseSkilId" required>
+                        <option selected="selected" value="-1" disabled>請選擇</option>
                         <option v-for="item in skillTags" v-bind:value="item.skillId">{{item.skillName}}</option>
                     </select>
                     <div class="invalid-feedback">
@@ -65,7 +65,7 @@
                 <div class="col-md-7 mb-2">
                     <label for="AreaCity" class="form-label">縣市</label>
                     <select class="form-select" id="AreaCity" v-on:change="getAreaTown" required>
-                        <option disabled>請選擇</option>
+                        <option  selected="selected" disabled>請選擇</option>
                         <option v-for="item in areaCity" v-bind:value="item">{{item}}</option>
                     </select>
                     <div class="invalid-feedback">
@@ -75,8 +75,8 @@
 
                 <div class="col-md-5 mb-2">
                     <label for="CaseSerArea" class="form-label">鄉鎮區</label>
-                    <select class="form-select" id="CaseSerArea" name="CaseSerArea" required>
-                        <option disabled v-show="isAreaSelected">請先選擇縣市</option>
+                    <select class="form-select" id="CaseSerArea" name="CaseSerArea" v-model="CaseSerArea" required>
+                        <option v-show="isAreaSelected" selected="selected" value=-1 disabled>請先選擇縣市</option>
                         <option v-for="item in areaTown" v-bind:value="item.areaId">{{item.areaTown}}</option>
                     </select>
                     <div class="invalid-feedback">
@@ -86,7 +86,7 @@
                 <div class="col-12">
                     <label for="CaseSerDate" class="form-label">可接受服務或提供技能的時間</label>
                     <textarea class="form-control" v-model="serDate" v-bind:class="{'is-invalid':serDateValid}"
-                           id="CaseSerDate" name="CaseSerDate" placeholder="請輸入希望貼文內容可以執行的時間，比如日期或時段等"
+                           id="CaseSerDate" name="CaseSerDate" placeholder="請輸入日期或時段"
                            cols="30" rows="2" required></textarea>
                     <div class="invalid-feedback">
                         此欄位不可為空

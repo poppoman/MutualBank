@@ -164,16 +164,16 @@
     </body>
     @section Scripts{
     <script>
-        myCases.addEventListener('click', function() {
+        var myCases = document.getElementById("myCases");
+        myCases.addEventListener("click", function() {
             dynamicLoading.css("/css/CaseList.css");
             dynamicLoading.css("/css/Card.css");
             $.ajax({
                 type: "POST",
                 url: "/Case/GetCaseList",
                 success: function(res) {
-                    $('#ajaxSection').html(res);
-                    $.getScript("/js/CaseList.js", function() {
-                    });
+                    $("#ajaxSection").html(res);
+                    $.getScript("/js/CaseList.js");
                 },
                 error: function(res) {
                     console.log(res);
@@ -181,25 +181,28 @@
             });
         });
 
-        changePwd.addEventListener('click', function() {
+        var changePwd = document.getElementById("changePwd");
+        changePwd.addEventListener("click", function() {
             $.ajax({
                 type: "POST",
                 url: "/UserLogin/changePwd",
                 success: function(res) {
-                    $('#ajaxSection').html(res);
+                    $("#ajaxSection").html(res);
                 },
                 error: function(res) {
                     console.log(res);
                 }
             });
         });
-        message.addEventListener('click', function() 
+
+        var message = document.getElementById("message");
+        message.addEventListener("click", function() 
         {
             $.ajax({
                 type: "POST",
                 url: "/UserLogin/message",
                 success: function(res) {
-                    $('#ajaxSection').html(res);
+                    $("#ajaxSection").html(res);
                 },
                 error: function(res) {
                     console.log(res);
@@ -207,6 +210,7 @@
             });
         })
     </script>
+
 }
 
 

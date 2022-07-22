@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MutualBank.Models;
 
 namespace MutualBank.Controllers
@@ -33,7 +34,7 @@ namespace MutualBank.Controllers
         public void AddCase(Case NewCase) {
             //TODO 暫時沒有登入者
             //var UserName = User.Identity.Name;
-            //NewCase.CaseUserId = _mutualBankContext.Users.Where(x => x.UserNname == UserName).FirstOrDefault().UserId;
+            //NewCase.CaseUserId = _mutualBankContext.Users.Where(x => Model.UserNname == UserName).FirstOrDefault().UserId;
             
             //整理資料
             //文字
@@ -56,16 +57,35 @@ namespace MutualBank.Controllers
             _mutualBankContext.Cases.Add(NewCase);
             _mutualBankContext.SaveChanges();
         }
-        public List<Case> UserCaseModel(bool NeedBit)
+        [HttpGet]
+        public string GetUserCaseModel()
         {
-            //TODO 暫時沒有登入者
+            //目前user 暫時沒有，暫時使用11號
             //var LoginName = User.Identity.Name;
             //var UserId =_mutualBankContext.Logins.FindAsync(LoginName).Result.LoginId;
 
-            //暫時使用11號
-            var UserIdTemp = 11;
-            var Model = _mutualBankContext.Cases.Where(x => x.CaseUserId == UserIdTemp & x.CaseNeedHelp == NeedBit).OrderBy(x => x.CaseAddDate).ToList();
-            return Model;
+            var Model = _mutualBankContext.Cases.Include("CaseSkil").Include("Messages")
+                .Where(x => x.CaseUserId == 11).Select(x => new CaseViewModel 
+                {
+                    CaseId = x.CaseId,
+                    CaseNeedHelp = x.CaseNeedHelp,
+                    CaseReleaseDate = x.CaseReleaseDate,
+                    CaseExpireDate = x.CaseExpireDate,
+                    CaseTitle = x.CaseTitle,
+                    CaseIntroduction = x.CaseIntroduction,
+                    CasePhoto = x.CasePhoto,
+                    CaseSerDate = x.CaseSerDate,
+                    CaseSerArea = x.CaseSerArea,
+                    CaseSkillId = x.CaseSkil.SkillId,
+                    CaseSkillName = x.CaseSkil.SkillName,
+                    CaseUserId = x.CaseUser.UserId,
+                    CaseUserName = x.CaseUser.UserFname.Concat(x.CaseUser.UserLname).ToString(),
+                    MessageCount = x.Messages == null ? 0 : x.Messages.Count()
+                });
+
+
+            var ModelJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model);
+            return ModelJson;
         }
     }
 }

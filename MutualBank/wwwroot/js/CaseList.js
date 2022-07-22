@@ -1,87 +1,72 @@
-﻿
-var vmCaseList = new Vue({
+﻿var vmCaseList = new Vue({
     el: "#caseList",
     data: {
-        caseModel: []
+        caseDataModel: [],
+        caseViewModel: [],
+        sortByType:"null"
     },
     methods: {
         initCaseModel: function () {
             $.ajax({
-                url: "/Case/UserCaseModel",
-                type: "GET",
-                data: {
-                    NeedBit: true
-                }
+                url: "/Case/GetUserCaseModel",
+                type: "GET"
             })
                 .done(function (res) {
-                    vmCaseList.caseModel = res;
+                    vmCaseList.caseDataModel = vmCaseList.caseViewModel = JSON.parse(res);
                 })
                 .fail(function (res) {
-                    alert("Fail");
+                    console.log(res);
                 });
 
-
         },
-        needCaseModel: function () {
+        getAllModel: function (e) {
+            vmCaseList.addClickClass(e);
+            vmCaseList.caseViewModel = vmCaseList.caseDataModel;
+        },
+        needOrSkillModel: function (e) {
+            vmCaseList.addClickClass(e);
             var bit = event.target.dataset.bit;
-            $.ajax({
-                url: "/Case/UserCaseModel",
-                type: "GET",
-                data: {
-                    NeedBit: bit
-                }
-            })
-                .done(function (res) {
-                    vmCaseList.caseModel = res;
-                })
-                .fail(function (res) {
-                    alert("Fail");
-                });
-
+            if (bit == "true") {
+                vmCaseList.caseViewModel = vmCaseList.caseDataModel.filter(x => x.CaseNeedHelp == true);
+                vmCaseList.orderByReleaseDate(1);
+            }
+            else {
+                vmCaseList.caseViewModel = vmCaseList.caseDataModel.filter(x => x.CaseNeedHelp == false);
+                vmCaseList.orderByReleaseDate(1);
+            }
         },
-        getPostCase: function () {
+        orderByReleaseDate: function (intIsDesc) {
+            return vmCaseList.caseDataModel.sort(function (a, b) {
+                return b.CaseReleaseDate > a.CaseReleaseDate ? intIsDesc : -intIsDesc
+            })
+        },
+        addClickClass: function (e) {
+            var btnSortCase = document.querySelectorAll(".btnSortCase");
+            btnSortCase.forEach(x => x.classList.remove("active"));
+            e.target.classList.add("active");
+        },
+        getPoseCaseForm: function () {
             dynamicLoading.css("/css/PostCase.css");
             $.ajax({
-                type: "POST",
                 url: "/Case/GetPostCase",
-                success: function (res) {
-                    $('#ajaxSection').html(res);
-                    $.getScript("/js/PostCaseReady.js", function () {
-                    });
-                    $.getScript("/js/PostCase.js", function () {
-                    });
-                },
-                error: function (res) {
-                    console.log(res);
-                }
-            });
-
-        }
-    },
-    filters: {
-        //顯示技能名稱，而非編號
-        showSkillName: function (id) {
-            var skillName = "X";
-            $.ajax({
-                url: "/Home/GetSkillName",
-                type: "GET",
-                async: false,
-                data: {
-                    SkillId: id
-                }
+                type:"GET"
             })
                 .done(function (res) {
-                    skillName = res;
+                    $("#ajaxSection").html(res);
+                    $.getScript("/js/PostCaseReady.js", function () { });
+                    $.getScript("/js/PostCase.js", function () { });
                 })
                 .fail(function (res) {
-                    skillName = "無分類"
+                    console.log(res);
                 });
-            return skillName;
+        },
+        redirectToCasePage: function (e) {
+            var href = "/PostPage/Index/" + e.target.dataset.caseid;
+            e.target.href = href;
         }
-
     },
     created() {
-        //初始頁面顯示需求Case
+        //初始化頁面Case
         this.initCaseModel();
-    },
+    }
 });

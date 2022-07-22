@@ -8,7 +8,10 @@ vmPostCase = new Vue({
         skillTags: [],
         title: "",
         intro: "",
-        serDate: ""
+        serDate: "",
+        CaseSerArea: -1,
+        CaseNeedHelp: -1,
+        CaseSkilId:-1
     },
     methods: {
         getAreaCity: function () {
@@ -65,7 +68,8 @@ vmPostCase = new Vue({
             return this.serDate.length > 0 ? false : true;
         },
         isSubmitAble: function () {
-            if (this.title.length > 0 && this.intro.length > 0 && this.serDate.length > 0)
+            if (this.title.length > 0 && this.intro.length > 0 && this.serDate.length > 0
+                && this.CaseSerArea != -1 && this.CaseNeedHelp != -1 &&this.CaseSkilId!=-1)
             {
                 return  false;
             }

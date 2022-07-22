@@ -35,7 +35,7 @@
                         </div>
                         <div class="city m-1">
                                 <select class="selectList" id="AreaTown" name="AreaTown">
-                                    <option class="selectOption" v-show="isDefaultShow">區域</option>
+                                    <option class="selectOption" selected="selected" v-show="isDefaultShow" disabled>區域</option>
                                     <option class="selectOption" v-for="item in areaTown" v-bind:data-areaid="item.areaId">{{item.areaTown}}</option>
                                 </select>
                         </div>
