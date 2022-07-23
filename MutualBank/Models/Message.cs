@@ -10,6 +10,8 @@ namespace MutualBank.Models
         public int? MsgCaseId { get; set; }
         public int? MsgUserId { get; set; }
         public string? MsgContent { get; set; }
+        public int MsgGroupId { get; set; }
+        public bool MsgGroupP { get; set; }
 
         public virtual Case? MsgCase { get; set; }
         public virtual User? MsgUser { get; set; }

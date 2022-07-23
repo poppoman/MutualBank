@@ -165,6 +165,10 @@ namespace MutualBank.Models
                     .HasMaxLength(200)
                     .HasColumnName("Msg_Content");
 
+                entity.Property(e => e.MsgGroupId).HasColumnName("Msg_GroupID");
+
+                entity.Property(e => e.MsgGroupP).HasColumnName("Msg_GroupP");
+
                 entity.Property(e => e.MsgUserId).HasColumnName("Msg_UserID");
 
                 entity.HasOne(d => d.MsgCase)
