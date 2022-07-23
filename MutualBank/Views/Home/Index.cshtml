@@ -50,18 +50,42 @@
         </div>
 
         <div class="container-fluid">
-            <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-4">
+            <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4">
                 <div class="col" v-for="item in caseViewModel">
                     <div class="card  mb-2 w-100">
                         <div class="imgBx">
+                            <div class="card-tag">
+                                <span class="case-type">{{item.CaseNeedHelp | filterCaseNeedHelp}}</span>
+                                <span class="case-type">{{item.CaseSkillName}}</span>
+                            </div>
                             <img src="https://picsum.photos/id/96/400/400" class="card-img-top p-2" alt="圖片">
                         </div>
-                        <span style="cursor:pointer" :data-skillid="item.CaseSkillId" v-on:click="getTagModel">{{item.CaseSkillName}}</span>
+@*                        <span style="cursor:pointer" :data-skillid="item.CaseSkillId" v-on:click="getTagModel">{{item.CaseSkillName}}</span>*@
                         <div class="card-body">
                             <h5 class="card-title">{{item.CaseTitle}}</h5>
                             <div style="height:50px;"><p class="card-text mt-1">{{item.CaseIntroduction}}</p></div>
-                            <div class="d-flex  justify-content-center">
-                                <a name="temp" class="btn" :data-caseid="item.CaseId" v-on:click="redirectToCasePage">留言</a>
+
+                            <div class="container mt-3 p-0">
+                                <div class="row">
+                                    <div class="col-md-8 col-sm-12">
+                                        <div class="row">
+                                            <div class="col-md-4 col-sm-2 col m-0">
+                                                <div class="userPhotoBx">
+                                                    <img src="https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg">
+                                                </div>
+                                            </div>
+                                            <div class="col-8 text-start align-items-center userInfo">
+                                                <p class="userName">{{item.CaseUserName}}</p>
+                                                <p class="releaseDate">{{item.CaseReleaseDate | showDate}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-12 text-center">
+                                        <a class="btn text-nowrap m-auto" :data-caseid="item.CaseId" v-on:click="redirectToCasePage">留言</a>
+                                    </div>
+                                </div>
+
+
                             </div>
                         </div>
                     </div>
@@ -213,7 +237,6 @@
                 },
                 orderAscOrDesc: function() {
                     var isDesc = vmIndex.isOrderByDesc = -vmIndex.isOrderByDesc;
-                    //根據Order紀錄值的資料傳回排列陣列
                     var para = vmIndex.orderByOption;
                     switch (para) {
                         case "releaseDate":
@@ -263,6 +286,21 @@
                     e.target.href = href;
                 }
             },
+            filters: {
+                filterCaseNeedHelp: function(e) {
+                    if (e == true) {
+                        return "需求"
+                    }
+                    else {
+                        return "技能"
+                    }
+                },
+                showDate: function(e) {
+                    if (e.includes("T")) {
+                        return e.split("T")[0];
+                    }
+                }
+            },
             mounted: function() {
                 //地區標籤綁定關閉標籤事件
                 var areaLabelCloseBtn = document.getElementById("areaLabelCloseBtn");
@@ -287,7 +325,6 @@
                             .fail(function(res) {
                                 console.log(res);
                             });
-
                     });
                 }
 

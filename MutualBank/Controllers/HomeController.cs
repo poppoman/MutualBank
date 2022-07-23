@@ -34,7 +34,7 @@ namespace MutualBank.Controllers
                     CaseSkillId = x.CaseSkil.SkillId,
                     CaseSkillName = x.CaseSkil.SkillName,
                     CaseUserId = x.CaseUser.UserId,
-                    CaseUserName = x.CaseUser.UserFname.Concat(x.CaseUser.UserLname).ToString(),
+                    CaseUserName = $"{x.CaseUser.UserLname}{x.CaseUser.UserFname}"
 
                 });
             return View(Model);
@@ -70,7 +70,7 @@ namespace MutualBank.Controllers
                 CaseSkillId = x.CaseSkil.SkillId,
                 CaseSkillName = x.CaseSkil.SkillName,
                 CaseUserId = x.CaseUser.UserId,
-                CaseUserName = x.CaseUser.UserFname.Concat(x.CaseUser.UserLname).ToString(),
+                CaseUserName = $"{x.CaseUser.UserLname}{x.CaseUser.UserFname}"
 
             }).ToList();
 
@@ -109,7 +109,7 @@ namespace MutualBank.Controllers
                     CaseSkillId = x.CaseSkil.SkillId,
                     CaseSkillName = x.CaseSkil.SkillName,
                     CaseUserId = x.CaseUser.UserId,
-                    CaseUserName = x.CaseUser.UserFname.Concat(x.CaseUser.UserLname).ToString(),
+                    CaseUserName = $"{x.CaseUser.UserLname}{x.CaseUser.UserFname}",
                     MessageCount = x.Messages.Count
                 }) ;
             var ModelJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model);

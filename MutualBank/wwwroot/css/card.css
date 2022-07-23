@@ -1,8 +1,23 @@
-﻿ .card {
+﻿.card {
     box-shadow: 5px 10px 25px rgba(0, 0, 0, 0.1);
 }
+    .card .card-tag {
+        position: absolute;
+        top: 15px;
+        left: 5px;
+        margin:0 2px;
+    }
 
-     .card span {
+    .card .case-type {
+        
+        padding: 0 5px;
+        border-radius: 0;
+        font-weight: 500;
+        border: 0px solid var(--bg);
+        background: rgb(255, 255, 255,0.6);
+    }
+
+    .card span {
         position: relative;
         display: inline-block;
         left: 0.5rem;
@@ -20,10 +35,10 @@
     .card .card-body {
         position: relative;
         bottom: 0.25rem;
-        background:rgba(0,0,0,0);
+        background: rgba(0,0,0,0);
     }
 
-     .card .card-title {
+    .card .card-title {
         border-bottom: 1px solid var(--gray);
         transition: 0.2s;
         font-size: 24px;
@@ -34,7 +49,7 @@
         -webkit-box-orient: vertical;
     }
 
-     .card .card-text {
+    .card .card-text {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: normal;
@@ -42,10 +57,48 @@
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         margin-top: 5px;
-        height:48px;
+        height: 48px;
     }
 
-     .card .btn {
+
+
+    .card .userPhotoBx {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+
+
+        .card .userPhotoBx img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+
+    .card .userInfo {
+        padding: 0;
+        white-space: nowrap;
+    }
+        .card .userInfo p {
+            margin:0;
+        }
+
+
+        .card .userName {
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+
+    .card .releaseDate {
+        font-weight: 300;
+        font-size: 12px;
+    }
+
+    .card .btn {
         background: var(--help);
         font-size: 16px;
         font-weight: 700;
