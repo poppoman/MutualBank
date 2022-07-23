@@ -201,6 +201,7 @@
                 type: "POST",
                 url: "/UserLogin/message",
                 success: function(res) {
+                    $("#ajaxSection").html("");
                     $("#ajaxSection").html(res);
                 },
                 error: function(res) {
