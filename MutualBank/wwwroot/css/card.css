@@ -1,36 +1,52 @@
-﻿.card {
+﻿
+.card {
     box-shadow: 5px 10px 25px rgba(0, 0, 0, 0.1);
 }
+
     .card .fw-300 {
         font-weight: 300;
     }
+    .card .fw-400 {
+        font-weight: 400;
+    }
+
     .card .imgBx {
         position: relative;
         width: 100%;
         height: 200px;
         overflow: hidden;
     }
+
         .card .imgBx img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
+
     .card .card-tag {
         position: absolute;
         top: 15px;
         left: 5px;
         margin: 0 2px;
-        z-index:1;
     }
 
-    .card .case-type {
-        
-        padding: 0 5px;
-        border-radius: 0;
-        font-weight: 400;
-        border: 0px solid var(--bg);
-        background: rgb(255, 255, 255,0.6);
-    }
+        .card .card-tag .case-type {
+            padding: 0 5px;
+            border-radius: 2px;
+            font-weight: 400;
+            border: 0px solid var(--bg);
+            background: rgb(255, 255, 255,0.7);
+            color: rgb(30, 30, 30);
+        }
+
+        .card .card-tag .type-skill {
+            color: var(--skill);
+        }
+
+        .card .card-tag .type-help {
+            color: rgb(78, 54, 21);
+        }
+
 
     .card span {
         position: relative;
@@ -51,13 +67,13 @@
         position: relative;
         bottom: 0.5rem;
         background: rgba(0,0,0,0);
-        padding-bottom:0.25rem;
+        padding-bottom: 0.25rem;
     }
 
     .card .card-title {
         border-bottom: 1px solid var(--gray);
         transition: 0.2s;
-        font-size: 24px;
+        font-size: 22px;
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
@@ -77,8 +93,9 @@
     }
 
     .card .userPhoto {
-        width:60px;
+        width: 60px;
     }
+
         .card .userPhoto .PhotoBx {
             position: relative;
             width: 40px;
@@ -86,6 +103,7 @@
             border-radius: 50%;
             overflow: hidden;
         }
+
             .card .userPhoto .PhotoBx img {
                 width: 100%;
                 height: 100%;
@@ -97,8 +115,9 @@
         padding: 0;
         white-space: nowrap;
     }
+
         .card .userInfo p {
-            margin:0;
+            margin: 0;
         }
 
 

@@ -54,14 +54,18 @@
                 <div class="col" v-for="item in caseViewModel">
                     <div class="card mb-2 w-100">
                         <div class="imgBx">
+
                             <div class="card-tag">
-                                <span class="case-type">{{item.CaseNeedHelp | filterCaseNeedHelp}}</span>
-                                <span class="case-type">{{item.CaseSkillName}}</span>
+                                <span class="case-type type-skill" v-bind:class="{'type-help': item.CaseNeedHelp }">
+                                    <i class="fa-regular fa-circle-question" v-if="item.CaseNeedHelp"></i>
+                                    <i class="fa-solid fa-briefcase" v-else></i> {{item.CaseSkillName}}</span>
+                                <span class="case-type"><i class="fa-regular fa-message"></i> {{item.MessageCount}}</span>
                             </div>
+                            
                             <img v-bind:src="item.CasePhoto" class="card-img-top p-2" alt="image not found">
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">{{item.CaseTitle}}</h5>
+                            <h5 class="card-title fw-400" title="item.CaseTitle">{{item.CaseTitle}}</h5>
                             <div><p class="card-text mt-1 fw-300">{{item.CaseIntroduction}}</p></div>
 
                             <div class="container mt-3 p-0">
@@ -83,7 +87,7 @@
 
                                     </div>
                                     <div class="col-md-4 text-center p-0">
-                                        <a class="btn text-nowrap" :data-caseid="item.CaseId" v-on:click="redirectToCasePage">留言</a>
+                                        <a class="btn text-nowrap" :data-caseid="item.CaseId" v-on:click="redirectToCasePage">詳細</a>
                                     </div>
                                 </div>
                             </div>
@@ -312,14 +316,14 @@
                 }
             },
             filters: {
-                filterCaseNeedHelp: function(e) {
-                    if (e == true) {
-                        return "需求"
-                    }
-                    else {
-                        return "技能"
-                    }
-                },
+                //filterCaseNeedHelp: function(e) {
+                //    if (e == true) {
+                //        return "需求"
+                //    }
+                //    else {
+                //        return "技能"
+                //    }
+                //},
                 showDate: function(e) {
                     if (e.includes("T")) {
                         return e.split("T")[0];

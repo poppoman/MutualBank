@@ -20,7 +20,7 @@ namespace MutualBank.Controllers
         {
             ViewBag.Tags = _mutualBankContext.Skills.OrderBy(x => x.SkillId).ToList();
             var PhotoFileFolder = Path.Combine("/Img", "CasePhoto");
-            var Model = _mutualBankContext.Cases.Include("CaseSkil")
+            var Model = _mutualBankContext.Cases.Include("CaseSkil").Where(x=>x.CaseClosedDate>= DateTime.Now)
                 .Select(x => new CaseViewModel
                 {
                     CaseId = x.CaseId,
@@ -47,6 +47,7 @@ namespace MutualBank.Controllers
             ViewBag.Tags = _mutualBankContext.Skills.OrderBy(x => x.SkillId).ToList();
             ViewBag.Area = $"{Search.AreaCity} {Search.AreaTown}";
             var Model = new List<CaseViewModel>{ };
+            var PhotoFileFolder = Path.Combine("/Img", "CasePhoto");
 
             var AreaId = -1;
             if (Search.AreaTown == null | Search.AreaTown == "區域")
@@ -67,7 +68,7 @@ namespace MutualBank.Controllers
                 CaseExpireDate = x.CaseExpireDate,
                 CaseTitle = x.CaseTitle,
                 CaseIntroduction = x.CaseIntroduction,
-                CasePhoto = x.CasePhoto,
+                CasePhoto = Path.Combine(PhotoFileFolder, x.CasePhoto),
                 CaseSerDate = x.CaseSerDate,
                 CaseSerArea = x.CaseSerArea,
                 CaseSkillId = x.CaseSkil.SkillId,
@@ -97,6 +98,7 @@ namespace MutualBank.Controllers
 
         public string GetAllCaseModel()
         {
+            var PhotoFileFolder = Path.Combine("/Img", "CasePhoto");
             var Model = _mutualBankContext.Cases.Include("CaseSkil").Include("Messages").Include("CaseSerAreaNavigation")
                 .Select(x => new CaseViewModel
                 {
@@ -106,7 +108,7 @@ namespace MutualBank.Controllers
                     CaseExpireDate = x.CaseExpireDate,
                     CaseTitle = x.CaseTitle,
                     CaseIntroduction = x.CaseIntroduction,
-                    CasePhoto = x.CasePhoto,
+                    CasePhoto = Path.Combine(PhotoFileFolder, x.CasePhoto),
                     CaseSerDate = x.CaseSerDate,
                     CaseSerArea = x.CaseSerArea,
                     CaseSkillId = x.CaseSkil.SkillId,
