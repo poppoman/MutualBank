@@ -8,7 +8,7 @@ namespace MutualBank.Controllers
     {
         private readonly MutualBankContext _mutualBankContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public CaseController(MutualBankContext MutualBankContext,IWebHostEnvironment webHostEnvironment)
+        public CaseController(MutualBankContext MutualBankContext, IWebHostEnvironment webHostEnvironment)
         {
             _mutualBankContext = MutualBankContext;
             _webHostEnvironment = webHostEnvironment;
@@ -17,8 +17,8 @@ namespace MutualBank.Controllers
         {
             return View();
         }
-        public IActionResult GetPostCase() 
-        {
+        public IActionResult GetPostCase()
+        {   
             return PartialView("PostCase");
         }
         public IActionResult GetCaseList()
@@ -31,28 +31,42 @@ namespace MutualBank.Controllers
             return result;
         }
         [HttpPost]
-        public void AddCase(Case NewCase) {
-            //TODO 暫時沒有登入者
-            //var UserName = User.Identity.Name;
-            //NewCase.CaseUserId = _mutualBankContext.Users.Where(x => Model.UserNname == UserName).FirstOrDefault().UserId;
-            
+        public void AddCase(Case NewCase)
+        {
+            //TODO 登入者Claims
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Type == "xxx").Value);
+            Console.WriteLine("========目前使用者 id========");
+            Console.WriteLine(UserId);
+
+
             //整理資料
-            //文字
+            NewCase.CaseUserId = UserId;
             NewCase.CaseTitle = NewCase.CaseTitle.Trim();
             NewCase.CaseIntroduction = NewCase.CaseIntroduction.Trim();
-            //日期
             NewCase.CaseAddDate = DateTime.Now;
             NewCase.CaseExpireDate = NewCase.CaseReleaseDate.AddDays(14);
             NewCase.CaseClosedDate = DateTime.Now;
 
             //取出表單圖片及名稱 
-            var InpitFile = HttpContext.Request.Form.Files[0];
-            NewCase.CasePhoto = InpitFile.FileName;
-            //TODO 檔案暫時儲存在wwwroot
-            var InpitFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Img","CasePhoto", NewCase.CasePhoto);
-            FileStream fs = new FileStream(InpitFilePath, FileMode.Create);
-            fs.CopyToAsync(fs);
-            fs.Close();
+            var InputFile = HttpContext.Request.Form.Files[0];
+            var InputFilePath = "";
+            if (InputFile == null)
+            {
+                NewCase.CasePhoto = "0_Default.jpg";
+            }
+            else 
+            {
+                //儲存photo
+                var UniqueId = Guid.NewGuid().ToString("D");
+                var PhotoFormat = InputFile.FileName.Split(".")[1];
+                NewCase.CasePhoto = $"{UserId}_{UniqueId}.{PhotoFormat}";
+
+                InputFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Img", "CasePhoto", NewCase.CasePhoto);
+                FileStream fs = new FileStream(InputFilePath, FileMode.Create);
+                InputFile.CopyToAsync(fs);
+                fs.Close();
+            }
+            
 
             _mutualBankContext.Cases.Add(NewCase);
             _mutualBankContext.SaveChanges();
@@ -60,12 +74,11 @@ namespace MutualBank.Controllers
         [HttpGet]
         public string GetUserCaseModel()
         {
-            //目前user 暫時沒有，暫時使用11號
-            //var LoginName = User.Identity.Name;
-            //var UserId =_mutualBankContext.Logins.FindAsync(LoginName).Result.LoginId;
+            //TODO 登入者Claims
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Type == "xxx").Value);
 
             var Model = _mutualBankContext.Cases.Include("CaseSkil").Include("Messages")
-                .Where(x => x.CaseUserId == 11).Select(x => new CaseViewModel 
+                .Where(x => x.CaseUserId == UserId).Select(x => new CaseViewModel
                 {
                     CaseId = x.CaseId,
                     CaseNeedHelp = x.CaseNeedHelp,
@@ -80,7 +93,7 @@ namespace MutualBank.Controllers
                     CaseSkillName = x.CaseSkil.SkillName,
                     CaseUserId = x.CaseUser.UserId,
                     CaseUserName = $"{x.CaseUser.UserLname}{x.CaseUser.UserFname}",
-                    MessageCount = x.Messages == null ? 0 : x.Messages.Count()
+                    MessageCount = x.Messages.Count
                 });
 
 

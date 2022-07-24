@@ -19,6 +19,7 @@ namespace MutualBank.Controllers
         public IActionResult Index()
         {
             ViewBag.Tags = _mutualBankContext.Skills.OrderBy(x => x.SkillId).ToList();
+            var PhotoFileFolder = Path.Combine("Img", "CasePhoto");
             var Model = _mutualBankContext.Cases.Include("CaseSkil")
                 .Select(x => new CaseViewModel
                 {
@@ -28,13 +29,14 @@ namespace MutualBank.Controllers
                     CaseExpireDate = x.CaseExpireDate,
                     CaseTitle = x.CaseTitle,
                     CaseIntroduction = x.CaseIntroduction,
-                    CasePhoto = x.CasePhoto,
+                    CasePhoto = Path.Combine(PhotoFileFolder, x.CasePhoto==null? "0_Default.jpg":x.CasePhoto),
                     CaseSerDate = x.CaseSerDate,
                     CaseSerArea = x.CaseSerArea,
                     CaseSkillId = x.CaseSkil.SkillId,
                     CaseSkillName = x.CaseSkil.SkillName,
                     CaseUserId = x.CaseUser.UserId,
-                    CaseUserName = $"{x.CaseUser.UserLname}{x.CaseUser.UserFname}"
+                    CaseUserName = $"{x.CaseUser.UserLname}{x.CaseUser.UserFname}",
+                    MessageCount = x.Messages.Count
 
                 });
             return View(Model);

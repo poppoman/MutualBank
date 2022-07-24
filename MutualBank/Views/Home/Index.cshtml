@@ -58,9 +58,9 @@
                                 <span class="case-type">{{item.CaseNeedHelp | filterCaseNeedHelp}}</span>
                                 <span class="case-type">{{item.CaseSkillName}}</span>
                             </div>
-                            <img src="https://picsum.photos/id/96/400/400" class="card-img-top p-2" alt="圖片">
+                            <img v-bind:src="item.CasePhoto" class="card-img-top p-2" alt="image not found">
                         </div>
-@*                        <span style="cursor:pointer" :data-skillid="item.CaseSkillId" v-on:click="getTagModel">{{item.CaseSkillName}}</span>*@
+                        @*                        <span style="cursor:pointer" :data-skillid="item.CaseSkillId" v-on:click="getTagModel">{{item.CaseSkillName}}</span>*@
                         <div class="card-body">
                             <h5 class="card-title">{{item.CaseTitle}}</h5>
                             <div style="height:50px;"><p class="card-text mt-1">{{item.CaseIntroduction}}</p></div>
@@ -284,6 +284,34 @@
                 redirectToCasePage: function(e) {
                     var href = "/PostPage/Index/" + e.target.dataset.caseid;
                     e.target.href = href;
+                },
+                //初始化排序(預設為降序)
+                initModelWithOrder: function() {
+                    var para = this.orderByOption;
+
+                    //this.caseViewModel.sort(function(a, b) {
+                    //    return b.CaseReleaseDate > a.CaseReleaseDate ? 1 : -1;
+                    //        });
+
+                    switch (para) {
+                        case "releaseDate":
+                            return this.caseViewModel.sort(function(a, b) {
+                                return b.CaseReleaseDate > a.CaseReleaseDate ? 1 : -1
+                            });
+                            break;
+                        case "messageCount":
+
+                            return this.caseViewModel.sort(function(a, b) {
+                                return b.MessageCount - a.MessageCount
+                            });
+                            break;
+                        case "expireDate":
+                            return this.caseViewModel.sort(function(a, b) {
+                                return b.CaseExpireDate > a.CaseReleaseDate ? 1 : -1
+                            });
+                            dafault:
+                            break;
+                    }
                 }
             },
             filters: {
@@ -301,7 +329,11 @@
                     }
                 }
             },
+            created: function() {
+                this.initModelWithOrder();
+            },
             mounted: function() {
+
                 //地區標籤綁定關閉標籤事件
                 var areaLabelCloseBtn = document.getElementById("areaLabelCloseBtn");
                 if (areaLabelCloseBtn != null) {

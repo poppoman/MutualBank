@@ -81,7 +81,8 @@ namespace MutualBank.Controllers
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, user.LoginName)
+                    new Claim(ClaimTypes.Name, user.LoginName),
+                    new Claim("xxx",user.LoginId.ToString())
                 };
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal(claimsIdentity);
@@ -89,6 +90,8 @@ namespace MutualBank.Controllers
                 {
                     ExpiresUtc = DateTime.UtcNow.AddMinutes(60)
                 });
+
+
                 return RedirectToAction("Index", "Home");
             }
         }
