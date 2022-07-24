@@ -52,7 +52,7 @@
         <div class="container-fluid">
             <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4">
                 <div class="col" v-for="item in caseViewModel">
-                    <div class="card  mb-2 w-100">
+                    <div class="card mb-2 w-100">
                         <div class="imgBx">
                             <div class="card-tag">
                                 <span class="case-type">{{item.CaseNeedHelp | filterCaseNeedHelp}}</span>
@@ -60,33 +60,34 @@
                             </div>
                             <img v-bind:src="item.CasePhoto" class="card-img-top p-2" alt="image not found">
                         </div>
-                        @*                        <span style="cursor:pointer" :data-skillid="item.CaseSkillId" v-on:click="getTagModel">{{item.CaseSkillName}}</span>*@
                         <div class="card-body">
                             <h5 class="card-title">{{item.CaseTitle}}</h5>
-                            <div style="height:50px;"><p class="card-text mt-1">{{item.CaseIntroduction}}</p></div>
+                            <div><p class="card-text mt-1 fw-300">{{item.CaseIntroduction}}</p></div>
 
                             <div class="container mt-3 p-0">
                                 <div class="row">
-                                    <div class="col-md-8 col-sm-12">
+                                    <div class="col-md-8 col">
+
                                         <div class="row">
-                                            <div class="col-md-4 col-sm-2 col m-0">
-                                                <div class="userPhotoBx">
+                                            <div class="userPhoto">
+                                                <div class="PhotoBx">
                                                     <img src="https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg">
                                                 </div>
                                             </div>
-                                            <div class="col-8 text-start align-items-center userInfo">
-                                                <p class="userName">{{item.CaseUserName}}</p>
-                                                <p class="releaseDate">{{item.CaseReleaseDate | showDate}}</p>
+                                            <div class="col-6 text-start align-items-center userInfo">
+                                                <p class="infoTitle">{{item.CaseUserName}}</p>
+                                                <p class="infoText">{{item.CaseSerAreaName}}</p>
+                                                <p class="infoText">{{item.CaseReleaseDate | showDate}}</p>
                                             </div>
                                         </div>
+
                                     </div>
-                                    <div class="col-md-4 col-sm-12 text-center">
-                                        <a class="btn text-nowrap m-auto" :data-caseid="item.CaseId" v-on:click="redirectToCasePage">留言</a>
+                                    <div class="col-md-4 text-center p-0">
+                                        <a class="btn text-nowrap" :data-caseid="item.CaseId" v-on:click="redirectToCasePage">留言</a>
                                     </div>
                                 </div>
-
-
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -288,10 +289,6 @@
                 //初始化排序(預設為降序)
                 initModelWithOrder: function() {
                     var para = this.orderByOption;
-
-                    //this.caseViewModel.sort(function(a, b) {
-                    //    return b.CaseReleaseDate > a.CaseReleaseDate ? 1 : -1;
-                    //        });
 
                     switch (para) {
                         case "releaseDate":

@@ -1,12 +1,12 @@
 ﻿<section id="caseList">
     <div class="container mb-3">
-        <div class="row justify-content-evenly">
+        <div class="row justify-content-evenly align-items-center text-nowrap">
             <div class="col-md-8 col-sm-12">
-                <button type="button" class="btnSortCase" v-on:click="getPoseCaseForm"><strong><i class="fa-solid fa-square-plus"></i> 新增貼文</strong> </button>
+                <button type="button" class="btnSortCase" v-on:click="getPoseCaseForm"><i class="fa-solid fa-square-plus"></i> 新增貼文 </button>
             </div>
 
-            <div class="col-md-4 text-nowrap">
-                <button type="button" class="btnSortCase active" v-on:click="getAllModel">全部貼文</button>
+            <div class="col-md-4 ">
+                <button type="button" class="btnSortCase active" id="allCase" v-on:click="getAllModel">全部貼文</button>
                 <span>/</span>
                 <button type="button" class="btnSortCase" v-on:click="needOrSkillModel" data-bit=true>需求</button>
                 <span>/</span>
@@ -16,19 +16,36 @@
     </div>
 
     <div class="container">
-        <div class="row row-cols-sm-1 row-cols-md-3">
+        <div class="row row-cols-sm-1 row-cols-md-2 row-cols-xl-3">
             <div class="col" v-for="item in caseViewModel">
                 <div class="card mb-2 w-100">
                     <div class="imgBx">
-                        <img src="https://picsum.photos/id/96/400/400" class="card-img-top p-2" alt="圖片">
+                        <div class="card-tag">
+                            <span class="case-type">{{item.CaseNeedHelp | filterCaseNeedHelp}}</span>
+                            <span class="case-type">{{item.CaseSkillName}}</span>
+                        </div>
+                        <img v-bind:src="item.CasePhoto" class="card-img-top p-2" alt="image not found">
                     </div>
-                    <span>{{item.CaseSkillName}}</span>
                     <div class="card-body">
                         <h5 class="card-title">{{item.CaseTitle}}</h5>
-                        <p class="card-text mt-1">{{item.CaseIntroduction}}</p>
-                        <div class="d-flex  justify-content-center">
-                            <a class="btn" :data-caseid="item.CaseId" v-on:click="redirectToCasePage">詳細內容</a>
+                        <p class="card-text mt-1 fw-300">{{item.CaseIntroduction}}</p>
+
+                        <div class="container mt-3 p-0">
+                            <div class="row">
+                                <div class="col-md-8 col">
+                                    <div class="col-6 text-start align-items-center userInfo">
+                                        <p class="infoTitle">{{item.MessageCount}}條留言</p>
+                                        <p class="infoText">{{item.CaseReleaseDate | showDate}}</p>
+                                        <p class="infoText">{{item.CaseSerAreaName}}</p>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-center p-0">
+                                    <a class="btn text-nowrap" :data-caseid="item.CaseId" v-on:click="redirectToCasePage">詳細</a>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
                 </div>
             </div>

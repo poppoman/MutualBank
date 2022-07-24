@@ -109,14 +109,14 @@
             margin: 0px 5px 8px 5px;
             padding: 3px 15px;
             font-size: 16px;
-            font-weight: 500;
+            font-weight: 400;
             text-align: center;
             white-space: nowrap;
             color: var(--black);
         }
 
             #home .tagBar .tags .tagName:hover {
-                font-weight: 700;
+                font-weight: 500;
             }
 
 
@@ -135,7 +135,7 @@
             margin-right: 30px;
             font-size: 18px;
             text-align: right;
-            font-weight: 500;
+            font-weight: 400;
         }
 
 
@@ -152,7 +152,7 @@
             right: 10px;
             font-size: 16px;
             text-align: left;
-            font-weight: 700;
+            font-weight: 500;
         }
 
 

@@ -31,6 +31,37 @@ namespace MutualBank.Controllers
             var result = _mutualBankContext.Skills.ToList();
             return result;
         }
+        
+        [HttpGet]
+        public string GetUserCaseModel()
+        {
+            var UserId = this.User.GetId();
+            var PhotoFileFolder = Path.Combine("/Img", "CasePhoto");
+            var Model = _mutualBankContext.Cases.Include("CaseSkil").Include("Messages")
+                .Where(x => x.CaseUserId == UserId).Select(x => new CaseViewModel
+                {
+                    CaseId = x.CaseId,
+                    CaseNeedHelp = x.CaseNeedHelp,
+                    CaseReleaseDate = x.CaseReleaseDate,
+                    CaseExpireDate = x.CaseExpireDate,
+                    CaseTitle = x.CaseTitle,
+                    CaseIntroduction = x.CaseIntroduction,
+                    CasePhoto = Path.Combine(PhotoFileFolder, x.CasePhoto),
+                    CaseSerDate = x.CaseSerDate,
+                    CaseSerArea = x.CaseSerArea,
+                    CaseSerAreaName = $"{x.CaseSerAreaNavigation.AreaCity}{x.CaseSerAreaNavigation.AreaTown}",
+                    CaseSkillId = x.CaseSkil.SkillId,
+                    CaseSkillName = x.CaseSkil.SkillName,
+                    CaseUserId = x.CaseUser.UserId,
+                    CaseUserName = $"{x.CaseUser.UserLname}{x.CaseUser.UserFname}",
+                    MessageCount = x.Messages.Count
+                });
+
+
+            var ModelJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model);
+            return ModelJson;
+        }
+
         [HttpPost]
         public void AddCase(Case NewCase)
         {
@@ -50,7 +81,7 @@ namespace MutualBank.Controllers
             {
                 NewCase.CasePhoto = "0_Default.jpg";
             }
-            else 
+            else
             {
                 //儲存photo
                 var UniqueId = Guid.NewGuid().ToString("D");
@@ -62,38 +93,10 @@ namespace MutualBank.Controllers
                 InputFile.CopyToAsync(fs);
                 fs.Close();
             }
-            
+
 
             _mutualBankContext.Cases.Add(NewCase);
             _mutualBankContext.SaveChanges();
-        }
-        [HttpGet]
-        public string GetUserCaseModel()
-        {
-            var UserId = this.User.GetId();
-            var PhotoFileFolder = Path.Combine("/Img", "CasePhoto");
-            var Model = _mutualBankContext.Cases.Include("CaseSkil").Include("Messages")
-                .Where(x => x.CaseUserId == UserId).Select(x => new CaseViewModel
-                {
-                    CaseId = x.CaseId,
-                    CaseNeedHelp = x.CaseNeedHelp,
-                    CaseReleaseDate = x.CaseReleaseDate,
-                    CaseExpireDate = x.CaseExpireDate,
-                    CaseTitle = x.CaseTitle,
-                    CaseIntroduction = x.CaseIntroduction,
-                    CasePhoto = Path.Combine(PhotoFileFolder, x.CasePhoto),
-                    CaseSerDate = x.CaseSerDate,
-                    CaseSerArea = x.CaseSerArea,
-                    CaseSkillId = x.CaseSkil.SkillId,
-                    CaseSkillName = x.CaseSkil.SkillName,
-                    CaseUserId = x.CaseUser.UserId,
-                    CaseUserName = $"{x.CaseUser.UserLname}{x.CaseUser.UserFname}",
-                    MessageCount = x.Messages.Count
-                });
-
-
-            var ModelJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model);
-            return ModelJson;
         }
     }
 }
