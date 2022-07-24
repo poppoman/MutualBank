@@ -103,32 +103,6 @@ namespace MutualBank.Controllers.api
 		}
 
 		[HttpPost]
-		public ActionResult<Error> Msgresponse(MsgResponsecs m)
-		{
-			Error err = new Error();
-			if (string.IsNullOrEmpty(m.MsgContent))
-			{
-				err.Message = "打些字回復人家吧~";
-			}
-			else if (string.IsNullOrEmpty(m.CaseId.ToString()))
-			{
-				err.Message = "請選擇貼文";
-			}
-			else
-			{
-				var userid = _mutualBankContext.Logins.Where(x => x.LoginName == User.Identity.Name).Select(x => x.LoginId).FirstOrDefault();
-				var newmsg = new Message()
-				{
-					MsgCaseId = m.CaseId,
-					MsgContent = m.MsgContent,
-					MsgUserId = userid
-				};
-				_mutualBankContext.Messages.Add(newmsg);
-				_mutualBankContext.SaveChanges();
-			}
-			return err;
-		}
-		[HttpPost]
 		public ActionResult<Error> ConfirmAll(UserRegister userregister)
 		{
 			Error err = new Error();

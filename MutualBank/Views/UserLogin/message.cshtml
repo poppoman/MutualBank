@@ -1,87 +1,49 @@
-﻿<section id="message">
+﻿<section id="message" class="bg-white">
     <div id="mes" class="container">
         <div class="row">
-            @*<div class="col-3">
-            <div class="bg-white">
-            <ul>
-            <li>
-            <button v-on:click="getHelpyou" class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
-            提供技能
-            </button>
-            <div class="collapse" id="dashboard-collapse">
-            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            <li v-for="(item,index) in helpyou"><button v-on:click="retrunyouid(index)" class="btn btn-toggle link-dark d-inline-flex text-decoration-none rounded">{{item}}</button></li>
+            <ul class="nav nav-tabs bg-white" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="All-tab" data-bs-toggle="tab" data-bs-target="#All-tab-pane" type="button" role="tab" aria-controls="All-tab-pane" aria-selected="true">全部貼文</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link " id="skill-tab" data-bs-toggle="tab" data-bs-target="#skill-tab-pane" type="button" role="tab" aria-controls="skill-tab-pane" aria-selected="true" v-on:click="getHelpyou">提供技能</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="need-tab" data-bs-toggle="tab" data-bs-target="#need-tab-pane" type="button" role="tab" aria-controls="need-tab-pane" aria-selected="true" v-on:click="getHelpme">需要幫忙</a>
+                </li>
             </ul>
-            </div>
-            </li>
-            <li>
-            <button v-on:click="getHelpme" class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
-            需要幫忙
-            </button>
-            <div class="collapse" id="orders-collapse">
-            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            <li v-for="(item,index) in helpme"><button v-on:click="retrunmeid(index)" class="btn btn-toggle link-dark d-inline-flex text-decoration-none rounded">{{item}}</button></li>
-            </ul>
-            </div>
-            </li>
-            </ul>
-            </div>
-            </div>
-            <div class="col-9">
-            <ul  class="list-group">
-            <li class="list-group-item" v-for="item in helpmessage">{{item}}</li>
-            <li id="contentli" class="list-group-item" style="display:none"><input id="content" type="text" /><button v-on:click="conmsg" class="btn">回復</button><span class="ms-5" id="err"></span></li>
-            </ul>
-            </div>*@
-            <div>
-                @*<div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        技能或需求
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" v-on:click="getHelpyou" >提供技能</a></li>
-                        <li><a class="dropdown-item" v-on:click="getHelpme">需要幫忙</a></li>
-                    </ul>
+
+            <div v-if="showwho" class="accordion accordion-flush" id="caseList" >
+                <div class="accordion-item" v-for="(item,index) in helpme":key="index">
+                    <h2 class="accordion-header" :id="'h'+index">
+                        <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#d' + index" aria-expanded="true" :aria-controls="index" v-on:click="retrunmeid(index)">
+                            {{item}}{{index}}
+                        </a>
+                    </h2>
+                    <div :id="'d'+index" class="accordion-collapse collapse" :aria-labelledby="'h'+index" data-bs-parent="#caseList" v-for="mes in helpmessage"  >
+                        <div class="accordion-body" >
+                            {{mes}}
+                        </div>
+                    </div>
                 </div>
-                 <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        文章
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" v-if="showwho" href="#" v-for="(item,index) in helpme" v-on:click="retrunmeid(index)">{{item}}</a></li>
-                        <li><a class="dropdown-item" v-if=showwho href="#" v-for="(item,index) in helpyou" v-on:click="retrunyouid(index)">{{item}}</a></li>
-                    </ul>
-                </div>*@
-
-
-
-
-
-                <ul class="nav nav-pills bg-white">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" id="title" role="button" aria-expanded="false">技能或需求</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" id="you" v-on:click="getHelpyou">提供技能</a></li>
-                            <li><a class="dropdown-item" id="me" v-on:click="getHelpme">需要幫忙</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" id="case">文章</a>
-                        <ul class="dropdown-menu">
-                            <li v-if="showwho" id="caseme" v-for="(item,index) in helpme"><a class="dropdown-item" v-on:click="retrunmeid(index)">{{item}}</a></li>
-                            <li v-if="showwho2" id="caseyou" v-for="(item,index) in helpyou"><a class="dropdown-item" v-on:click="retrunyouid(index)">{{item}}</a></li>
-                        </ul>
-                    </li>
-                </ul>
             </div>
-            <div>
-                <ul class="bg-white">
-                    <li class="" v-for="item in helpmessage">{{item}}</li>
-                    <li id="contentli" class="" style="display:none"><input id="content" type="text" /><button v-on:click="conmsg" class="btn">回復</button><span class="ms-5" id="err"></span></li>
-                </ul>
+
+            <div v-if="showwho2" class="accordion accordion-flush" id="caseList2" >
+                <div class="accordion-item" v-for="(item,index) in helpyou">
+                    <h2 class="accordion-header" :id="'h'+index">
+                        <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#d' + index" aria-expanded="true" :aria-controls="index" v-on:click="retrunyouid(index)">
+                            {{item}}
+                        </a>
+                    </h2>
+                    <div :id="'d'+index" class="accordion-collapse collapse" :aria-labelledby="'h'+index" data-bs-parent="#caseList2" v-for="mes in helpmessage">
+                        <div class="accordion-body">
+                            {{mes}}
+                        </div>
+                    </div>
+                </div>
             </div>
+
         </div>
-
     </div>
 </section>
 
@@ -96,9 +58,9 @@
             helpyoucaseid: [],
             helpmessage: [],
             caseid: "",
-            casename:"",
-            show:true,
-            show2:false
+            casename: "",
+            show: true,
+            show2: false
         },
         methods:
         {
@@ -109,13 +71,12 @@
                         return response.json();
                     })
                     .then(function(res) {
-                        console.log("m = ", res);
+                        console.log("getcase = ", res);
                         self.helpme = res.casetitle;
                         self.helpmecaseid = res.caseid;
-                        document.getElementById("title").innerText = document.getElementById("me").innerText;
-                        //document.getElementById("caseme").removeAttribute("style");
                         self.show = true;
                         self.show2 = false;
+                        self.helpmessage = [];
                     });
             },
             getHelpyou: function() {
@@ -125,13 +86,12 @@
                         return response.json();
                     })
                     .then(function(res) {
-                        console.log("m = ", res);
+                        console.log("getcase = ", res);
                         self.helpyou = res.casetitle;
                         self.helpyoucaseid = res.caseid;
-                        document.getElementById("title").innerText = document.getElementById("you").innerText;
-                        //document.getElementById("caseyou").removeAttribute("style");
                         self.show = false;
                         self.show2 = true;
+                        self.helpmessage = [];
                     });
             },
             retrunmeid: function(e) {
@@ -143,10 +103,8 @@
                         return response.json();
                     })
                     .then(function(res) {
-                        console.log("m = ", res);
+                        console.log("message = ", res);
                         self.helpmessage = res;
-                        document.getElementById("case").innerText = self.casename;
-                        document.getElementById("contentli").removeAttribute("style");
                     });
             },
             retrunyouid: function(e) {
@@ -158,49 +116,20 @@
                         return response.json();
                     })
                     .then(function(res) {
-                        console.log("m = ", res);
+                        console.log("message = ", res);
                         self.helpmessage = res;
-                        document.getElementById("case").innerText = self.casename;
-                        document.getElementById("contentli").removeAttribute("style");
                     });
-            },
-            conmsg: function() {
-                var data =
-                {
-                    CaseId: this.caseid,
-                    MsgContent: document.getElementById("content").value,
-                };
-                console.log(data);
-
-                fetch(`/api/Confirm/Msgresponse`, {
-                    method: 'POST',
-                    headers:
-                    {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                })
-                    .then(function(response) {
-                        return response.json();
-                    })
-                    .then(function(res) {
-                        $("#err").text(res.message);
-                        document.getElementById("content").value = null;
-                    })
             }
         },
-        computed: 
+        computed:
         {
-            showwho: function()
-            {
+            showwho: function() {
                 return this.show;
             },
-            showwho2: function()
-            {
+            showwho2: function() {
                 return this.show2;
             }
-        }
+        },
 
     });
 
