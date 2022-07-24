@@ -82,7 +82,7 @@ namespace MutualBank.Controllers
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.LoginName),
-                    new Claim("xxx",user.LoginId.ToString())
+                    new Claim("UserId",user.LoginId.ToString())
                 };
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal(claimsIdentity);

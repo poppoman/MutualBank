@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MutualBank.Extensions;
 using MutualBank.Models;
 
 namespace MutualBank.Controllers
@@ -33,14 +34,9 @@ namespace MutualBank.Controllers
         [HttpPost]
         public void AddCase(Case NewCase)
         {
-            //TODO 登入者Claims
-            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Type == "xxx").Value);
-            Console.WriteLine("========目前使用者 id========");
-            Console.WriteLine(UserId);
-
 
             //整理資料
-            NewCase.CaseUserId = UserId;
+            NewCase.CaseUserId = this.User.GetId();
             NewCase.CaseTitle = NewCase.CaseTitle.Trim();
             NewCase.CaseIntroduction = NewCase.CaseIntroduction.Trim();
             NewCase.CaseAddDate = DateTime.Now;
@@ -59,7 +55,7 @@ namespace MutualBank.Controllers
                 //儲存photo
                 var UniqueId = Guid.NewGuid().ToString("D");
                 var PhotoFormat = InputFile.FileName.Split(".")[1];
-                NewCase.CasePhoto = $"{UserId}_{UniqueId}.{PhotoFormat}";
+                NewCase.CasePhoto = $"{NewCase.CaseUserId}_{UniqueId}.{PhotoFormat}";
 
                 InputFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Img", "CasePhoto", NewCase.CasePhoto);
                 FileStream fs = new FileStream(InputFilePath, FileMode.Create);
@@ -74,9 +70,8 @@ namespace MutualBank.Controllers
         [HttpGet]
         public string GetUserCaseModel()
         {
-            //TODO 登入者Claims
-            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Type == "xxx").Value);
-
+            var UserId = this.User.GetId();
+            var PhotoFileFolder = Path.Combine("/Img", "CasePhoto");
             var Model = _mutualBankContext.Cases.Include("CaseSkil").Include("Messages")
                 .Where(x => x.CaseUserId == UserId).Select(x => new CaseViewModel
                 {
@@ -86,7 +81,7 @@ namespace MutualBank.Controllers
                     CaseExpireDate = x.CaseExpireDate,
                     CaseTitle = x.CaseTitle,
                     CaseIntroduction = x.CaseIntroduction,
-                    CasePhoto = x.CasePhoto,
+                    CasePhoto = Path.Combine(PhotoFileFolder, x.CasePhoto),
                     CaseSerDate = x.CaseSerDate,
                     CaseSerArea = x.CaseSerArea,
                     CaseSkillId = x.CaseSkil.SkillId,
