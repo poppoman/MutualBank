@@ -75,21 +75,21 @@ namespace MutualBank.Controllers
             NewCase.CaseExpireDate = NewCase.CaseReleaseDate.AddDays(14);
             NewCase.CaseClosedDate = DateTime.Now;
 
-            //取出表單圖片及名稱 
-            var InputFile = HttpContext.Request.Form.Files[0];
-            var InputFilePath = "";
-            if (InputFile == null)
+            //取出表單圖片及圖片檔名
+            IFormFile InputFile = null;
+            if (HttpContext.Request.Form.Files.Count == 0)
             {
                 NewCase.CasePhoto = "0_Default.jpg";
             }
             else
             {
-                //儲存photo
+                //制定圖片檔名
+                InputFile = HttpContext.Request.Form.Files[0];
                 var UniqueId = Guid.NewGuid().ToString("D");
                 var PhotoFormat = InputFile.FileName.Split(".")[1];
                 NewCase.CasePhoto = $"{NewCase.CaseUserId}_{UniqueId}.{PhotoFormat}";
-
-                InputFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Img", "CasePhoto", NewCase.CasePhoto);
+                //存圖
+                var InputFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Img", "CasePhoto", NewCase.CasePhoto);
                 FileStream fs = new FileStream(InputFilePath, FileMode.Create);
                 InputFile.CopyToAsync(fs);
                 fs.Close();

@@ -56,22 +56,32 @@
                         <div class="imgBx">
 
                             <div class="card-tag">
-                                    <span class="case-type">
-                                        <i class="fa-solid fa-square-h" v-if="item.CaseNeedHelp"></i>
-                                        <i class="fa-solid fa-square-poll-horizontal" v-else></i> {{item.CaseSkillName}}
-                                    </span>
-
-                                    <span class="case-type">
-                                        <i class="fa-solid fa-message"></i> {{item.MessageCount}}
-                                    </span>
+                                <span class="case-type" :data-skillid="item.SkillId" v-on:click="getTagModel">
+                                    <i class="fa-solid fa-square-h" v-if="item.CaseNeedHelp"></i>
+                                    <i class="fa-solid fa-square-poll-horizontal" v-else></i> {{item.CaseSkillName}}
+                                </span>
+                            </div>
+                            <div class="d-flex w-100 justify-content-center" id="card-info">
+                                <div class="card-info">
+                                    <div>
+                                        <i class="fa-solid fa-location-dot"></i> {{item.CaseSerAreaName}}
+                                    </div>
+                                    
+                                    <div>
+                                        <i class="fa-solid fa-comment-dots"></i> {{item.MessageCount}}
+                                    </div>
+                                </div>
                             </div>
 
                             <img v-bind:src="item.CasePhoto" class="card-img-top p-2" alt="image not found">
                         </div>
+
+
+
                         <div class="card-body">
                             <h5 class="card-title fw-400" title="item.CaseTitle">{{item.CaseTitle}}</h5>
                             <div><p class="card-text mt-1 fw-300">{{item.CaseIntroduction}}</p></div>
-
+                            <hr />
                             <div class="container mt-3 p-0">
                                 <div class="row">
                                     <div class="col-md-8 col">
@@ -85,7 +95,6 @@
                                             </div>
                                             <div class="col-6 text-start align-items-center userInfo">
                                                 <p class="infoTitle">{{item.CaseUserName}}</p>
-                                                <p class="infoText">{{item.CaseSerAreaName}}</p>
                                                 <p class="infoText">{{item.CaseReleaseDate | showDate}}</p>
                                             </div>
                                         </div>

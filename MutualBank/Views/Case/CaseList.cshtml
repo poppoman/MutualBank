@@ -22,33 +22,38 @@
                     <div class="imgBx">
                         <div class="card-tag">
                             <span class="case-type">
-                                <i class="fa-solid fa-square-check" v-if="item.IsCaseExpire"></i>
-                                <i class="fa-solid fa-square-minus" v-else></i>
-                            </span>
-                            <span class="case-type">
                                 <i class="fa-solid fa-square-h" v-if="item.CaseNeedHelp"></i>
                                 <i class="fa-solid fa-square-poll-horizontal" v-else></i> {{item.CaseSkillName}}
                             </span>
-                            
                         </div>
+                        <div class="d-flex w-100 justify-content-center" id="card-info">
+                                <div class="card-info">
+                                    <div>
+                                        <i class="fa-solid fa-location-dot"></i> {{item.CaseSerAreaName}}
+                                    </div>
+                                    
+                                    <div>
+                                        <i class="fa-solid fa-comment-dots"></i> {{item.MessageCount}}
+                                    </div>
+                                </div>
+                            </div>
                         <img v-bind:src="item.CasePhoto" class="card-img-top p-2" alt="image not found">
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">{{item.CaseTitle}}</h5>
                         <p class="card-text mt-1 fw-300">{{item.CaseIntroduction}}</p>
-
+                        <hr />
                         <div class="container mt-3 p-0">
                             <div class="row">
                                 <div class="col-md-8 col">
                                     <div class="col-6 text-start align-items-center userInfo">
-                                        <p class="infoTitle">{{item.MessageCount}}條留言</p>
+                                        <p class="infoTitle" style="font-weight:300;overflow: visible;" v-if="item.IsCaseExpire"><i class="fa-solid fa-square-check"></i> 已過期</p>
+                                        <p class="infoTitle" style="font-weight:300;overflow: visible;" v-else><i class="fa-regular fa-calendar-check"></i> 活動中</p>
                                         <p class="infoText">{{item.CaseReleaseDate | showDate}}</p>
-                                        <p class="infoText">{{item.CaseSerAreaName}}</p>
-
                                     </div>
                                 </div>
                                 <div class="col-md-4 text-center p-0">
-                                    <a class="btn text-nowrap" v-bind:href="'/PostPage/Index/'+item.CaseId" @*:data-caseid="item.CaseId" v-on:click="redirectToCasePage"*@>詳細</a>
+                                    <a class="btn text-nowrap" v-bind:href="'/PostPage/Index/'+item.CaseId">詳細</a>
                                 </div>
                             </div>
                         </div>

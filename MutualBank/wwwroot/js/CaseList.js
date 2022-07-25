@@ -46,10 +46,6 @@
                 .fail(function (res) {
                     console.log(res);
                 });
-        },
-        redirectToCasePage: function (e) {
-            var href = "/PostPage/Index/" + e.target.dataset.caseid;
-            e.target.href = href;
         }
     },
     filters: {
