@@ -21,8 +21,15 @@
                 <div class="card mb-2 w-100">
                     <div class="imgBx">
                         <div class="card-tag">
-                            <span class="case-type">{{item.CaseNeedHelp | filterCaseNeedHelp}}</span>
-                            <span class="case-type">{{item.CaseSkillName}}</span>
+                            <span class="case-type">
+                                <i class="fa-solid fa-square-check" v-if="item.IsCaseExpire"></i>
+                                <i class="fa-solid fa-square-minus" v-else></i>
+                            </span>
+                            <span class="case-type">
+                                <i class="fa-solid fa-square-h" v-if="item.CaseNeedHelp"></i>
+                                <i class="fa-solid fa-square-poll-horizontal" v-else></i> {{item.CaseSkillName}}
+                            </span>
+                            
                         </div>
                         <img v-bind:src="item.CasePhoto" class="card-img-top p-2" alt="image not found">
                     </div>
@@ -41,7 +48,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4 text-center p-0">
-                                    <a class="btn text-nowrap" :data-caseid="item.CaseId" v-on:click="redirectToCasePage">詳細</a>
+                                    <a class="btn text-nowrap" v-bind:href="'/PostPage/Index/'+item.CaseId" @*:data-caseid="item.CaseId" v-on:click="redirectToCasePage"*@>詳細</a>
                                 </div>
                             </div>
                         </div>

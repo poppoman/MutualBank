@@ -44,6 +44,7 @@ namespace MutualBank.Controllers
                     CaseNeedHelp = x.CaseNeedHelp,
                     CaseReleaseDate = x.CaseReleaseDate,
                     CaseExpireDate = x.CaseExpireDate,
+                    IsCaseExpire=DateTime.Now >= x.CaseExpireDate?true:false,
                     CaseTitle = x.CaseTitle,
                     CaseIntroduction = x.CaseIntroduction,
                     CasePhoto = Path.Combine(PhotoFileFolder, x.CasePhoto),

@@ -10,6 +10,7 @@
         public DateTime CaseReleaseDate { get; set; }
         public DateTime CaseExpireDate { get; set; }
         public DateTime? CaseClosedDate { get; set; }
+        public bool? IsCaseExpire { get; set; }
         public string CaseTitle { get; set; } = null!;
         public string CaseIntroduction { get; set; } = null!;
         public string? CasePhoto { get; set; }

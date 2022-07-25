@@ -28,25 +28,26 @@
         top: 15px;
         left: 5px;
         margin: 0 2px;
+        color: var(--black);
     }
 
         .card .card-tag .case-type {
             padding: 0 5px;
             border-radius: 2px;
-            font-weight: 400;
+            font-weight: 300;
             border: 0px solid var(--bg);
             background: rgb(255, 255, 255,0.7);
             color: rgb(30, 30, 30);
         }
-
-        .card .card-tag .type-skill {
-            color: var(--skill);
+        /*標籤分類顏色*/
+/*        .card .card-tag .type-skill {
+            color: var(--black);
         }
 
         .card .card-tag .type-help {
-            color: rgb(78, 54, 21);
-        }
-
+            color: var(--black);
+        }*/
+    /*標籤分類顏色*/
 
     .card span {
         position: relative;

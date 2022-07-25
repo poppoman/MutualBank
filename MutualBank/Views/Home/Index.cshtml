@@ -56,12 +56,16 @@
                         <div class="imgBx">
 
                             <div class="card-tag">
-                                <span class="case-type type-skill" v-bind:class="{'type-help': item.CaseNeedHelp }">
-                                    <i class="fa-regular fa-circle-question" v-if="item.CaseNeedHelp"></i>
-                                    <i class="fa-solid fa-briefcase" v-else></i> {{item.CaseSkillName}}</span>
-                                <span class="case-type"><i class="fa-regular fa-message"></i> {{item.MessageCount}}</span>
+                                    <span class="case-type">
+                                        <i class="fa-solid fa-square-h" v-if="item.CaseNeedHelp"></i>
+                                        <i class="fa-solid fa-square-poll-horizontal" v-else></i> {{item.CaseSkillName}}
+                                    </span>
+
+                                    <span class="case-type">
+                                        <i class="fa-solid fa-message"></i> {{item.MessageCount}}
+                                    </span>
                             </div>
-                            
+
                             <img v-bind:src="item.CasePhoto" class="card-img-top p-2" alt="image not found">
                         </div>
                         <div class="card-body">
@@ -75,7 +79,8 @@
                                         <div class="row">
                                             <div class="userPhoto">
                                                 <div class="PhotoBx">
-                                                    <img src="https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg">
+                                                    <img src="https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg"
+                                                         :data-caseid="item.CaseId" v-on:click="redirectToCasePage">
                                                 </div>
                                             </div>
                                             <div class="col-6 text-start align-items-center userInfo">
@@ -87,7 +92,7 @@
 
                                     </div>
                                     <div class="col-md-4 text-center p-0">
-                                        <a class="btn text-nowrap" :data-caseid="item.CaseId" v-on:click="redirectToCasePage">詳細</a>
+                                        <a class="btn text-nowrap" v-bind:href="'/PostPage/Index/'+item.CaseId">詳細</a>
                                     </div>
                                 </div>
                             </div>
@@ -316,14 +321,7 @@
                 }
             },
             filters: {
-                //filterCaseNeedHelp: function(e) {
-                //    if (e == true) {
-                //        return "需求"
-                //    }
-                //    else {
-                //        return "技能"
-                //    }
-                //},
+
                 showDate: function(e) {
                     if (e.includes("T")) {
                         return e.split("T")[0];
