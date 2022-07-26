@@ -1,32 +1,81 @@
 ﻿@model MutualBank.Models.Skill
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     ViewData["Title"] = "Edit";
 }
+<link rel="stylesheet" type="text/css" href="~/css/DataList.css"/>
 
-<h1>Edit</h1>
+<div class="row justify-content-between align-items-center pt-3 mb-3">
+    <div class="col-4 col-sm-8 col-md-5 col-lg-4 border-bottom">
+        <h1>技能</h1>
 
-<h4>Skill</h4>
-<hr />
+    </div>
+    <div class="col-md-5 col-lg-8 fs-4">
+        <span id="editText" class="badge border-end-0 bg-secondary">閱讀</span>
+        <input type="button" id="editBtn" value="切換模式" class="btn btn-saveyellow"/>
+    </div>
+</div>
+
+
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="SkillId" />
-            <div class="form-group">
-                <label asp-for="SkillName" class="control-label"></label>
-                <input asp-for="SkillName" class="form-control" />
-                <span asp-validation-for="SkillName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            <input type="hidden" asp-for="SkillId" />            
+            <div class="d-flex" id="editSec">
+                <div class="form-group">
+                    <label asp-for="SkillName" class="control-label"></label>
+                    <input asp-for="SkillName" class="form-control rounded-pill ps-3" />
+                    <span asp-validation-for="SkillName" class="text-danger"></span>
+                </div>
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-backtolist">Reset</a>
+    <a asp-action="Index" class="btn btn-backtolist">Back to List</a>
 </div>
+
+@section Scripts{
+    <script>
+        //參數宣告
+        var inp = $('#editSec input');
+        var sp = $('#editText');
+        var bool = true;
+
+        //input 初始化
+        inp.prop('readonly', 'true');
+        inp.removeClass('form-control');
+        inp.addClass('form-control-plaintext fs-6 bg-light');
+        //註冊事件
+        $("#editBtn").on("click",modeSwitch);
+
+        //按鈕事件處理
+        function modeSwitch() {
+            if (bool) {
+                inp.removeAttr('readonly')
+                inp.addClass('form-control');
+                inp.removeClass('form-control-plaintext bg-light');
+                sp.text("編輯");
+                sp.removeClass('bg-secondary')
+                sp.addClass('bg-saveyellow');
+                bool = false;
+            }
+            else {
+                inp.prop('readonly', 'true');
+                inp.removeClass('form-control');
+                inp.addClass('form-control-plaintext fs-6 bg-light');
+                sp.text("閱讀");
+                sp.removeClass('bg-saveyellow')
+                sp.addClass('bg-secondary');
+                bool = true;
+            }
+        }
+
+    </script>
+}
+
 

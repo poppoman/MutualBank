@@ -8,17 +8,31 @@
     --skill1: #406ac4;
     --tag: #67dd55;
     --bg: #ececec;
+    --bg-saveyellow: #f39412;
 }
 
-.btn-saveyellow {
-  color: #000;
-  background-color: #f39412;
-  border-color: #f39412;
+.btn-simple {
+    background-color: var(--white);
+    border-radius: 1rem;
 }
-.btn-saveyellow:hover{
-    color: #fff;
+
+.btn-simple:hover {
+    background-color: var(--bg);
+    border-radius: 1rem;
+}
+
+
+.btn-saveyellow {
+    color: var(--white);
+    background-color: var(--bg-saveyellow);
+    border-color: var(--bg-saveyellow);
+    border-radius: 1rem;
+}
+.btn-saveyellow:hover {
+    color: var(--white);
     background-color: #6e6e6e;
     border-color: #6e6e6e;
+    border-radius: 1rem;
 }
 
 .btn-backtolist {
@@ -30,4 +44,23 @@
     color: #fff;
     background-color: #6e6e6e;
     border-color: #6e6e6e;
+}
+
+.aspect-ratio-box {
+    background: white;
+}
+
+.aspect-ratio-box::before {
+    content: "";
+    width: 1px;
+    margin-left: -1px;
+    float: left;
+    height: 0;
+    padding-top: var(--ratio-box-1);
+}
+
+.aspect-ratio-box::after { /* to clear float */
+    content: "";
+    display: table;
+    clear: both;
 }
