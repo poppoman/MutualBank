@@ -111,6 +111,10 @@ namespace MutualBank.Controllers.api
 			if (string.IsNullOrEmpty(userregister.LoginName) || string.IsNullOrEmpty(userregister.ConfirmPwd) || string.IsNullOrEmpty(userregister.LoginPwd) || string.IsNullOrEmpty(userregister.LoginEmail))
 			{
 				err.Message = "有誤";
+				err.AccMessage = "帳號不能為空";
+				err.ConfMessage = "確認密碼不能為空";
+				err.EmailMessage = "信箱不能為空";
+				err.PwdMessage = "密碼不能為空";
 				return err;
 			}
 			else if (user != null)
