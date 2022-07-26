@@ -24,7 +24,7 @@ namespace MutualBank.Areas.Admin.Controllers
         {
               return _context.Skills != null ? 
                           View( _context.Skills) :
-                          Problem("Entity set 'MutualBankContext.Skills'  is null.");
+                          Problem("找不到資料");
         }
 
         // GET: Admin/Skills/Details/5

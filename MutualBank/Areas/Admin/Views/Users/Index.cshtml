@@ -1,5 +1,4 @@
-﻿@model IEnumerable<MutualBank.Models.User>
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@model IEnumerable<MutualBank.Areas.Admin.Models.ViewModel.UserLogin>
 
 @{
     ViewData["Title"] = "Index";
@@ -17,6 +16,24 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.LoginName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LoginPwd)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LoginEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LoginLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LoginAddDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LoginActive)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.UserLname)
             </th>
             <th>
@@ -32,9 +49,6 @@
                 @Html.DisplayNameFor(model => model.UserHphoto)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UserEmail)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.UserBirthday)
             </th>
             <th>
@@ -44,7 +58,7 @@
                 @Html.DisplayNameFor(model => model.UserAreaId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UserCv)
+                @Html.DisplayNameFor(model => model.UserCV)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.UserResume)
@@ -65,6 +79,24 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.LoginName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LoginPwd)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LoginEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LoginLevel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LoginAddDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LoginActive)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.UserLname)
             </td>
             <td>
@@ -80,9 +112,6 @@
                 @Html.DisplayFor(modelItem => item.UserHphoto)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.UserEmail)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.UserBirthday)
             </td>
             <td>
@@ -92,7 +121,7 @@
                 @Html.DisplayFor(modelItem => item.UserAreaId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.UserCv)
+                @Html.DisplayFor(modelItem => item.UserCV)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.UserResume)

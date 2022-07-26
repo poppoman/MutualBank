@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using MutualBank.Areas.Admin.Models;
+using MutualBank.Areas.Admin.Models.ViewModel;
 using MutualBank.Models;
 
 namespace MutualBank.Areas.Admin.Controllers
@@ -23,9 +23,36 @@ namespace MutualBank.Areas.Admin.Controllers
         // GET: Admin/Users
         public async Task<IActionResult> Index()
         {
-              return _context.Users != null ? 
-                          View( _context.Users) :
-                          Problem("Entity set 'MutualBankContext.Users'  is null.");
+            var query = _context.Users.Include(UserNav => UserNav.UserNavigation).Select(u => new UserLogin
+            {
+                LoginName = u.UserNavigation.LoginName,
+                LoginPwd = u.UserNavigation.LoginPwd,
+                LoginEmail = u.UserNavigation.LoginEmail,
+                LoginLevel = u.UserNavigation.LoginLevel,
+                LoginAddDate = u.UserNavigation.LoginAddDate,
+                LoginActive = u.UserNavigation.LoginActive,
+                UserId = u.UserId,
+                UserLname = u.UserLname,
+                UserFname = u.UserFname,
+                UserNname = u.UserNname,
+                UserEmail = u.UserEmail,
+                UserSex = u.UserSex,
+                UserHphoto = u.UserHphoto,
+                UserBirthday = u.UserBirthday,
+                UserSkillId = u.UserSkillId,
+                UserAreaId = u.UserAreaId,
+                UserCV = u.UserCv,
+                UserResume = u.UserResume,
+                UserSchool = u.UserSchool,
+                UserFaculty = u.UserFaculty,
+                UserPoint = u.UserPoint,
+            });
+
+            return View(query);
+            //return _context.Users != null ?
+            //            View(_context.Users) :
+            //            Problem("Entity set 'MutualBankContext.Users'  is null.");
+
         }
 
         
