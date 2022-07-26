@@ -23,14 +23,14 @@ namespace MutualBank.Areas.Admin.Controllers
         // GET: Admin/Users
         public async Task<IActionResult> Index()
         {
-            var query = _context.Users.Include(UserNav => UserNav.UserNavigation).Select(u => new UserLogin
+            var query = _context.Users.Include(UserNav => UserNav.User1).Select(u => new UserLogin
             {
-                LoginName = u.UserNavigation.LoginName,
-                LoginPwd = u.UserNavigation.LoginPwd,
-                LoginEmail = u.UserNavigation.LoginEmail,
-                LoginLevel = u.UserNavigation.LoginLevel,
-                LoginAddDate = u.UserNavigation.LoginAddDate,
-                LoginActive = u.UserNavigation.LoginActive,
+                LoginName = u.User1.LoginName,
+                LoginPwd = u.User1.LoginPwd,
+                LoginEmail = u.User1.LoginEmail,
+                LoginLevel = u.User1.LoginLevel,
+                LoginAddDate = u.User1.LoginAddDate,
+                LoginActive = u.User1.LoginActive,
                 UserId = u.UserId,
                 UserLname = u.UserLname,
                 UserFname = u.UserFname,
