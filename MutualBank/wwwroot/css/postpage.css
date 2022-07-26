@@ -88,7 +88,7 @@
     border-radius: 50%;
     background-color: #fff;
     overflow: hidden;
-    border: 1px solid #ebebeb;
+    display:inline-block;
 }
 
 .author-picture,
@@ -186,7 +186,6 @@
     border-radius: 50%;
     background-color: #fff;
     overflow: hidden;
-    border: 1px solid #ebebeb;
     margin-right: 10px;
 }
 

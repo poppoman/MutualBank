@@ -3,22 +3,9 @@
     data: {
         caseDataModel: [],
         caseViewModel: [],
-        sortByType:"null"
+        sortByType: "null"
     },
     methods: {
-        initCaseModel: function () {
-            $.ajax({
-                url: "/Case/GetUserCaseModel",
-                type: "GET"
-            })
-                .done(function (res) {
-                    vmCaseList.caseDataModel = vmCaseList.caseViewModel = JSON.parse(res);
-                })
-                .fail(function (res) {
-                    console.log(res);
-                });
-
-        },
         getAllModel: function (e) {
             vmCaseList.addClickClass(e);
             vmCaseList.caseViewModel = vmCaseList.caseDataModel;
@@ -49,7 +36,7 @@
             dynamicLoading.css("/css/PostCase.css");
             $.ajax({
                 url: "/Case/GetPostCase",
-                type:"GET"
+                type: "GET"
             })
                 .done(function (res) {
                     $("#ajaxSection").html(res);
@@ -59,14 +46,35 @@
                 .fail(function (res) {
                     console.log(res);
                 });
+        }
+    },
+    filters: {
+        filterCaseNeedHelp: function (e) {
+            if (e == true) {
+                return "需求"
+            }
+            else {
+                return "技能"
+            }
         },
-        redirectToCasePage: function (e) {
-            var href = "/PostPage/Index/" + e.target.dataset.caseid;
-            e.target.href = href;
+        showDate: function (e) {
+            if (e.includes("T")) {
+                return e.split("T")[0];
+            }
         }
     },
     created() {
-        //初始化頁面Case
-        this.initCaseModel();
+        //初始化頁面
+        $.ajax({
+            url: "/Case/GetUserCaseModel",
+            type: "GET"
+        })
+            .done(function (res) {
+                vmCaseList.caseDataModel = vmCaseList.caseViewModel = JSON.parse(res);
+            })
+            .fail(function (res) {
+                console.log(res);
+            });
+
     }
 });

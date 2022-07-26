@@ -2,25 +2,34 @@
 
 namespace MutualBank.Models
 {
-    internal class PostPageVM
+    public class PostPageVM
     {
-        public Case? Case { get; set; }
-        public Skill? Skill { get; set; }
-        public Area? Area { get; set; }
+        [Key]
         public int CaseId { get; set; }
+        public Message Message { get; set; }
         public string CaseTitle { get; set; }
 
         public string? CasePhoto { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime CasesAddDate { get; set; }
 
         public string? CaseSerDate { get; set; }
         public string CaseIntroduction { get; set; } = null!;
+
         public string SkillName { get; set; }
+        public string UserNName { get; set; } = null!;
+        public string? UserPhoto { get; set; }
 
         public string? Areacity { get; set; }
 
+        public string? LoginHPhoto { get; set; }
+
+        public int? MsgCaseId { get; set; }
+        public DateTime MsgAddDate { get; set; }
+        public int? MsgUserId { get; set; }
+        public string? MsgContent { get; set; }
 
     }
 }

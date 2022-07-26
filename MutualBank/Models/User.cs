@@ -8,7 +8,8 @@ namespace MutualBank.Models
         public User()
         {
             Cases = new HashSet<Case>();
-            Messages = new HashSet<Message>();
+            MessageMsgToUsers = new HashSet<Message>();
+            MessageMsgUsers = new HashSet<Message>();
         }
 
         public int UserId { get; set; }
@@ -30,8 +31,11 @@ namespace MutualBank.Models
         public string? UserFaculty { get; set; }
         public int UserPoint { get; set; }
 
-        public virtual Login UserNavigation { get; set; } = null!;
+        public virtual Login User1 { get; set; } = null!;
+        public virtual Area UserNavigation { get; set; } = null!;
+        public virtual Skill? UserSkill { get; set; }
         public virtual ICollection<Case> Cases { get; set; }
-        public virtual ICollection<Message> Messages { get; set; }
+        public virtual ICollection<Message> MessageMsgToUsers { get; set; }
+        public virtual ICollection<Message> MessageMsgUsers { get; set; }
     }
 }

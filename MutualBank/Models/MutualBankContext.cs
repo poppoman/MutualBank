@@ -165,6 +165,12 @@ namespace MutualBank.Models
                     .HasMaxLength(200)
                     .HasColumnName("Msg_Content");
 
+                entity.Property(e => e.MsgIsRead).HasColumnName("Msg_IsRead");
+
+                entity.Property(e => e.MsgParentId).HasColumnName("Msg_ParentID");
+
+                entity.Property(e => e.MsgToUserId).HasColumnName("Msg_ToUserID");
+
                 entity.Property(e => e.MsgUserId).HasColumnName("Msg_UserID");
 
                 entity.HasOne(d => d.MsgCase)
@@ -172,8 +178,19 @@ namespace MutualBank.Models
                     .HasForeignKey(d => d.MsgCaseId)
                     .HasConstraintName("FK_Message_Case");
 
+                entity.HasOne(d => d.MsgParent)
+                    .WithMany(p => p.InverseMsgParent)
+                    .HasForeignKey(d => d.MsgParentId)
+                    .HasConstraintName("FK_Message_Message");
+
+                entity.HasOne(d => d.MsgToUser)
+                    .WithMany(p => p.MessageMsgToUsers)
+                    .HasForeignKey(d => d.MsgToUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Message_Users1");
+
                 entity.HasOne(d => d.MsgUser)
-                    .WithMany(p => p.Messages)
+                    .WithMany(p => p.MessageMsgUsers)
                     .HasForeignKey(d => d.MsgUserId)
                     .HasConstraintName("FK_Message_Users");
             });
@@ -278,7 +295,18 @@ namespace MutualBank.Models
                     .WithOne(p => p.User)
                     .HasForeignKey<User>(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Users_Area");
+
+                entity.HasOne(d => d.User1)
+                    .WithOne(p => p.User)
+                    .HasForeignKey<User>(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Users_Login");
+
+                entity.HasOne(d => d.UserSkill)
+                    .WithMany(p => p.Users)
+                    .HasForeignKey(d => d.UserSkillId)
+                    .HasConstraintName("FK_Users_Skill");
             });
 
             OnModelCreatingPartial(modelBuilder);

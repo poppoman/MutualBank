@@ -10,6 +10,7 @@
 @section Styles{
     <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/card.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/btn-shared.css" asp-append-version="true" />
 }
 
     <div class="wrap" id="home">
@@ -25,14 +26,23 @@
 
     </div>
     <div class="home">
-        <div class="typeBar">
-            <button type="button" class="butn help" name="type" data-bit=true v-on:click="getTypeModel">需要幫忙</button>
-            <button type="button" class="butn skill" name="type" data-bit=false v-on:click="getTypeModel">提供技能</button>
+        <div class="typeBar fs-24">
+            <button type="button" class="mainBtn" name="mainBtn" data-bit=true v-on:click="getTypeModel">
+                <i class="fa-solid fa-square-h"></i> 需要幫忙
+            </button>
+            <button type="button" class="mainBtn" name="mainBtn" data-bit=false v-on:click="getTypeModel">
+                <i class="fa-solid fa-square-poll-horizontal"></i> 提供技能
+            </button>
         </div>
 
         <div class="tagBar">
-            <div class="tags">
-                <span class="tagName" v-for="item in tagList" :data-skillid="item.SkillId" v-on:click="getTagModel">{{item.SkillName}}</span>
+            <div class="tags fs-16">
+                <span class="btnSortCase active" data-skillid=0 v-on:click="getTagModel" name="">全部</span>
+                <span class="btnSortCase" v-for="item in tagList" :data-skillid="item.SkillId" v-on:click="getTagModel" name="">{{item.SkillName}}</span>
+
+                <div class="m-0 p-0">
+                    <span></span>
+                </div>
             </div>
 
             <div class="sort">
@@ -50,19 +60,62 @@
         </div>
 
         <div class="container-fluid">
-            <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-4">
+            <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4">
                 <div class="col" v-for="item in caseViewModel">
-                    <div class="card  mb-2 w-100">
+                    <div class="card mb-2 w-100">
                         <div class="imgBx">
-                            <img src="https://picsum.photos/id/96/400/400" class="card-img-top p-2" alt="圖片">
-                        </div>
-                        <span style="cursor:pointer" :data-skillid="item.CaseSkillId" v-on:click="getTagModel">{{item.CaseSkillName}}</span>
-                        <div class="card-body">
-                            <h5 class="card-title">{{item.CaseTitle}}</h5>
-                            <div style="height:50px;"><p class="card-text mt-1">{{item.CaseIntroduction}}</p></div>
-                            <div class="d-flex  justify-content-center">
-                                <a name="temp" class="btn" :data-caseid="item.CaseId" v-on:click="redirectToCasePage">留言</a>
+
+                            <div class="card-tag">
+                                <span class="case-type" :data-skillid="item.SkillId" v-on:click="getTagModel">
+                                    <i class="fa-solid fa-square-h" v-if="item.CaseNeedHelp"></i>
+                                    <i class="fa-solid fa-square-poll-horizontal" v-else></i> {{item.CaseSkillName}}
+                                </span>
                             </div>
+                            <div class="d-flex w-100 justify-content-center" id="card-info">
+                                <div class="card-info">
+                                    <div>
+                                        <i class="fa-solid fa-location-dot"></i> {{item.CaseSerAreaName}}
+                                    </div>
+
+                                    <div>
+                                        <i class="fa-solid fa-comment-dots"></i> {{item.MessageCount}}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <img v-bind:src="item.CasePhoto" class="card-img-top p-2" alt="image not found">
+                        </div>
+
+
+
+                        <div class="card-body">
+                            <h5 class="card-title fw-400" title="item.CaseTitle">{{item.CaseTitle}}</h5>
+                            <div><p class="card-text mt-1 fw-300">{{item.CaseIntroduction}}</p></div>
+                            <hr />
+                            <div class="container mt-3 p-0">
+                                <div class="row">
+                                    <div class="col-md-8 col">
+
+                                        <div class="row">
+                                            <div class="userPhoto">
+                                                <div class="PhotoBx">
+                                                    <img src="https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg"
+                                                         :data-caseid="item.CaseId" v-on:click="redirectToCasePage">
+                                                </div>
+                                            </div>
+                                            <div class="col-6 text-start align-items-center userInfo">
+                                                <p class="infoTitle">{{item.CaseUserName}}</p>
+                                                <p class="infoText">{{item.CaseReleaseDate | showDate}}</p>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-4 text-center p-0">
+                                        <a class="btn text-nowrap" v-bind:href="'/PostPage/Index/'+item.CaseId">詳細</a>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -88,7 +141,7 @@
                 caseDataModel: caseModel,
                 tagList: tagListData,
                 sortByType: "null",
-                sortByTag: -1,
+                sortByTag: 0,
                 orderByOption: orderByDafult,
                 isOrderByDesc: 1
             },
@@ -119,7 +172,7 @@
                     vmIndex.sortByType = "null";
                     //更新畫面模型
 
-                    if (vmIndex.sortByTag != -1) {
+                    if (vmIndex.sortByTag != 0) {
                         vmIndex.caseViewModel = vmIndex.filterTagModel(vmIndex.caseDataModel, vmIndex.sortByTag);
                     }
                     else {
@@ -129,7 +182,7 @@
                 closeTagLabel: function(e) {
                     //移除標籤並清除對應data(恢復初始值)
                     vmIndex.closeLabel(e);
-                    vmIndex.sortByTag = -1;
+                    vmIndex.sortByTag = 0;
                     //更新畫面模型
                     if (typeof (vmIndex.sortByType) == Boolean) {
                         vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseDataModel, vmIndex.sortByType);
@@ -145,30 +198,44 @@
                 },
                 //依需求或技能拿模型
                 getTypeModel: function(e) {
+                    //add class
+                    var mainBtn = document.querySelectorAll(".mainBtn");
+                    mainBtn.forEach(x => x.classList.remove("active"));
+                    e.target.classList.add("active");
+                    //get type model
                     var bitString = e.target.dataset.bit;
                     var bit = bitString == "true" ? true : false;
                     vmIndex.sortByType = bit;
-                    vmIndex.addLabel(typeLabel, e.target.innerText, vmIndex.closeTypeLabel);
+                    //vmIndex.addLabel(typeLabel, e.target.innerText, vmIndex.closeTypeLabel);
 
                     vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseDataModel, bit);
 
-                    if (vmIndex.sortByTag != -1) {
+                    if (vmIndex.sortByTag != 0) {
                         vmIndex.caseViewModel = vmIndex.filterTagModel(vmIndex.caseViewModel, vmIndex.sortByTag);
                     }
                     vmIndex.orderModelForSort();
                 },
                 //依技能分類篩選Model(通用)
                 filterTagModel: function(vmModel, n) {
+                    //0 =>all case
+                    if (n == 0) {
+                        return vmIndex.caseDataModel;
+                    }
                     return vmModel.filter(x => x.CaseSkillId == n);
                 },
                 //依技能分類拿模型
                 getTagModel: function(e) {
+                    //add class
+                    var btnSortCase = document.querySelectorAll(".btnSortCase");
+                    btnSortCase.forEach(x => x.classList.remove("active"));
+                    e.target.classList.add("active");
+                    //get tag model
                     var skillid = e.target.dataset.skillid;
                     vmIndex.sortByTag = skillid;
-                    vmIndex.addLabel(tagLabel, e.target.innerText, vmIndex.closeTagLabel);
-
+                    //vmIndex.addLabel(tagLabel, e.target.innerText, vmIndex.closeTagLabel);
                     vmIndex.caseViewModel = vmIndex.filterTagModel(vmIndex.caseDataModel, skillid);
 
+                    //more filter
                     if (typeof (vmIndex.sortByType) == Boolean) {
                         vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseViewModel, vmIndex.sortByType);
                     }
@@ -213,7 +280,6 @@
                 },
                 orderAscOrDesc: function() {
                     var isDesc = vmIndex.isOrderByDesc = -vmIndex.isOrderByDesc;
-                    //根據Order紀錄值的資料傳回排列陣列
                     var para = vmIndex.orderByOption;
                     switch (para) {
                         case "releaseDate":
@@ -261,9 +327,45 @@
                 redirectToCasePage: function(e) {
                     var href = "/PostPage/Index/" + e.target.dataset.caseid;
                     e.target.href = href;
+                },
+                //初始化排序(預設為降序)
+                initModelWithOrder: function() {
+                    var para = this.orderByOption;
+
+                    switch (para) {
+                        case "releaseDate":
+                            return this.caseViewModel.sort(function(a, b) {
+                                return b.CaseReleaseDate > a.CaseReleaseDate ? 1 : -1
+                            });
+                            break;
+                        case "messageCount":
+
+                            return this.caseViewModel.sort(function(a, b) {
+                                return b.MessageCount - a.MessageCount
+                            });
+                            break;
+                        case "expireDate":
+                            return this.caseViewModel.sort(function(a, b) {
+                                return b.CaseExpireDate > a.CaseReleaseDate ? 1 : -1
+                            });
+                            dafault:
+                            break;
+                    }
                 }
             },
+            filters: {
+
+                showDate: function(e) {
+                    if (e.includes("T")) {
+                        return e.split("T")[0];
+                    }
+                }
+            },
+            created: function() {
+                this.initModelWithOrder();
+            },
             mounted: function() {
+
                 //地區標籤綁定關閉標籤事件
                 var areaLabelCloseBtn = document.getElementById("areaLabelCloseBtn");
                 if (areaLabelCloseBtn != null) {
@@ -287,7 +389,6 @@
                             .fail(function(res) {
                                 console.log(res);
                             });
-
                     });
                 }
 

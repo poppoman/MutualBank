@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Web.Helpers;
-using static MutualBank.Models.ViewModels.MemberModel;
+using static MutualBank.Models.ViewModels.CaseTitle;
 
 namespace MutualBank.Controllers.api
 {
@@ -27,56 +27,127 @@ namespace MutualBank.Controllers.api
             _configuration = configuration;
         }
 		[HttpGet]
-		public ActionResult<MemberModel> helpme(string id)
+		public ActionResult<CaseTitle> helpme(string id)
 		{
 			var userid = _mutualBankContext.Logins.Where(x => x.LoginName == id).Select(x => x.LoginId).FirstOrDefault();
-			var casetitle = (_mutualBankContext.Cases.Where(x => x.CaseUserId == userid && x.CaseNeedHelp==true).Select(x => x.CaseTitle));
-			var caseid = (_mutualBankContext.Cases.Where(x => x.CaseUserId == userid && x.CaseNeedHelp == true).Select(x => x.CaseId));
-			MemberModel helpme = new MemberModel();
-			helpme.casetitle = casetitle;
-			helpme.caseid = caseid;
-			return helpme;
+			var casetitle = (_mutualBankContext.Cases.Where(x => x.CaseUserId == userid && x.CaseNeedHelp==true).Select(x => x.CaseTitle)).ToList();
+			var caseid = (_mutualBankContext.Cases.Where(x => x.CaseUserId == userid && x.CaseNeedHelp == true).Select(x => x.CaseId)).ToList();
+            List<string[]> msg = new List<string[]>();
+            List<string[]> msgUsername = new List<string[]>();
+			List<string> msgname = new List<string>();
+			foreach (int a in caseid)
+			{
+				var msgContent = _mutualBankContext.Messages.Where(x => x.MsgCaseId == a).Select(x => x.MsgContent).ToArray();
+				var msgUserid = (_mutualBankContext.Messages.Where(x => x.MsgCaseId == a).Select(x => x.MsgUserId)).ToList();
+				foreach (int b in msgUserid)
+				{
+					var Username = (_mutualBankContext.Users.Where(x => x.UserId == b).Select(x => x.UserNname)).FirstOrDefault();					
+					msgname.Add(Username);
+				}
+				msg.Add(msgContent);
+				msgUsername.Add(msgname.ToArray());
+				msgname.Clear();
+
+			}
+			CaseTitle helpme = new CaseTitle() 
+			{
+				caseid=caseid,
+				casetitle=casetitle,
+			};
+			//helpme.msgname = msgUsername;
+			//helpme.casemsg = msg;
+            return helpme;
 		}
 
 		[HttpGet]
-		public ActionResult<MemberModel> helpyou(string id)
+		public ActionResult<CaseTitle> helpyou(string id)
 		{
 			var userid = _mutualBankContext.Logins.Where(x => x.LoginName == id).Select(x => x.LoginId).FirstOrDefault();
-			var casetitle = (_mutualBankContext.Cases.Where(x => x.CaseUserId == userid && x.CaseNeedHelp==false).Select(x => x.CaseTitle));
-			var caseid = (_mutualBankContext.Cases.Where(x => x.CaseUserId == userid && x.CaseNeedHelp == false).Select(x => x.CaseId));
-			MemberModel helpyou = new MemberModel();
+			var casetitle = (_mutualBankContext.Cases.Where(x => x.CaseUserId == userid && x.CaseNeedHelp==false).Select(x => x.CaseTitle)).ToList();
+			var caseid = (_mutualBankContext.Cases.Where(x => x.CaseUserId == userid && x.CaseNeedHelp == false).Select(x => x.CaseId)).ToList();
+			List<string[]> msg = new List<string[]>();
+			List<string[]> msgUsername = new List<string[]>();
+			List<string> msgname = new List<string>();
+			foreach (int a in caseid)
+			{
+				var msgContent = _mutualBankContext.Messages.Where(x => x.MsgCaseId == a).Select(x => x.MsgContent).ToArray();
+				var msgUserid = (_mutualBankContext.Messages.Where(x => x.MsgCaseId == a).Select(x => x.MsgUserId)).ToList();
+				foreach (int b in msgUserid)
+				{
+					var Username = (_mutualBankContext.Users.Where(x => x.UserId == b).Select(x => x.UserNname)).FirstOrDefault();
+					msgname.Add(Username);
+				}
+				msg.Add(msgContent);
+				msgUsername.Add(msgname.ToArray());
+				msgname.Clear();
+			}
+			CaseTitle helpyou = new CaseTitle();
 			helpyou.casetitle = casetitle;
 			helpyou.caseid = caseid;
+			//helpyou.msgname = msgUsername;
+			//helpyou.casemsg = msg;
 			return helpyou;
 		}
 		[HttpGet]
-        public ActionResult<Error> ConfirmAccount(string id)
-        {
-			
-            var user = _mutualBankContext.Logins.FirstOrDefault(u => u.LoginName == id);
-			Error err = new Error(); 
-			if (user == null)  err.Message = "OK2";  
-			else  err.Message = "此帳號已有人使用";
-			return err;
+		public List<string> message(int id)
+		{
+			List<string> f = new List<string>();
+			var msg = _mutualBankContext.Messages.Where(x=>x.MsgCaseId == id).Select(x => x.MsgContent).ToArray();
+			var msguser = (_mutualBankContext.Messages.Where(x => x.MsgCaseId == id).Select(x => x.MsgUserId)).ToArray();
+			for (int i = 0; i < msg.Length; i++) 
+			{
+				var username = (_mutualBankContext.Users.Where(x => x.UserId == msguser[i]).Select(x => x.UserNname)).FirstOrDefault();
+                f.Add($"{username}說: {msg[i]}");
+			}
+			return f;
 		}
 
-        [HttpPost]
-		public ActionResult<Error> ConfirmAll(UserRegister userregister)
+		[HttpPost]
+		public ActionResult<Error> ConfirmRegister(UserRegister userregister)
 		{
 			Error err = new Error();
 			var user = _mutualBankContext.Logins.FirstOrDefault(u => u.LoginName == userregister.LoginName);
 			//檢查欄位是否都有輸入
 			if (string.IsNullOrEmpty(userregister.LoginName) || string.IsNullOrEmpty(userregister.ConfirmPwd) || string.IsNullOrEmpty(userregister.LoginPwd) || string.IsNullOrEmpty(userregister.LoginEmail))
 			{
-				err.Message = "請輸入完資料";
+				err.Message = "有誤";
+				return err;
 			}
 			else if (user != null)
 			{
-				err.Message = "此帳號已有人使用";
+				err.AccMessage = "此帳號已有人使用";
+				err.Message = "有誤";
+				return err;
 			}
 			else if(userregister.LoginPwd != userregister.ConfirmPwd)
 			{
-				err.Message = "密碼與確認密碼不一致";
+				err.ConfMessage = "密碼與確認密碼不一致";
+				err.Message = "有誤";
+				return err;
+			}
+			return err;
+		}
+
+		[HttpPost]
+		public ActionResult<Error> ConfirmLogin(UserLogin userlogin)
+		{
+			Error err = new Error();
+			var user = (from a in _mutualBankContext.Logins
+						where a.LoginName == userlogin.LoginName
+						&& a.LoginPwd == userlogin.LoginPwd
+						select a).SingleOrDefault();
+			//檢查欄位是否都有輸入
+			if (string.IsNullOrEmpty(userlogin.LoginName) || string.IsNullOrEmpty(userlogin.LoginPwd))
+			{
+				err.Message = "有誤";
+				err.AccMessage = "";
+				return err;
+			}
+			else if (user == null)
+			{
+				err.Message = "有誤";
+				err.AccMessage = "帳號或密碼錯誤";
+				return err;
 			}
 			return err;
 		}

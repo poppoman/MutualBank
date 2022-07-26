@@ -1,4 +1,5 @@
-﻿* {
+﻿/*泛用*/
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -19,6 +20,29 @@ body {
 a {
     color: var(--black) !important;
 }
+
+
+.fs-14 {
+    font-size: 14px;
+}
+.fs-16 {
+    font-size: 16px;
+}
+.fs-18 {
+    font-size:18px;
+}
+.fs-24 {
+    font-size: 24px;
+}
+.fw-500 {
+    font-weight: 500;
+}
+.fw-700 {
+    font-weight:700;
+}
+
+
+/*_Layout*/
 .toTop {
     position: fixed;
     right: 1.5rem;

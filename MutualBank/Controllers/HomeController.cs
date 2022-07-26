@@ -19,7 +19,8 @@ namespace MutualBank.Controllers
         public IActionResult Index()
         {
             ViewBag.Tags = _mutualBankContext.Skills.OrderBy(x => x.SkillId).ToList();
-            var Model = _mutualBankContext.Cases.Include("CaseSkil")
+            var PhotoFileFolder = Path.Combine("/Img", "CasePhoto");
+            var Model = _mutualBankContext.Cases.Include("CaseSkil").Where(x=>x.CaseClosedDate>= DateTime.Now)
                 .Select(x => new CaseViewModel
                 {
                     CaseId = x.CaseId,
@@ -28,13 +29,15 @@ namespace MutualBank.Controllers
                     CaseExpireDate = x.CaseExpireDate,
                     CaseTitle = x.CaseTitle,
                     CaseIntroduction = x.CaseIntroduction,
-                    CasePhoto = x.CasePhoto,
+                    CasePhoto = Path.Combine(PhotoFileFolder, x.CasePhoto),
                     CaseSerDate = x.CaseSerDate,
                     CaseSerArea = x.CaseSerArea,
+                    CaseSerAreaName = $"{x.CaseSerAreaNavigation.AreaCity}{x.CaseSerAreaNavigation.AreaTown}",
                     CaseSkillId = x.CaseSkil.SkillId,
                     CaseSkillName = x.CaseSkil.SkillName,
                     CaseUserId = x.CaseUser.UserId,
-                    CaseUserName = x.CaseUser.UserFname.Concat(x.CaseUser.UserLname).ToString(),
+                    CaseUserName = x.CaseUser.UserNname,
+                    MessageCount = x.Messages.Count
 
                 });
             return View(Model);
@@ -44,6 +47,7 @@ namespace MutualBank.Controllers
             ViewBag.Tags = _mutualBankContext.Skills.OrderBy(x => x.SkillId).ToList();
             ViewBag.Area = $"{Search.AreaCity} {Search.AreaTown}";
             var Model = new List<CaseViewModel>{ };
+            var PhotoFileFolder = Path.Combine("/Img", "CasePhoto");
 
             var AreaId = -1;
             if (Search.AreaTown == null | Search.AreaTown == "區域")
@@ -64,13 +68,13 @@ namespace MutualBank.Controllers
                 CaseExpireDate = x.CaseExpireDate,
                 CaseTitle = x.CaseTitle,
                 CaseIntroduction = x.CaseIntroduction,
-                CasePhoto = x.CasePhoto,
+                CasePhoto = Path.Combine(PhotoFileFolder, x.CasePhoto),
                 CaseSerDate = x.CaseSerDate,
                 CaseSerArea = x.CaseSerArea,
                 CaseSkillId = x.CaseSkil.SkillId,
                 CaseSkillName = x.CaseSkil.SkillName,
                 CaseUserId = x.CaseUser.UserId,
-                CaseUserName = x.CaseUser.UserFname.Concat(x.CaseUser.UserLname).ToString(),
+                CaseUserName = x.CaseUser.UserNname,
 
             }).ToList();
 
@@ -94,7 +98,8 @@ namespace MutualBank.Controllers
 
         public string GetAllCaseModel()
         {
-            var Model = _mutualBankContext.Cases.Include("CaseSkil").Include("Messages")
+            var PhotoFileFolder = Path.Combine("/Img", "CasePhoto");
+            var Model = _mutualBankContext.Cases.Include("CaseSkil").Include("Messages").Include("CaseSerAreaNavigation")
                 .Select(x => new CaseViewModel
                 {
                     CaseId = x.CaseId,
@@ -103,13 +108,13 @@ namespace MutualBank.Controllers
                     CaseExpireDate = x.CaseExpireDate,
                     CaseTitle = x.CaseTitle,
                     CaseIntroduction = x.CaseIntroduction,
-                    CasePhoto = x.CasePhoto,
+                    CasePhoto = Path.Combine(PhotoFileFolder, x.CasePhoto),
                     CaseSerDate = x.CaseSerDate,
                     CaseSerArea = x.CaseSerArea,
                     CaseSkillId = x.CaseSkil.SkillId,
                     CaseSkillName = x.CaseSkil.SkillName,
                     CaseUserId = x.CaseUser.UserId,
-                    CaseUserName = x.CaseUser.UserFname.Concat(x.CaseUser.UserLname).ToString(),
+                    CaseUserName = x.CaseUser.UserNname,
                     MessageCount = x.Messages.Count
                 }) ;
             var ModelJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model);
@@ -131,6 +136,11 @@ namespace MutualBank.Controllers
             return View();
         }
         public IActionResult ProfilePageAjax()
+        {
+            return View();
+        }
+
+        public IActionResult ProfileUpdate()
         {
             return View();
         }

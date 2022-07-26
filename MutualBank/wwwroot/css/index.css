@@ -12,6 +12,7 @@
 }
 #home #searchLabel {
     display:flex;
+    margin-left:15px;
 }
 #home #searchLabel .searchLabel {
     margin: 5px;
@@ -19,8 +20,8 @@
     font-size: 14px;
     color: black;
     background: rgba(255, 255, 255, 0.8);
-    border-radius: 5px;
-    border: 0.5px solid rgba(0, 0, 0, 0.25);
+    border-radius: 2px;
+    border: 0;
 }
 
 #home #searchLabel .searchLabelClose {
@@ -39,85 +40,24 @@
 
 #home .typeBar {
     position: relative;
-    margin: 25px 20px;
+    margin: 10px 20px 0px;
 }
 
-    #home .typeBar .butn {
-        position: relative;
-        margin: 10px 15px 10px 0;
-        padding: 10px 18px;
-        border-radius: 5px;
-        font-size: 24px;
-        font-weight: 700;
-        text-align: center;
-        border: 0px;
-        background: var(--white);
-        transition: 0.5s;
-    }
 
-        #home .typeBar .butn i {
-            font-size: 20px;
-        }
-
-        #home .typeBar .butn.help {
-            color: var(--black);
-        }
-
-            #home .typeBar .butn.help::before {
-                content: '';
-                padding-right: 10px;
-                border-left: 15px solid var(--help);
-            }
-
-            #home .typeBar .butn.help:hover::before {
-                border-left: 15px solid var(--help1);
-            }
-
-        #home .typeBar .butn.skill {
-            color: var(--black)
-        }
-
-            #home .typeBar .butn.skill::before {
-                content: '';
-                padding-right: 10px;
-                border-left: 15px solid var(--skill);
-            }
-
-            #home .typeBar .butn.skill:hover::before {
-                border-left: 15px solid var(--skill1);
-            }
 
 #home .tagBar {
     position: relative;
     display: block;
-    margin: 20px 10px;
+    margin: 0px 10px 10px;
 }
 
 
     #home .tagBar .tags {
         position: relative;
         display: flex;
-        justify-content: flex-start;
-        align-items: flex-start;
         flex-wrap: wrap;
         width: 60%;
     }
-
-        #home .tagBar .tags .tagName {
-            background: var(--white);
-            border-radius: 5px;
-            margin: 0px 5px 8px 5px;
-            padding: 3px 15px;
-            font-size: 16px;
-            font-weight: 500;
-            text-align: center;
-            white-space: nowrap;
-            color: var(--black);
-        }
-
-            #home .tagBar .tags .tagName:hover {
-                font-weight: 700;
-            }
 
 
     #home .tagBar .sort {
@@ -135,7 +75,7 @@
             margin-right: 30px;
             font-size: 18px;
             text-align: right;
-            font-weight: 500;
+            font-weight: 400;
         }
 
 
@@ -152,7 +92,7 @@
             right: 10px;
             font-size: 16px;
             text-align: left;
-            font-weight: 700;
+            font-weight: 500;
         }
 
 

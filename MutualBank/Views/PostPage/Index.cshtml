@@ -3,7 +3,10 @@
 @{
     ViewData["Title"] = "Index";
 }
-
+@{
+    var msgDataString = Newtonsoft.Json.JsonConvert.SerializeObject((List<MessageVM>)ViewBag.messages);
+    var msgDataStringCh = Newtonsoft.Json.JsonConvert.SerializeObject((List<MessageChVM>)ViewBag.msgChild);
+}
 @section Styles
     {
     <link rel="stylesheet" href="~/css/postpage.css" asp-append-version="true" />
@@ -11,7 +14,7 @@
 }
 
     <main id="postpage">
-        <div class="postpage">
+        <div class="postpage" id="postpage">
             <div class="page-top">
                 <div class="page-title"> @Html.DisplayFor(Model=>Model.CaseTitle) </div>
                 <div calss="need">@Html.DisplayFor(Model=>Model.SkillName)</div>
@@ -28,10 +31,10 @@
                 <div class="author">
                     <span class="author-pic-name">
                         <span class="authorpicture-frame">
-                            <img src="background.jpg" alt="無此圖片" class="author-picture">
+                            <img src="@Html.DisplayFor(model=>model.UserPhoto)" alt="" onerror="this.src = '/postpage/userhphotonull.svg';this.onerror = null" class="author-picture">
                         </span>
                         <span class="author-name">
-                            <h2 href="" style="padding-left:20px; font-size:16px" class="authorname">陳曉明</h2>
+                            <h2 href="" style="padding-left:20px; font-size:16px" class="authorname">@Html.DisplayFor(Model=>Model.UserNName)</h2>
                         </span>
                     </span>
                     <div class="author-itemlist">
@@ -67,16 +70,15 @@
                     <span class="article">@Html.DisplayFor(Model=>Model.CaseIntroduction)</span>
                 </div>
             </div>
-
             <!-- 留言板 -->
-            <div class="messageboard-frame">
+            <div class="messageboard-frame" id="">
                 <div class="messageboard-title"> 留言</div>
                 <!-- 輸入訊息 -->
                 <form asp-action="AddComment" asp-controller="PostPage">
                     <div class="comment-frame">
                         <div>
                             <div class="user-pic">
-                                <img src="background.jpg" alt="無此圖片" class="author-picture">
+                                <img src="@Html.DisplayFor(model=>model.LoginHPhoto)" alt="" onerror="this.src = '/postpage/userhphotonull.svg';this.onerror = null" class="author-picture">
                             </div>
                         </div>
 
@@ -86,9 +88,7 @@
                             <div class="statics-text">0/200字</div>
                         </div>
                         <div class="col-auto">
-                            <input type="button" class="btn btn-primary" data-bs-toggle="modal"
-                               data-bs-target="#exampleModal" id="commentbtn" disabled
-                               value="留言" />
+                            <input type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" id="commentbtn" disabled data-caseid="@Model.CaseId" value="留言" />
                             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                              aria-hidden="true">
                                 <div class="modal-dialog">
@@ -105,84 +105,87 @@
 
                     </div>
                 </form>
-                <!-- 回應1 -->
-                <div class="respone-mes-frame">
-                    <div class="responer-pic">
-                        <a href="">
-                            <div class="pad-avatar">
-                                <img src="background.jpg" alt="無此圖片" class="respons-picture">
-                            </div>
-                        </a>
-                    </div>
+                <div id="message">
 
-                    <div class="pad-content">
-                        <div>
-                            <div class="responser-name">{{usercomment}}</div>
+                    <!-- 回應爸爸 -->
+                    <div class="respone-mes-frame" v-for="item in msglist">
+                        <div class="responer-pic">
+                            <a href="">
+                                <div class="pad-avatar">
+                                    <img src="{{item.MagUserPhoto}}" alt="" onerror="this.src = '/postpage/userhphotonull.svg';this.onerror = null" class="respons-picture">
+                                </div>
+                            </a>
                         </div>
-                        <div class="responser-context">
-                            <div class="text">
-                                1111111
-                            </div>
-                        </div>
-                        <div class="response-day-button">
-                            <i class="fa-regular fa-clock"></i>
-                            <span class="post-time">XX 天前</span>
-                            <span class="replay-btn">回覆</span>
 
-                        </div>
-                        <!-- 回應2 -->
-                        <div class="comment-bother-frame">
-                            <div class="comment-bother">
-                                <a href="" class="comment-pic-frame">
-                                    <div style="width: 24px; height: 24px;" class="avatar-frame">
-                                        <img src="background.jpg" alt="無此圖片" class="comment-bother-pic">
-                                    </div>
-                                </a>
-                                <div class="comment-brother-re">
-                                    <div class="responser-name-frame">
-                                        <a class="responser-name" href="">回覆者的名字</a>
-                                        <div class="reply-user">
-                                            <span>回覆給：</span>
-                                            <div class="comment-bother">
-                                                <a href="">
-                                                    <img src="background.jpg" alt="無此圖片" class="comment-bother-pic">
-                                                </a>
+                        <div class="pad-content">
+                            <div>
+                                <div class="responser-name">{{item.MsgUserName}}</div>
+                            </div>
+                            <div class="responser-context">
+                                <div class="text">
+                                    {{item.MsgContent}}
+                                </div>
+                            </div>
+                            <div class="response-day-button">
+                                <i class="fa-regular fa-clock"></i>
+                                <span class="post-time">留言日期：{{item.MsgAddDate|showDate}}</span>
+                                <span class="replay-btn">回覆</span>
+
+                            </div>
+                            <!-- 回應小孩 -->
+                            <div class="comment-bother-frame" v-for="item in msglistch">
+                                <div class="comment-bother">
+                                    <a href="" class="comment-pic-frame">
+                                        <div style="width: 24px; height: 24px;" class="avatar-frame">
+                                            <img src="background.jpg" alt="無此圖片" class="comment-bother-pic">
+                                        </div>
+                                    </a>
+                                    <div class="comment-brother-re">
+                                        <div class="responser-name-frame">
+                                            <a class="responser-name" href="">{{item.MsgUserName}}</a>
+                                            <div class="reply-user">
+                                                <span>回覆給：</span>
+                                                <div class="comment-bother">
+                                                    <a href="">
+                                                        <img src="background.jpg" alt="無此圖片" class="comment-bother-pic">
+                                                    </a>
+                                                </div>
+                                                <a>名稱</a>
                                             </div>
-                                            <a>名稱</a>
+
+                                        </div>
+                                        <div class="text">回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容</div>
+                                        <div class="response-day-button">
+                                            <i class="fa-regular fa-clock"></i>
+                                            <span class="post-time">XX 天前</span>
+                                            <span class="replay-btn">回覆</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 回應訊息輸入 -->
+                            <!-- <div class="comment-bother-frame-input">
+                                <div class="comment-bother-input">
+                                    <a href="" class="comment-pic-frame">
+                                        <div style="width: 24px; height: 24px;" class="avatar-frame">
+                                            <img src="background.jpg" alt="無此圖片" class="comment-bother-pic">
+                                        </div>
+                                    </a>
+                                        <div class="textarea-box">
+                                            <textarea type="text" class="form-control" id="exampleFormControlTextarea1" placeholder="請輸入你的訊息"
+                                                maxlength="200" rows="3"></textarea>
+                                            <div class="statics-text">0/200字</div>
+                                        </div>
+                                        <div class="col-auto-input">
+                                            <button type="button" class="btn btn-primary" disabled data-bs-toggle="button" id=commentbtmre>留言</button>
                                         </div>
 
                                     </div>
-                                    <div class="text">回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容</div>
-                                    <div class="response-day-button">
-                                        <i class="fa-regular fa-clock"></i>
-                                        <span class="post-time">XX 天前</span>
-                                        <span class="replay-btn">回覆</span>
-                                    </div>
-                                </div>
-                            </div>
+                                </div> -->
+                            <!--  -->
                         </div>
-                        <!-- 回應訊息輸入 -->
-                        <!-- <div class="comment-bother-frame-input">
-                            <div class="comment-bother-input">
-                                <a href="" class="comment-pic-frame">
-                                    <div style="width: 24px; height: 24px;" class="avatar-frame">
-                                        <img src="background.jpg" alt="無此圖片" class="comment-bother-pic">
-                                    </div>
-                                </a>
-                                    <div class="textarea-box">
-                                        <textarea type="text" class="form-control" id="exampleFormControlTextarea1" placeholder="請輸入你的訊息"
-                                            maxlength="200" rows="3"></textarea>
-                                        <div class="statics-text">0/200字</div>
-                                    </div>
-                                    <div class="col-auto-input">
-                                        <button type="button" class="btn btn-primary" disabled data-bs-toggle="button" id=commentbtmre>留言</button>
-                                    </div>
 
-                                </div>
-                            </div> -->
-                        <!--  -->
                     </div>
-
                 </div>
             </div>
         </div>
@@ -190,102 +193,25 @@
 
     @section Scripts
     {
-    <script src="~/js/PostPage.js"></script>
-    
+
     <script>
-        
-        let vm = new Vue({
+        var msgData = @Html.Raw(msgDataString);
+        var msgDataCh = @Html.Raw(msgDataStringCh)
+        let PP = new Vue({
             el: "#postpage",
             data: {
-                caseModel: [],
-                usercomment:"",
-               
-            },
-            methods: {
-                initCaseModel: function() {
-                    $.ajax({
-                        url: "PostPage/InitCaseModel",
-                        type: "GET"
-                    })
-                        .done(function(res) {
-                            vmIndex.caseModel = res;
-                        })
-                        .fail(function(res) {
-                            alert("Fail");
-                        });
-
-
-                }
+                msglist: msgData,
+                msglistch: msgDataCh
             },
             filters: {
-                //顯示技能名稱，而非編號
-                showSkillName: function(id) {
-                    var skillName = "X";
-                    $.ajax({
-                        url: "PostPage/GetSkillName",
-                        type: "GET",
-                        async: false,
-                        data: {
-                             SkillId:id,
-                        }
-                    })
-                        .done(function(res) {
-                            skillName = res;
-                        })
-                        .fail(function(res) {
-                            skillName = "無分類"
-                        });
-                    return skillName;
+                showDate: function(e) {
+                    if (e.includes("T")) {
+                        return e.split("T")[0];
+                    }
                 }
             },
-            })
 
-
-
+        })
     </script>
+    <script src="~/js/PostPage.js"></script>
 }
-    @*<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.MsgAddDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MsgCaseId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MsgUserId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MsgContent)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.MsgAddDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MsgCaseId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MsgUserId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MsgContent)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.MsgId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MsgId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MsgId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>*@

@@ -1,106 +1,195 @@
-﻿@model MutualBank.Models.ViewModels.UserRegister
-@{
-    ViewData["Title"] = "Register";
-}
+﻿<div class="offset-2 col-8">
+    <div id="homeContent" class="container cn mb-5">
+        <form id="form" action="/UserLogin/Register" method="post" onsubmit="return false" class="">
+            <div class="row pt-3">
+                <div class="col-12">
+                    <h4 class="postTitle mb-2">註冊帳戶</h4>
+                </div>
+                <div class="col-12 mb-3">
+                    <label for="LoginName" class="form-label">帳號</label>
+                    <input type="text" class="form-control" v-bind:class="{'is-invalid':AccountValid}"
+                           id="LoginName" name="LoginName" v-model="Account" placeholder="">
+                    <div class="invalid-feedback">
+                    </div>
+                    <div class="text-danger" id="Accerrormsg"></div>
+                </div>
 
-<div class="container row" id="homeContent" style="background-image:">
-    <div class="offset-3 col-6">
-        <form method="post" action="/UserLogin/Register" onsubmit="return false">
-            <div class="form-group">
-                <label asp-for="LoginName" class="control-label">帳號</label>
-                <input asp-for="LoginName" class="form-control" v-model="Account" />
-                <span style="color:red">@ViewBag.message</span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LoginPwd" class="control-label">密碼</label>
-                <input asp-for="LoginPwd" class="form-control" v-model="Password" />
-            </div>
-            <div class="form-group">
-                <label asp-for="ConfirmPwd" class="control-label">確認密碼</label>
-                <input asp-for="ConfirmPwd" class="form-control" v-model="ConfirmPwd"/>
-            </div>
-            <div class="form-group">
-                <label asp-for="LoginEmail" class="control-label">註冊信箱</label>
-                <input asp-for="LoginEmail" placeholder="例如: XXX@test.com" class="form-control" v-model="Email"/>
-            </div>
-            <div class="form-group">
-                </br>
-                <input type="submit" value="註冊" class="btn btn-primary col-6 offset-3" v-on:click="sub"/>
-                <div id="errormsg"></div>
+                <div class="col-12 mb-3">
+                    <label for="LoginPwd" class="form-label">密碼</label>
+                    <input type="password" class="form-control" v-bind:class="{'is-invalid':PasswordValid}"
+                           id="LoginPwd" name="LoginPwd" v-model="Password" placeholder="">
+                    <div class="invalid-feedback">
+                    </div>
+                    <div class="text-danger" id="Pwderrormsg"></div>
+                </div>
+                <div class="col-12 mb-3">
+                    <label for="ConfirmPwd" class="form-label">確認密碼</label>
+                    <input type="password" class="form-control" v-bind:class="{'is-invalid':ConfirmPwdValid}"
+                           id="ConfirmPwd" name="ConfirmPwd" v-model="ConfirmPwd" placeholder="">
+                    <div class="invalid-feedback">
+                    </div>
+                    <div class="text-danger" id="Conferrormsg"></div>
+                </div>
+                <div class="col-12 mb-3">
+                    <label for="LoginEmail" class="form-label">註冊信箱</label>
+                    <input type="text" class="form-control" v-bind:class="{'is-invalid':EmailValid}"
+                           id="LoginEmail" name="LoginEmail" v-model="Email" placeholder="例如XXX@mail.com">
+                    <div class="invalid-feedback">
+                    </div>
+                    <div class="text-danger" id="Emailerrormsg"></div>
+                </div>
+                <div class="col-12 text-center">
+                    <button class="postBtn w-25 mt-4" type="submit" v-on:click="sub">註冊</button>
+                </div>
+                
             </div>
         </form>
+        <!-- Modal -->
+@*<div class="modal fade" id="success" tabindex="-1" aria-labelledby="successModalLabe" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabe">註冊成功</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                確認或{{count}}秒後導向登入畫面
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="postBtn">確定</button>
+            </div>
+        </div>
     </div>
-    <div class="offset-9 col-3" >
+</div>*@
     </div>
 </div>
-<div class="col-7"></div>
+
+
+
 @section Scripts {
-
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
-        let vm = new Vue({
-    el: "#homeContent",
-    data: 
-    {
-        Account:"",
-        Password:"",
-        ConfirmPwd:"",
-        Email:"",
-
-    },
-    methods: 
-    {
-        //ConfirmAccount:function()
-        //{
-        //    let self = this;
-        //    //ajax=> es fetch
-        //    fetch(`/api/Confirm/ConfirmAccount?id=${self.Account}`)
-        //    .then(function (response) {
-        //        return response.json();
-        //    })
-        //    .then(function (res) {
-        //        console.log("m = ",res);
-        //        $('#errormsg').text(res.message);
-        //    });
-        //},
-        sub: function() 
-        {
-            var data = 
+        var vm = new Vue({
+            el: "#homeContent",
+            data:
             {
-                LoginName: this.Account,
-                LoginPwd: this.Password,
-                LoginEmail:this.Email,
-                ConfirmPwd:this.ConfirmPwd
-            }; 
-            console.log(data);
-            
-            fetch(`/api/Confirm/ConfirmAll`, {
-                method: 'POST',
-                headers:
-                {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+                Account: "",
+                Password: "",
+                ConfirmPwd: "",
+                Email: "",
+                count: 5,
+
+            },
+            methods:
+            {
+                sub: function() {
+                    var self = this;
+                    var data =
+                    {
+                        LoginName: this.Account,
+                        LoginPwd: this.Password,
+                        LoginEmail: this.Email,
+                        ConfirmPwd: this.ConfirmPwd
+                    };
+                    console.log(data);
+
+                    fetch(`/api/Confirm/ConfirmRegister`, {
+                        method: 'POST',
+                        headers:
+                        {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                        .then(function(response) {
+                            return response.json();
+                        })
+                        .then(function(res) {
+                            console.log("m = ", res);
+                            $('#Accerrormsg').text(res.accMessage);
+                            $('#Conferrormsg').text(res.confMessage);
+                            if (res.message == null) {
+                                $("#form").attr("onsubmit", "retrun true");
+                                $("#form").submit();
+                                //$("#success").modal('show');
+                                //self.countDown();
+                                self.success();
+                            }
+                        })
+                        .catch(function(res) {
+                            console.log("err = ", res);
+                        });
                 },
-                body: JSON.stringify(data)
-            })
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (res) {
-                console.log("m = ",res);
-                $('#errormsg').text(res.message);
-                if (res.message == null) 
+                countDown:function() {
+                    console.log(this.count);
+                    if (this.count == 0) 
+                    {
+                        location.href = "/UserLogin/Login";
+                    }
+                    else 
+                    {
+                        this.count = this.count- 1;
+                        window.setTimeout(this.countDown, 1000);
+                    }
+                    
+                },
+                success:function()
                 {
-                    $("form").attr("onsubmit", "retrun true");
-                    $("form").submit();
+                    swal("註冊成功!", "點擊確認或3秒後導向登入畫面", "success", {button: "確認", timer: 3000})
+                    .then((value) => {
+                    location.href = "/UserLogin/Login";});
                 }
-            })
-            .catch(function(res) {  
-                console.log("err = ",res);
-            });
-        }
-    }
-});
+            },
+            computed:
+            {
+                AccountValid: function() {
+                    return this.Account.length > 0 ? false : true;
+                },
+                PasswordValid: function() {
+                    return this.Password.length > 0 ? false : true;
+                },
+                ConfirmPwdValid: function() {
+                    return this.ConfirmPwd.length > 0 ? false : true;
+                },
+                EmailValid: function() {
+                    return this.Email.length > 0 ? false : true;
+                },
+            }
+        });
     </script>
+}
+@section Styles
+{
+    <style>
+        .cn {
+        position: relative;
+        border-radius: 5px;
+        padding: 10px 40px 30px;
+        background: var(--white);
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.03);
+    }
+    .postTitle {
+        font-weight: 700;
+    }
+    .postBtn {
+        border: 0px;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 18px;
+        background: var(--help);
+        font-weight: 700;
+    }
+    .postBtn:hover {
+            background: var(--help1);
+        }
+        h6 {
+        font-weight: 700;
+    }
+    h4::before {
+            content: '';
+            padding-right: 10px;
+            border-left: 5px solid var(--help);
+        }
+</style>
 }
