@@ -103,22 +103,51 @@ namespace MutualBank.Controllers.api
 		}
 
 		[HttpPost]
-		public ActionResult<Error> ConfirmAll(UserRegister userregister)
+		public ActionResult<Error> ConfirmRegister(UserRegister userregister)
 		{
 			Error err = new Error();
 			var user = _mutualBankContext.Logins.FirstOrDefault(u => u.LoginName == userregister.LoginName);
 			//檢查欄位是否都有輸入
 			if (string.IsNullOrEmpty(userregister.LoginName) || string.IsNullOrEmpty(userregister.ConfirmPwd) || string.IsNullOrEmpty(userregister.LoginPwd) || string.IsNullOrEmpty(userregister.LoginEmail))
 			{
-				err.Message = "請輸入完資料";
+				err.Message = "有誤";
+				return err;
 			}
 			else if (user != null)
 			{
-				err.Message = "此帳號已有人使用";
+				err.AccMessage = "此帳號已有人使用";
+				err.Message = "有誤";
+				return err;
 			}
 			else if(userregister.LoginPwd != userregister.ConfirmPwd)
 			{
-				err.Message = "密碼與確認密碼不一致";
+				err.ConfMessage = "密碼與確認密碼不一致";
+				err.Message = "有誤";
+				return err;
+			}
+			return err;
+		}
+
+		[HttpPost]
+		public ActionResult<Error> ConfirmLogin(UserLogin userlogin)
+		{
+			Error err = new Error();
+			var user = (from a in _mutualBankContext.Logins
+						where a.LoginName == userlogin.LoginName
+						&& a.LoginPwd == userlogin.LoginPwd
+						select a).SingleOrDefault();
+			//檢查欄位是否都有輸入
+			if (string.IsNullOrEmpty(userlogin.LoginName) || string.IsNullOrEmpty(userlogin.LoginPwd))
+			{
+				err.Message = "有誤";
+				err.AccMessage = "";
+				return err;
+			}
+			else if (user == null)
+			{
+				err.Message = "有誤";
+				err.AccMessage = "帳號或密碼錯誤";
+				return err;
 			}
 			return err;
 		}
