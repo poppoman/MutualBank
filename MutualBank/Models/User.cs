@@ -31,7 +31,9 @@ namespace MutualBank.Models
         public string? UserFaculty { get; set; }
         public int UserPoint { get; set; }
 
-        public virtual Login UserNavigation { get; set; } = null!;
+        public virtual Login User1 { get; set; } = null!;
+        public virtual Area UserNavigation { get; set; } = null!;
+        public virtual Skill? UserSkill { get; set; }
         public virtual ICollection<Case> Cases { get; set; }
         public virtual ICollection<Message> MessageMsgToUsers { get; set; }
         public virtual ICollection<Message> MessageMsgUsers { get; set; }

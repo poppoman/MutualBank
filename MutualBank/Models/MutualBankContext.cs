@@ -295,7 +295,18 @@ namespace MutualBank.Models
                     .WithOne(p => p.User)
                     .HasForeignKey<User>(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Users_Area");
+
+                entity.HasOne(d => d.User1)
+                    .WithOne(p => p.User)
+                    .HasForeignKey<User>(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Users_Login");
+
+                entity.HasOne(d => d.UserSkill)
+                    .WithMany(p => p.Users)
+                    .HasForeignKey(d => d.UserSkillId)
+                    .HasConstraintName("FK_Users_Skill");
             });
 
             OnModelCreatingPartial(modelBuilder);

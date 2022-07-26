@@ -14,6 +14,7 @@ namespace MutualBank.Models
         public string AreaCity { get; set; } = null!;
         public string AreaTown { get; set; } = null!;
 
+        public virtual User User { get; set; } = null!;
         public virtual ICollection<Case> Cases { get; set; }
     }
 }
