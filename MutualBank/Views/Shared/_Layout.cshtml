@@ -15,7 +15,6 @@
           integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">\
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-
     @await RenderSectionAsync("Styles", required: false)
     @await RenderSectionAsync("ScriptsReady",required:false)
 
@@ -29,15 +28,15 @@
                 <form class="m-auto" method="get" action="@Url.Action("Search","Home")">
                     <div class="search">
                         <div class="area m-1 me-0">
-                                <select class="selectList" id="AreaCity" name="AreaCity" v-on:change="getAreaTown">
-                                    <option class="selectOption" v-for="item in areaCity" >{{item}}</option>
-                                </select>
+                            <select class="selectList" id="AreaCity" name="AreaCity" v-on:change="getAreaTown">
+                                <option class="selectOption" v-for="item in areaCity">{{item}}</option>
+                            </select>
                         </div>
                         <div class="city m-1">
-                                <select class="selectList" id="AreaTown" name="AreaTown">
-                                    <option class="selectOption" selected="selected" v-show="isDefaultShow" disabled>區域</option>
-                                    <option class="selectOption" v-for="item in areaTown" v-bind:data-areaid="item.areaId">{{item.areaTown}}</option>
-                                </select>
+                            <select class="selectList" id="AreaTown" name="AreaTown">
+                                <option class="selectOption" selected="selected" v-show="isDefaultShow" disabled>區域</option>
+                                <option class="selectOption" v-for="item in areaTown" v-bind:data-areaid="item.areaId">{{item.areaTown}}</option>
+                            </select>
                         </div>
                         <input type="text" id="KeyWord" name="KeyWord" placeholder="輸入關鍵字">
                         <button class="searchBtn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -95,6 +94,46 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
-</body>
+    @*@if (User.Identity.IsAuthenticated)
+    {
+        <script src="~/js/signalr/dist/browser/signalr.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+        <script>
+            toastr.options = 
+            {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-bottom-right",
+                "preventDuplicates": false,
+                "onclick": function () { location.href = "/Home/ProfilePageAjax"; },
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
 
-</html>
+            var userName = "@User.Identity.Name";
+
+            var connection = new signalR.HubConnectionBuilder().withUrl("/messageHub").build();
+
+            connection.start().then(function() {
+                connection.invoke("Online", userName);
+            }).catch (function(err) {
+                return console.error(err.toString());
+            });
+            connection.on("UserOnline", function(user, UserId,Msg) {
+                toastr["success"](`目前有${Msg}則未讀訊息`, `歡迎您 ${user}`)
+            });
+
+        </script>
+    }*@   
+    </body>
+
+    </html>

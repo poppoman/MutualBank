@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MutualBank.Data;
+using MutualBank.Hubs;
 using MutualBank.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,7 +26,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
-
+builder.Services.AddSignalR();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -64,6 +65,7 @@ app.UseEndpoints(endpoints =>
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapHub<MessageHub>("/messageHub");
 app.MapRazorPages();
 
 app.Run();
