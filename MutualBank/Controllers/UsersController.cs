@@ -23,24 +23,25 @@ namespace MutualBank.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<User>> GetUsers()
+        public async Task<ActionResult<UserViewModel>> GetUsers()
         {
             int id = 11; 
           if (_context.Users == null)
           {
               return NotFound();
           }
-            return _context.Users.Where(s=> s.UserId == id).ToArray().Select(s=> new User()
+            return _context.Users.Where(s=> s.UserId == id).ToArray().Select(s=> new UserViewModel()
             {
                 UserId = s.UserId,
                 UserLname = s.UserLname,
                 UserFname = s.UserFname,
                 UserNname = s.UserNname,
-                UserSex = s.UserSex, /*true "男":"女"*/
+                UserSex = s.UserSex == true ? "男":"女" ,
                 UserEmail = s.UserEmail,
-                UserBirthday = s.UserBirthday,/* ?.ToShortDateString(),*/
-                UserAreaId = s.UserAreaId,
-                UserCv = s.UserCv
+                UserBirthday = s.UserBirthday.Value.ToShortDateString(),  
+                UserAreaId = s.UserAreaId  ,
+                UserCv = s.UserCv,
+                UserResume = s.UserResume
             }).FirstOrDefault();
         }
 
@@ -52,11 +53,13 @@ namespace MutualBank.Controllers
             var upd = _context.Users.FirstOrDefault(u => u.UserId == id);
             upd.UserLname = UpdateU.UserLname;
             upd.UserFname = UpdateU.UserFname;
-            //upd.UserNname = UpdateU.UserNname;
-            upd.UserSex = UpdateU.UserSex;
-            upd.UserBirthday = UpdateU.UserBirthday; /* Convert.ToDateTime(UpdateU.UserBirthday);*/
-            //upd.UserAreaId = UpdateU.UserAreaId;
-            //upd.UserCv = UpdateU.UserCv;
+            upd.UserNname = UpdateU.UserNname;
+            upd.UserSex =  UpdateU.UserSex == "男" ? true: false   ;
+            upd.UserBirthday = Convert.ToDateTime(UpdateU.UserBirthday);  //UpdateU.UserBirthday; /*
+            upd.UserAreaId = UpdateU.UserAreaId;
+            upd.UserCv = UpdateU.UserCv;
+            upd.UserResume = UpdateU.UserResume;
+
             _context.SaveChanges();
             err.Message = "OK";
             return err;
