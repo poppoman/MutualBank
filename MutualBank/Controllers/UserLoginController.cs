@@ -141,7 +141,6 @@ namespace MutualBank.Controllers
 
             if (verify == "")
             {
-                ViewData["ErrorMsg"] = "缺少驗證碼";
                 return View();
             }
 
