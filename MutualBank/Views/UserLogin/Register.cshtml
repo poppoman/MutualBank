@@ -119,8 +119,8 @@
                             if (res.emailMessage != null) { document.getElementById("LoginEmail").setAttribute("class", "form-control is-invalid"); $('#Emailerrormsg').text(res.emailMessage);}
                             else {document.getElementById("LoginEmail").setAttribute("class", "form-control is-valid") }
                             if (res.message == null) {
-                                //$("#form").attr("onsubmit", "retrun true");
-                                //$("#form").submit();
+                                $("#form").attr("onsubmit", "retrun true");
+                                $("#form").submit();
                                 //$("#success").modal('show');
                                 //self.countDown();
                                 self.success();
@@ -150,21 +150,6 @@
                     location.href = "/UserLogin/Login";});
                 }
             },
-            computed:
-            {
-                AccountValid: function() {
-                    return this.Account.length > 0 ? false : true;
-                },
-                PasswordValid: function() {
-                    return this.Password.length > 0 ? false : true;
-                },
-                ConfirmPwdValid: function() {
-                    return this.ConfirmPwd.length > 0 ? false : true;
-                },
-                EmailValid: function() {
-                    return this.Email.length > 0 ? false : true;
-                },
-            }
         });
     </script>
 }

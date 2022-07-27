@@ -74,7 +74,6 @@ namespace MutualBank.Controllers
                         select a).SingleOrDefault();
             if (user == null)
             {
-                ViewBag.LoginFalse = "帳號或密碼錯誤";
                 return View();
             }
             else
@@ -90,8 +89,6 @@ namespace MutualBank.Controllers
                 {
                     ExpiresUtc = DateTime.UtcNow.AddMinutes(60)
                 });
-
-
                 return RedirectToAction("Index", "Home");
             }
         }
@@ -115,13 +112,13 @@ namespace MutualBank.Controllers
         }
 
         [HttpPost]
-        public IActionResult changePassword(string Password)
+        public IActionResult changePassword(Userchangepwd Password)
         {
             string user = User.Identity.Name;
             var update = _mutualBankContext.Logins.FirstOrDefault(u => u.LoginName == User.Identity.Name);
             if (Password != null)
             {
-                update.LoginPwd = Password;
+                update.LoginPwd = Password.LoginPwd;
                 _mutualBankContext.SaveChanges();
                 return RedirectToAction("ProfilePageAjax", "Home");
             }

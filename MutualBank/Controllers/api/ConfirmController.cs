@@ -107,6 +107,7 @@ namespace MutualBank.Controllers.api
 		{
 			Error err = new Error();
 			var user = _mutualBankContext.Logins.FirstOrDefault(u => u.LoginName == userregister.LoginName);
+			var email = _mutualBankContext.Logins.FirstOrDefault(e => e.LoginEmail == userregister.LoginEmail);
 			//檢查欄位是否都有輸入
 			if (string.IsNullOrEmpty(userregister.LoginName) || string.IsNullOrEmpty(userregister.ConfirmPwd) || string.IsNullOrEmpty(userregister.LoginPwd) || string.IsNullOrEmpty(userregister.LoginEmail))
 			{
@@ -123,9 +124,15 @@ namespace MutualBank.Controllers.api
 				err.Message = "有誤";
 				return err;
 			}
-			else if(userregister.LoginPwd != userregister.ConfirmPwd)
+			else if (userregister.LoginPwd != userregister.ConfirmPwd)
 			{
 				err.ConfMessage = "密碼與確認密碼不一致";
+				err.Message = "有誤";
+				return err;
+			}
+			else if (email != null)
+			{
+				err.EmailMessage = "此組信箱已被註冊";
 				err.Message = "有誤";
 				return err;
 			}
@@ -144,13 +151,35 @@ namespace MutualBank.Controllers.api
 			if (string.IsNullOrEmpty(userlogin.LoginName) || string.IsNullOrEmpty(userlogin.LoginPwd))
 			{
 				err.Message = "有誤";
-				err.AccMessage = "";
+				err.AccMessage = "帳號不能為空";
+				err.PwdMessage = "密碼不能為空";
 				return err;
 			}
 			else if (user == null)
 			{
 				err.Message = "有誤";
 				err.AccMessage = "帳號或密碼錯誤";
+				err.PwdMessage = "帳號或密碼錯誤";
+				return err;
+			}
+			return err;
+		}
+
+		[HttpPost]
+		public ActionResult<Error> Confirmchangepwd(Userchangepwd userchangepwd)
+		{
+			Error err = new Error();
+			if (string.IsNullOrEmpty(userchangepwd.ConfirmPwd) || string.IsNullOrEmpty(userchangepwd.LoginPwd))
+			{
+				err.Message = "有誤";
+				err.ConfMessage = "帳號不能為空";
+				err.PwdMessage = "密碼不能為空";
+				return err;
+			}
+			else if (userchangepwd.ConfirmPwd != userchangepwd.LoginPwd)
+			{
+				err.Message = "有誤";
+				err.ConfMessage = "確認密碼與密碼不一致";
 				return err;
 			}
 			return err;

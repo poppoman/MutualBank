@@ -1,16 +1,129 @@
 ﻿<section id="changePwd">
-    <div class="container" >
-        <div class="row">
-           <form method="post" action="/UserLogin/changePassword">
-            <div class="offset-2 col-8">
-                <label name="Password" class="control-label">密碼</label>
-                <input name="Password" class="form-control" />
-            </div>
-            <div class="offset-5 col-4 mt-4">
-                <input type="submit" value="更改密碼" class="btn btn-primary" />
+<div class="offset-2 col-8">
+    <div id="homeContent" class=" cn mb-5">
+        <form id="form" action="/UserLogin/changePassword" method="post" onsubmit="return false" class="">
+            <div class="row pt-3">
+                <div class="col-12">
+                    <h4 class="postTitle mb-2">更改密碼</h4>
+                </div>
+                <div class="col-12 mb-3">
+                    <label for="LoginPwd" class="form-label">密碼</label>
+                    <input type="password" class="form-control"
+                           id="LoginPwd" name="LoginPwd" v-model="Password" placeholder="">
+                    <div class="invalid-feedback">
+                        <div id="Pwderrormsg"></div>
+                    </div>
+                </div>
+
+                <div class="col-12 mb-3">
+                    <label for="ConfirmPwd" class="form-label">確認密碼</label>
+                    <input type="password" class="form-control"
+                           id="ConfirmPwd" name="ConfirmPwd" v-model="ConfirmPwd" placeholder="">
+                    <div class="invalid-feedback">
+                        <div id="Conferrormsg"></div>
+                    </div>
+                </div>
+
+                <div class="col-12 text-center">
+                    <button class="postBtn w-25 mt-4" type="submit" v-on:click="sub">更改</button>
+                </div>
+                
             </div>
         </form>
-        </div>
     </div>
-
+</div>
 </section>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+        var vm = new Vue({
+            el: "#homeContent",
+            data:
+            {
+                Password: "",
+                ConfirmPwd: "",
+
+            },
+            methods:
+            {
+                sub: function() {
+                    var self = this;
+                    var data =
+                    {
+                        LoginPwd: this.Password,
+                        ConfirmPwd: this.ConfirmPwd
+                    };
+                    console.log(data);
+
+                    fetch(`/api/Confirm/Confirmchangepwd`, {
+                        method: 'POST',
+                        headers:
+                        {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                        .then(function(response) {
+                            return response.json();
+                        })
+                        .then(function(res) {
+                            console.log("m = ", res);
+                            if (res.pwdMessage != null) { document.getElementById("LoginPwd").setAttribute("class", "form-control is-invalid"); $('#Pwderrormsg').text(res.pwdMessage);}
+                            else {document.getElementById("LoginPwd").setAttribute("class", "form-control is-valid") }
+                            if (res.confMessage != null) { document.getElementById("ConfirmPwd").setAttribute("class", "form-control is-invalid"); $('#Conferrormsg').text(res.confMessage);}
+                            else {document.getElementById("ConfirmPwd").setAttribute("class", "form-control is-valid") }
+                            if (res.message == null) {
+                                $("#form").attr("onsubmit", "retrun true");
+                                self.success();
+                            }
+                        })
+                        .catch(function(res) {
+                            console.log("err = ", res);
+                        });
+                },
+                success:function()
+                {
+                    swal("修改成功!","", "success", {button:false, timer: 1500})
+                    .then((value) => {
+                    $("#form").submit();});
+                }
+            },
+            computed:
+            {
+            }
+        });
+    </script>
+
+
+    <style>
+        .cn {
+        position: relative;
+        border-radius: 5px;
+        padding: 10px 40px 30px;
+        background: var(--white);
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.03);
+    }
+    .postTitle {
+        font-weight: 700;
+    }
+    .postBtn {
+        border: 0px;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 18px;
+        background: var(--help);
+        font-weight: 700;
+    }
+    .postBtn:hover {
+            background: var(--help1);
+        }
+        h6 {
+        font-weight: 700;
+    }
+    h4::before {
+            content: '';
+            padding-right: 10px;
+            border-left: 5px solid var(--help);
+        }
+</style>
+
