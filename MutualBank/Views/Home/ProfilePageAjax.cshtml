@@ -196,6 +196,8 @@
 
         var message = document.getElementById("message");
         message.addEventListener("click", function() {
+            dynamicLoading.css("/css/Card.css");
+            dynamicLoading.css("/css/btn-shared.css");
             $.ajax({
                 type: "POST",
                 url: "/UserLogin/message",

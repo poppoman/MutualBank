@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using MutualBank.Extensions;
 using MutualBank.Models;
 using MutualBank.Models.ViewModels;
 using System.Configuration;
@@ -26,68 +28,25 @@ namespace MutualBank.Controllers.api
             _mutualBankContext = mutualBankContext;
             _configuration = configuration;
         }
-		[HttpGet]
-		public ActionResult<CaseTitle> helpme(string id)
-		{
-			var userid = _mutualBankContext.Logins.Where(x => x.LoginName == id).Select(x => x.LoginId).FirstOrDefault();
-			var casetitle = (_mutualBankContext.Cases.Where(x => x.CaseUserId == userid && x.CaseNeedHelp==true).Select(x => x.CaseTitle)).ToList();
-			var caseid = (_mutualBankContext.Cases.Where(x => x.CaseUserId == userid && x.CaseNeedHelp == true).Select(x => x.CaseId)).ToList();
-            List<string[]> msg = new List<string[]>();
-            List<string[]> msgUsername = new List<string[]>();
-			List<string> msgname = new List<string>();
-			foreach (int a in caseid)
-			{
-				var msgContent = _mutualBankContext.Messages.Where(x => x.MsgCaseId == a).Select(x => x.MsgContent).ToArray();
-				var msgUserid = (_mutualBankContext.Messages.Where(x => x.MsgCaseId == a).Select(x => x.MsgUserId)).ToList();
-				foreach (int b in msgUserid)
-				{
-					var Username = (_mutualBankContext.Users.Where(x => x.UserId == b).Select(x => x.UserNname)).FirstOrDefault();					
-					msgname.Add(Username);
-				}
-				msg.Add(msgContent);
-				msgUsername.Add(msgname.ToArray());
-				msgname.Clear();
-
-			}
-			CaseTitle helpme = new CaseTitle() 
-			{
-				caseid=caseid,
-				casetitle=casetitle,
-			};
-			//helpme.msgname = msgUsername;
-			//helpme.casemsg = msg;
-            return helpme;
-		}
 
 		[HttpGet]
-		public ActionResult<CaseTitle> helpyou(string id)
+		public List<CaseTitle> AllCase(string id) 
 		{
 			var userid = _mutualBankContext.Logins.Where(x => x.LoginName == id).Select(x => x.LoginId).FirstOrDefault();
-			var casetitle = (_mutualBankContext.Cases.Where(x => x.CaseUserId == userid && x.CaseNeedHelp==false).Select(x => x.CaseTitle)).ToList();
-			var caseid = (_mutualBankContext.Cases.Where(x => x.CaseUserId == userid && x.CaseNeedHelp == false).Select(x => x.CaseId)).ToList();
-			List<string[]> msg = new List<string[]>();
-			List<string[]> msgUsername = new List<string[]>();
-			List<string> msgname = new List<string>();
-			foreach (int a in caseid)
+			var caseidd  = _mutualBankContext.Cases.Where(x => x.CaseUserId == userid).Select(x=>x.CaseId).ToList();
+			var casetitlee = _mutualBankContext.Cases.Where(x => x.CaseUserId == userid).Select(x => x.CaseTitle).ToList();
+			var casehelp = _mutualBankContext.Cases.Where(x => x.CaseUserId == userid).Select(x => x.CaseNeedHelp).ToList();
+			
+			List<CaseTitle> c = new List<CaseTitle>();
+			for (int i = 0; i < caseidd.Count; i++)
 			{
-				var msgContent = _mutualBankContext.Messages.Where(x => x.MsgCaseId == a).Select(x => x.MsgContent).ToArray();
-				var msgUserid = (_mutualBankContext.Messages.Where(x => x.MsgCaseId == a).Select(x => x.MsgUserId)).ToList();
-				foreach (int b in msgUserid)
-				{
-					var Username = (_mutualBankContext.Users.Where(x => x.UserId == b).Select(x => x.UserNname)).FirstOrDefault();
-					msgname.Add(Username);
-				}
-				msg.Add(msgContent);
-				msgUsername.Add(msgname.ToArray());
-				msgname.Clear();
+				var msg = _mutualBankContext.Messages.Where(x => x.MsgCaseId == caseidd[i]).Select(x => x.MsgContent).ToList();
+				CaseTitle Case = new CaseTitle { caseid = caseidd[i] , casetitle = casetitlee[i], casehelp = casehelp[i],casemsg=msg };
+				c.Add(Case);
 			}
-			CaseTitle helpyou = new CaseTitle();
-			helpyou.casetitle = casetitle;
-			helpyou.caseid = caseid;
-			//helpyou.msgname = msgUsername;
-			//helpyou.casemsg = msg;
-			return helpyou;
+			return c;
 		}
+
 		[HttpGet]
 		public List<string> message(int id)
 		{

@@ -2,12 +2,13 @@
 {
     public class CaseTitle
     {
-        public List<string> casetitle { get; set; }
+        public string casetitle { get; set; }
 
-        public List<int> caseid { get; set; }
+        public int caseid { get; set; }
+        
+        public bool casehelp { get; set; }
 
-        //public List<string[]> casemsg { get; set; }
-        //public List<string[]> msgname { get; set; }   
+        public List<string> casemsg { get; set; }
     }
 }
 

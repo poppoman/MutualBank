@@ -1,4 +1,4 @@
-﻿<section id="message" class="bg-white">
+﻿@*<section id="message" class="bg-white">
     <div id="mes" class="container">
         <div class="row">
             <ul class="nav nav-tabs bg-white" id="myTab" role="tablist">
@@ -45,91 +45,96 @@
 
         </div>
     </div>
+</section>*@
+<style>
+        .cn {
+        position: relative;
+        border-radius: 5px;
+        padding: 10px 40px 30px;
+        background: var(--white);
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.03);
+    }
+
+</style>
+<section id="msg">
+    <div class="container mb-3 fs-18">
+        <div class="row justify-content-evenly align-items-center text-nowrap">
+            <div class="col-md-8 col-sm-12">
+            </div>
+
+            <div class="col-md-4">
+                <a type="button" class="btnSortCase active" id="allCase" v-on:click="GetAllCase">全部貼文</a>
+                <span>/</span>
+                <a type="button" class="btnSortCase" v-on:click="needOrSkillModel" data-bit=true>需求</a>
+                <span>/</span>
+                <a type="button" class="btnSortCase" v-on:click="needOrSkillModel" data-bit=false>技能</a>
+            </div>
+        </div>
+        <div class="cn row">
+            <div class="accordion accordion-flush" id="caseList">
+                <div v-for="item in Case" :key="item.caseid">
+                    <div class="accordion-item">
+                    <h2 class="accordion-header" :id="'h'+item.caseid">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#d' + item.caseid" aria-expanded="true" :aria-controls="'d'+item.caseid">
+                            {{item.casetitle}}
+                        </button>
+                    </h2>
+                    <div :id="'d'+item.caseid" class="accordion-collapse collapse" :aria-labelledby="'h'+item.caseid" data-bs-parent="#caseList">
+                        <div class="accordion-body">
+                            <div v-for="msg in item.casemsg" >{{msg}}</div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
 </section>
 
 <script>
     var vm = new Vue({
-        el: "#mes",
+        el: "#msg",
         data:
         {
-            helpme: [],
-            helpyou: [],
-            helpmecaseid: [],
-            helpyoucaseid: [],
-            helpmessage: [],
-            caseid: "",
-            casename: "",
-            show: true,
-            show2: false
+            Case: [],
+            Case2: [],
         },
         methods:
         {
-            getHelpme: function() {
-                let self = this;
-                fetch(`/api/Confirm/helpme?id=${@User.Identity.Name}`)
-                    .then(function(response) {
-                        return response.json();
-                    })
-                    .then(function(res) {
-                        console.log("getcase = ", res);
-                        self.helpme = res.casetitle;
-                        self.helpmecaseid = res.caseid;
-                        self.show = true;
-                        self.show2 = false;
-                        self.helpmessage = [];
-                    });
+            GetAllCase: function(e) {
+                this.addClickClass(e);
+                this.Case = this.Case2;
             },
-            getHelpyou: function() {
-                let self = this;
-                fetch(`/api/Confirm/helpyou?id=${@User.Identity.Name}`)
-                    .then(function(response) {
-                        return response.json();
-                    })
-                    .then(function(res) {
-                        console.log("getcase = ", res);
-                        self.helpyou = res.casetitle;
-                        self.helpyoucaseid = res.caseid;
-                        self.show = false;
-                        self.show2 = true;
-                        self.helpmessage = [];
-                    });
+            needOrSkillModel: function(e) {
+                this.addClickClass(e);
+                var bit = event.target.dataset.bit;
+                if (bit == "true") {
+                    this.Case = this.Case2.filter(x => x.casehelp == true);
+                }
+                else {
+                    this.Case = this.Case2.filter(x => x.casehelp == false);
+                }
             },
-            retrunmeid: function(e) {
-                let self = this;
-                this.caseid = this.helpmecaseid[e];
-                this.casename = this.helpme[e];
-                fetch(`/api/Confirm/message?id=${self.helpmecaseid[e]}`)
-                    .then(function(response) {
-                        return response.json();
-                    })
-                    .then(function(res) {
-                        console.log("message = ", res);
-                        self.helpmessage = res;
-                    });
+            addClickClass: function(e) {
+                var btnSortCase = document.querySelectorAll(".btnSortCase");
+                btnSortCase.forEach(x => x.classList.remove("active"));
+                e.target.classList.add("active");
             },
-            retrunyouid: function(e) {
-                let self = this;
-                this.caseid = this.helpyoucaseid[e];
-                this.casename = this.helpyou[e];
-                fetch(`/api/Confirm/message?id=${self.helpyoucaseid[e]}`)
-                    .then(function(response) {
-                        return response.json();
-                    })
-                    .then(function(res) {
-                        console.log("message = ", res);
-                        self.helpmessage = res;
-                    });
-            }
+
         },
-        computed:
-        {
-            showwho: function() {
-                return this.show;
-            },
-            showwho2: function() {
-                return this.show2;
-            }
-        },
+        mounted: function() {
+            let self = this;
+            fetch(`/api/Confirm/AllCase?id=${@User.Identity.Name}`)
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(res) {
+                    console.log("GetAllCase = ", res);
+                    self.Case = self.Case2 = res;
+                });
+        }
 
     });
 
