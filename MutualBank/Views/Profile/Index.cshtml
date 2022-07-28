@@ -1,0 +1,269 @@
+﻿@section Styles{
+    <link rel="stylesheet" href="~/css/Profile/Index.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/card.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/btn-shared.css" asp-append-version="true" />
+}
+    @{
+    var profileDataString = Newtonsoft.Json.JsonConvert.SerializeObject(@Model);
+}
+<div class="container-filud p-0" id="appPf">
+    <!-- 全版底圖 -->
+    <div class="bgBx">
+        <img src="https://images.unsplash.com/photo-1541450805268-4822a3a774ca?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80">
+    </div>
+    <div class="container">
+        <div class="archiment text-nowrap">
+            <h5><i class="fa-solid fa-hand-point-up"></i>&nbsp;{{pointTitle}}</h5>
+                <p>持有點數<strong id="userPoint">&nbsp;{{pfModel.UserPoint}}</strong></p>
+        </div>
+
+    </div>
+    <!-- all -->
+    <div class="container profileUser">
+        <!-- User -->
+        <div id="sec1">
+            <div class="d-flex">
+                <div class="userPhotoBx">
+                    <img src="https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg">
+                </div>
+                <div class="userTitle">
+                    <div class="row">
+                        <div class="col-md-8 col-12">
+                            <h2>{{pfModel.UserNname}}</h2>
+                            <h5 class="fw-400">{{pfModel.UserAreaName}}</h5>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <hr class="hrUp">
+
+        <!-- 資訊 -->
+        <div id="sec2" class="row">
+            <!-- col-1 -->
+            <div class="col-md-4 col-sm-5 col">
+                <div class="info">
+                    <div class="part">
+                        <div class="solidBx"></div>
+                        <h4 class="d-inline">經歷</h4><span>Experience</span>
+                        <p v-if="pfModel.UserSchool!=null">{{pfModel.UserResume}}</p>
+                        <p v-else>未填寫</p>
+
+                    </div>
+                    <div class="part">
+                        <div class="solidBx"></div>
+                        <h4 class="d-inline">學歷</h4><span>Education</span>
+                        <p v-if="pfModel.UserSchool!=null">{{pfModel.UserSchool}}</p>
+                        <p v-else>未填寫</p>
+                        <p class="d-inline" v-show="pfModel.UserFaculty!=null">{{pfModel.UserFaculty}}</p>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- col-2 -->
+            <div class="col-md-8 col-sm-6">
+                <div class="info">
+                    <div class="part">
+                        <div class="solidBx"></div>
+                        <h4 class="d-inline">關於我</h4><span>About Me</span>
+                        <p v-if="pfModel.UserCv!=null">{{pfModel.UserCv}}</p>
+                        <p v-else>未填寫</p>
+
+                    </div>
+                    <div class="part">
+                        <div class="solidBx"></div>
+                        <h4 class="d-inline ">技能</h4><span>Skill</span>
+                        <p>{{pfModel.UserSkillName}}</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div id="sec3">
+            <div class="part text-center mb-4">
+                <h4 class="d-inline mainBtn">技能與需求</h4>
+            </div>
+
+            <div class="container" v-if="caseModel.length!=0">
+                <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4">
+                    <div class="col" v-for="item in caseModel">
+                        <div class="card mb-2 w-100">
+                            <div class="imgBx">
+
+                                <div class="card-tag">
+                                    <span class="case-type">
+                                        <i class="fa-solid fa-square-h" v-if="item.CaseNeedHelp"></i>
+                                        <i class="fa-solid fa-square-poll-horizontal" v-else></i>
+                                        {{item.CaseSkillName}}
+                                    </span>
+                                </div>
+
+                                <div class="d-flex w-100 justify-content-center" id="card-info">
+                                    <div class="card-info">
+                                        <div class="me-2">
+                                            <i class="fa-solid fa-location-dot"></i>&nbsp;{{item.CaseSerAreaName}}
+                                        </div>
+
+                                        <div>
+                                            <i class="fa-solid fa-comment-dots"></i>&nbsp;{{item.MessageCount}}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <img v-bind:src="item.CasePhoto" class="card-img-top p-2" alt="image not found">
+                            </div>
+
+
+
+                            <div class="card-body">
+                                <h5 class="card-title fw-400" title="item.CaseTitle">{{item.CaseTitle}}</h5>
+                                <div>
+                                    <p class="card-text mt-1 fw-300">{{item.CaseIntroduction}}</p>
+                                </div>
+                                <hr />
+                                <div class="container mt-3 p-0">
+                                    <div class="row">
+                                        <div class="col-md-8 col">
+
+                                            <div class="row">
+                                                <div class="userPhoto">
+                                                    <div class="PhotoBx">
+                                                        <img src="https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg">
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 text-start align-items-center userInfo">
+                                                    <p class="infoTitle">{{item.CaseUserName}}</p>
+                                                    <p class="infoText">{{item.CaseReleaseDate | showDate}}</p>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-4 text-center p-0">
+                                            <a class="btn text-nowrap"
+                                               v-bind:href="'/PostPage/Index/'+item.CaseId">詳細</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container" v-else>
+                <div id="whenNoCase" class="d-flex justify-content-center align-items-center">
+                    <div class="noCaseBx">
+                        <img id="noCaseImg" src="https://pic.sopili.net/pub/emoji/twitter/2/72x72/1f47b.png">
+                    </div>
+                    <div class="text-start" style="z-index: 5;">
+                        <h1 id="noCaseText" class="p-5">
+                            這裡沒有東西喔
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts{
+    <script>
+        //Vue
+        var profileData = @Html.Raw(profileDataString);
+        var caseData = @Html.Raw(ViewBag.Case);
+        var vmPF = new Vue({
+            el: "#appPf",
+            data: {
+                pfModel: profileData,
+                caseModel: caseData
+            },
+            filters: {
+
+                showDate: function(e) {
+                    if (e.includes("T")) {
+                        return e.split("T")[0];
+                    }
+                }
+            },
+            computed: {
+                pointTitle: function() {
+                    var point = this.pfModel.UserPoint;
+                    if ( point== 0) {
+                        return "初來乍到"
+                    }
+                    else if (point >= 1 & point <= 29) {
+                        return "步上軌道"
+                    }
+                    else if (point >= 30 & point <= 59) {
+                        return "專家等級"
+                    }
+                    else if (point >= 60 & point <= 99) {
+                        return "貼文之龍"
+                    }
+                    else if (point >= 100) {
+                        return "貼文之鬼"
+                    }
+                    return "???"
+                }
+            }
+        });
+
+
+
+        //當沒有貼文時，顯示隨機內容
+        function randomNoCaseText(max, textId) {
+            var number = Math.floor(Math.random() * max);
+            switch (number) {
+                case 0:
+                    textId.innerText = "這裡...沒有東西喔";
+                    break;
+                case 1:
+                    textId.innerText = "哎呀，沒有貼文呢";
+                    break;
+                case 2:
+                    textId.innerText = "目前沒有貼文";
+                    break;
+                case 3:
+                    textId.innerText = "喔噢，這裡是空的";
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function randomNoCaseImg(max, imgId) {
+            var number = Math.floor(Math.random() * max);
+            switch (number) {
+                case 0:
+                    imgId.src = "https://pic.sopili.net/pub/emoji/twitter/2/72x72/1f9d0.png"
+                    break;
+                case 1:
+                    imgId.src = "https://pic.sopili.net/pub/emoji/twitter/2/72x72/1f47b.png";
+                    break;
+                case 2:
+                    imgId.src = "https://pic.sopili.net/pub/emoji/twitter/2/72x72/1f928.png";
+                    break;
+                case 3:
+                    imgId.src = "https://pic.sopili.net/pub/emoji/twitter/2/72x72/1f633.png";
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        var noCaseText = document.getElementById("noCaseText");
+        randomNoCaseText(4, noCaseText);
+        var noCaseImg = document.getElementById("noCaseImg");
+        randomNoCaseImg(4, noCaseImg);
+
+    </script>
+
+}

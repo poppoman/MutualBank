@@ -16,21 +16,27 @@
         color: var(--white);
         background: var(--black);
     }
+    .mainBtn i {
+        pointer-events: none;
+    }
+    .mainBtn span {
+        pointer-events:none;
+    }
 
-.btnSortCase {
-    display:inline-block;
-    position: relative;
-    margin: 10px;
-    height: 22px;
-    font-weight: 400;
-    text-align: center;
-    border: 0px;
-    transition: 0.3s;
-    white-space: nowrap;
-    color: var(--black);
-    border-bottom: 4px solid transparent;
-    cursor:pointer;
-}
+    .btnSortCase {
+        display: inline-block;
+        position: relative;
+        margin: 10px;
+        height: 22px;
+        font-weight: 400;
+        text-align: center;
+        border: 0px;
+        transition: 0.3s;
+        white-space: nowrap;
+        color: var(--black);
+        border-bottom: 4px solid transparent;
+        cursor: pointer;
+    }
 
     .btnSortCase.active {
         border-bottom: 4px solid var(--help);

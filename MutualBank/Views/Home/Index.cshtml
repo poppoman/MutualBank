@@ -25,20 +25,20 @@
         <div id="tagLabel"></div>
 
     </div>
-    <div class="home">
+    <div class="home container">
         <div class="typeBar fs-24">
             <button type="button" class="mainBtn" name="mainBtn" data-bit=true v-on:click="getTypeModel">
-                <i class="fa-solid fa-square-h"></i> 需要幫忙
+                <i class="fa-solid fa-square-h"></i><span>&nbsp;需要幫忙</span>
             </button>
             <button type="button" class="mainBtn" name="mainBtn" data-bit=false v-on:click="getTypeModel">
-                <i class="fa-solid fa-square-poll-horizontal"></i> 提供技能
+                <i class="fa-solid fa-square-poll-horizontal"></i><span>&nbsp;提供技能</span>
             </button>
         </div>
 
         <div class="tagBar">
             <div class="tags fs-16">
-                <span class="btnSortCase active" data-skillid=0 v-on:click="getTagModel" name="">全部</span>
-                <span class="btnSortCase" v-for="item in tagList" :data-skillid="item.SkillId" v-on:click="getTagModel" name="">{{item.SkillName}}</span>
+                <span class="btnSortCase active" data-skillid=0 v-on:click="getTagModel">全部</span>
+                <span class="btnSortCase" v-for="item in tagList" :data-skillid="item.SkillId" v-on:click="getTagModel">{{item.SkillName}}</span>
 
                 <div class="m-0 p-0">
                     <span></span>
@@ -66,19 +66,19 @@
                         <div class="imgBx">
 
                             <div class="card-tag">
-                                <span class="case-type" :data-skillid="item.SkillId" v-on:click="getTagModel">
+                                <span class="case-type" @*:data-skillid="item.SkillId" v-on:click="getTagModel"*@>
                                     <i class="fa-solid fa-square-h" v-if="item.CaseNeedHelp"></i>
-                                    <i class="fa-solid fa-square-poll-horizontal" v-else></i> {{item.CaseSkillName}}
+                                    <i class="fa-solid fa-square-poll-horizontal" v-else></i>&nbsp{{item.CaseSkillName}}
                                 </span>
                             </div>
                             <div class="d-flex w-100 justify-content-center" id="card-info">
                                 <div class="card-info">
-                                    <div>
-                                        <i class="fa-solid fa-location-dot"></i> {{item.CaseSerAreaName}}
+                                    <div class="me-2">
+                                        <i class="fa-solid fa-location-dot"></i>&nbsp;{{item.CaseSerAreaName}}
                                     </div>
 
                                     <div>
-                                        <i class="fa-solid fa-comment-dots"></i> {{item.MessageCount}}
+                                        <i class="fa-solid fa-comment-dots"></i>&nbsp;{{item.MessageCount}}
                                     </div>
                                 </div>
                             </div>
@@ -98,9 +98,8 @@
 
                                         <div class="row">
                                             <div class="userPhoto">
-                                                <div class="PhotoBx">
-                                                    <img src="https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg"
-                                                         :data-caseid="item.CaseId" v-on:click="redirectToCasePage">
+                                                <div class="PhotoBx" v-bind:data-userid="item.CaseUserId" v-on:click="redirectToUserPage">
+                                                    <img src="https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg">
                                                 </div>
                                             </div>
                                             <div class="col-6 text-start align-items-center userInfo">
@@ -323,10 +322,9 @@
                         });
                     }
                 },
-                //跳轉到Case主頁
-                redirectToCasePage: function(e) {
-                    var href = "/PostPage/Index/" + e.target.dataset.caseid;
-                    e.target.href = href;
+                //跳轉到User主頁
+                redirectToUserPage: function(e) {
+                    location.href= "/Profile/Index/" + e.target.dataset.userid;
                 },
                 //初始化排序(預設為降序)
                 initModelWithOrder: function() {

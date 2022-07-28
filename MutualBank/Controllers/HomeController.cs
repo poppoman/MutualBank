@@ -9,7 +9,7 @@ namespace MutualBank.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly MutualBankContext _mutualBankContext;
-
+        private static string _filePath= Path.Combine("/Img", "CasePhoto");
         public HomeController(ILogger<HomeController> logger, MutualBankContext mutualBankContext)
         {
             _logger = logger;
@@ -19,7 +19,6 @@ namespace MutualBank.Controllers
         public IActionResult Index()
         {
             ViewBag.Tags = _mutualBankContext.Skills.OrderBy(x => x.SkillId).ToList();
-            var PhotoFileFolder = Path.Combine("/Img", "CasePhoto");
             var Model = _mutualBankContext.Cases.Include("CaseSkil").Where(x=>x.CaseClosedDate>= DateTime.Now)
                 .Select(x => new CaseViewModel
                 {
@@ -29,7 +28,7 @@ namespace MutualBank.Controllers
                     CaseExpireDate = x.CaseExpireDate,
                     CaseTitle = x.CaseTitle,
                     CaseIntroduction = x.CaseIntroduction,
-                    CasePhoto = Path.Combine(PhotoFileFolder, x.CasePhoto),
+                    CasePhoto = Path.Combine(_filePath, x.CasePhoto),
                     CaseSerDate = x.CaseSerDate,
                     CaseSerArea = x.CaseSerArea,
                     CaseSerAreaName = $"{x.CaseSerAreaNavigation.AreaCity}{x.CaseSerAreaNavigation.AreaTown}",
@@ -47,7 +46,6 @@ namespace MutualBank.Controllers
             ViewBag.Tags = _mutualBankContext.Skills.OrderBy(x => x.SkillId).ToList();
             ViewBag.Area = $"{Search.AreaCity} {Search.AreaTown}";
             var Model = new List<CaseViewModel>{ };
-            var PhotoFileFolder = Path.Combine("/Img", "CasePhoto");
 
             var AreaId = -1;
             if (Search.AreaTown == null | Search.AreaTown == "區域")
@@ -68,7 +66,7 @@ namespace MutualBank.Controllers
                 CaseExpireDate = x.CaseExpireDate,
                 CaseTitle = x.CaseTitle,
                 CaseIntroduction = x.CaseIntroduction,
-                CasePhoto = Path.Combine(PhotoFileFolder, x.CasePhoto),
+                CasePhoto = Path.Combine(_filePath, x.CasePhoto),
                 CaseSerDate = x.CaseSerDate,
                 CaseSerArea = x.CaseSerArea,
                 CaseSkillId = x.CaseSkil.SkillId,
@@ -98,7 +96,6 @@ namespace MutualBank.Controllers
 
         public string GetAllCaseModel()
         {
-            var PhotoFileFolder = Path.Combine("/Img", "CasePhoto");
             var Model = _mutualBankContext.Cases.Include("CaseSkil").Include("Messages").Include("CaseSerAreaNavigation")
                 .Select(x => new CaseViewModel
                 {
@@ -108,7 +105,7 @@ namespace MutualBank.Controllers
                     CaseExpireDate = x.CaseExpireDate,
                     CaseTitle = x.CaseTitle,
                     CaseIntroduction = x.CaseIntroduction,
-                    CasePhoto = Path.Combine(PhotoFileFolder, x.CasePhoto),
+                    CasePhoto = Path.Combine(_filePath, x.CasePhoto),
                     CaseSerDate = x.CaseSerDate,
                     CaseSerArea = x.CaseSerArea,
                     CaseSkillId = x.CaseSkil.SkillId,
@@ -144,5 +141,6 @@ namespace MutualBank.Controllers
         {
             return View();
         }
+
     }
 }
