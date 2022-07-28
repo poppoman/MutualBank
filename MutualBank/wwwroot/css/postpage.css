@@ -58,8 +58,6 @@
     height: 400px;
     padding-top: 20px;
     padding-bottom: 20px;
-    margin: 0px 20px;
-    /* border-bottom: 1px dotted #ccc; */
 }
 
 .author-pic {
@@ -71,14 +69,13 @@
 
 .pic-frame {
     height: 100%;
-    object-fit: contain;
 }
 
-    .pic-frame > img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
+.pic-frame > img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
 
 .authorpicture-frame {
     height: 50px;
@@ -96,9 +93,8 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
+    object-fit:cover;
+ 
 }
 
 .author {

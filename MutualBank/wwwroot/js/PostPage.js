@@ -16,11 +16,14 @@ $(".messageboard-frame").on("click", "#commentbtn", function () {
         enctype: 'multipart/form-data',
         processData: false,
         }).done(function (res) {
-           console.log(res)
+           alert("新增成功")
         })
          .fail(function (res) {
-            console.log(res);
+            alert("登入後才能留言")
          });
+
+  
+
     var textareaVal = $("textarea:eq(0)").val()
     $(".messageboard-frame").append("<div class='respone-mes-frame'></div>")
     $(".respone-mes-frame").last().append("<div class='responer-pic'></div> <div class='pad-content'></div>")
@@ -29,6 +32,9 @@ $(".messageboard-frame").on("click", "#commentbtn", function () {
     $(".text").last().append(textareaVal);
     $("textarea:eq(0)").val("");
     $("#commentbtn").attr("disabled", "true");
+
+    var targetTop = $(".respone-mes-frame").last().offset().top
+    $(window).scrollTop(targetTop)
 
 });
 
@@ -50,29 +56,18 @@ $(".messageboard-frame").on("click", "#commentbtmre", function () {
 
 //按回覆後新增留言區 
 $(".messageboard-frame").on("click", "[class=replay-btn]", function (e) {
-    var a = $(e.target).parents(".comment-bother-frame")
     var b = $(e.target).parents(".pad-content")
-
-    if ($(".textarea-box").length == 1 & a.length >= 1) {
-        a.after("<div class='comment-bother-frame-input'></div>")
-        $(".comment-bother-frame-input").append("<div class='comment-bother-input'></div)")
-        $(".comment-bother-input").last().append("<a href='' class='comment-pic-frame'></a><div class='textarea-box'></div><div class='col-auto-input'></div>")
-        $(".comment-pic-frame").last().append("<div style='width: 24px; height: 24px;' class='avatar-frame'></div>")
-        $(".avatar-frame").last().append(" <img src='background.jpg' alt='無此圖片' class='comment-bother-pic'>")
-        $(".textarea-box:eq(1)").append("<textarea type='text' class='form-control' id='exampleFormControlTextarea2' placeholder='請輸入你的訊息' maxlength='200' rows='3'></textarea><div class='statics-text'>0/200字</div>")
-        $(".col-auto-input").append(" <button type='button' class='btn btn-primary' disabled data-bs-toggle='button' id='commentbtmre'>留言</button>")
-    }
+    var tousername = $(e.target).parents(".response-day-button").siblings(".responser-name-frame").children(".responser-name").text()
 
     if ($(".textarea-box").length == 1 & b.length >= 1) {
-        b.append("<div class='comment-bother-frame-input'></div>")
-        $(".comment-bother-frame-input").append("<div class='comment-bother-input'></div)")
-        $(".comment-bother-input").last().append("<a href='' class='comment-pic-frame'></a><div class='textarea-box'></div><div class='col-auto-input'></div>")
-        $(".comment-pic-frame").last().append("<div style='width: 24px; height: 24px;' class='avatar-frame'></div>")
-        $(".avatar-frame").last().append(" <img src='background.jpg' alt='無此圖片' class='comment-bother-pic'>")
+        b.last().append("<div class='comment-bother-frame-input'><div class='comment-bother-input'><a href='' class='comment-pic-frame'><div style='width: 24px; height: 24px;' class='avatar-frame'><img src='background.jpg' alt='無此圖片' class='comment-bother-pic'></div></a><div class='textarea-box'></div><div class='col-auto-input'></div></div)</div>")
         $(".textarea-box:eq(1)").append("<textarea type='text' class='form-control' id='exampleFormControlTextarea2' placeholder='請輸入你的訊息' maxlength='200' rows='3'></textarea><div class='statics-text'>0/200字</div>")
+        $(".form-control").attr("placeholder", "回覆給："+tousername)
         $(".col-auto-input").append(" <button type='button' class='btn btn-primary' disabled data-bs-toggle='button' id='commentbtmre'>留言</button>")
     }
+    console.log(tousername)
 
+ 
     $(".pad-content").on("input propertychange", "[class=form-control]", function () {
         $("#commentbtmre").removeAttr("disabled");
     })

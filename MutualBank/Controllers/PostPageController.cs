@@ -26,31 +26,29 @@ namespace MutualBank.Controllers
 
         public async Task<IActionResult> Index(int? id)
         {
-            //留言爸爸
-            ViewBag.messages = _mutualBankContext.Messages.Include("MsgCase").Include("MsgUser").
-                Where(c => c.MsgCaseId == id && c.MsgParentId==null).Select(x => new MessageVM{ 
-                    MsgCaseId = x.MsgCaseId,
-                    MsgAddDate = x.MsgAddDate,
-                    MsgContent = x.MsgContent,
-                    MsgUserId = x.MsgUserId,
-                    MsgtoUserName = x.MsgToUser.UserNname, /*被留言者*/
-                    MsgUserName = x.MsgUser.UserNname,/*留言者*//*$"{x.MsgUser.UserFname}{x.MsgUser.UserLname}"*/
-                    MagUserPhoto = x.MsgUser.UserHphoto, /*留言者照片*/
-                    
-                }).ToList();
-            //回覆小孩
-            ViewBag.msgChild = _mutualBankContext.Messages.Include("MsgCase").Include("MsgUser").
-                Where(c=>c.MsgCaseId == id && c.MsgParentId!=null).Select(x=> new MessageChVM { 
-                    MsgCaseId = x.MsgCaseId,
-                    MsgParentId = x.MsgParentId,
-                    MsgAddDate = x.MsgAddDate,
-                    MsgContent = x.MsgContent,
-                    MsgUserId = x.MsgUserId,
-                    MsgtoUserName = x.MsgToUser.UserNname,
-                    MsgUserName = x.MsgUser.UserNname,
-                    MagUserPhoto = x.MsgUser.UserHphoto,                   
-                }).ToList();
-             //= Newtonsoft.Json.JsonConvert.SerializeObject(messagedata);
+            var messages = _mutualBankContext.Messages.Include("MsgCase").Include("MsgUser").
+                    Where(c => c.MsgCaseId == id & c.MsgParentId == null).Select(x => new {
+                        MsgCaseId = x.MsgCaseId,
+                        MsgAddDate = x.MsgAddDate,
+                        MsgContent = x.MsgContent,
+                        MsgUserId = x.MsgUserId,
+                        MsgtoUserName = x.MsgToUser.UserNname, /*被留言者*/
+                        MsgUserName = x.MsgUser.UserNname,/*留言者*//*$"{x.MsgUser.UserFname}{x.MsgUser.UserLname}"*/
+                        MagUserPhoto = x.MsgUser.UserHphoto, /*留言者照片*/
+                        MsgParentId = x.MsgParentId,
+                        Mychildinhouse = _mutualBankContext.Messages.Include("MsgUser").Where(q => q.MsgParentId == x.MsgId & q.MsgParentId != null).Select(y => new { 
+                            childname = y.MsgUser.UserNname,
+                            childtoUsername = y.MsgToUser.UserNname,
+                            childHphoto = y.MsgUser.UserHphoto,
+                            childtoUserHphoto = y.MsgToUser.UserHphoto,
+                            childcontent = y.MsgContent,
+                            childaddDate = y.MsgAddDate,
+                        
+                        }).ToList()
+
+                    }).ToList();
+            ViewBag.tmessages = Newtonsoft.Json.JsonConvert.SerializeObject(messages);
+
             if (id == null)
             {
                 return NotFound();
@@ -65,13 +63,12 @@ namespace MutualBank.Controllers
 
             var skillname = Case.CaseSkil.SkillName;
             var Areaname = Case.CaseSerAreaNavigation == null ? "無" : Case.CaseSerAreaNavigation.AreaCity;
+            var AreaTownname = Case.CaseSerAreaNavigation == null ? "無" : Case.CaseSerAreaNavigation.AreaTown;
             var usernname = Case.CaseUser.UserNname;
             var userphoto = Case.CaseUser.UserHphoto;
             var PhotoFileFolder = Path.Combine("/Img", "CasePhoto");
-            var USER = this.User.GetId();
-            var LoginHPhoto = _mutualBankContext.Users.Include("UserNavigation").Include("Cases")
-                .Include("MessageMsgToUsers").Include("MessageMsgUsers").Where(x => x.UserId == USER).Select(c => c.UserFname).First();
-
+            
+           
             PostPageVM vm = new PostPageVM()
             {
                 CaseId = Case.CaseId,
@@ -84,31 +81,45 @@ namespace MutualBank.Controllers
                 UserNName = usernname,
                 UserPhoto = userphoto == null ? "~/postpage/userhphotonull.svg" : userphoto,
                 Areacity = Areaname,
-                LoginHPhoto = LoginHPhoto,
+                AreaTownname = AreaTownname,
+
 
             };
             return View(vm);
 
         }
-
-        public ActionResult Comment(int caseid)
+        
+        
+        //[Authorize]
+        public async Task<IActionResult> message(int? id)
         {
-            List<Message> messages = new List<Message>();
-            messages = (
-                from c in _mutualBankContext.Messages
-                where c.MsgId==caseid
-                orderby c.MsgId descending
-                select c).ToList();
+            if (id == null)
+            {
+                return NotFound();
+            }
+            
+            var USER = this.User.GetId();
+            var LoginHPhoto = _mutualBankContext.Users.Include("UserNavigation").Include("Cases")
+                .Include("MessageMsgToUsers").Include("MessageMsgUsers").Where(x => x.UserId == USER).Select(c => c.UserFname).First();
+            PostPageVM vm = new PostPageVM()
+            {
+                LoginHPhoto = LoginHPhoto,
+            };
 
-            return View(messages);
+
+            return View(vm);
 
         }
 
+
+      
+
         [HttpPost]
-        //[Authorize]
+        [Authorize]
         public async Task<bool> AddComment(int id, string content)
         {
             var USER = this.User.GetId();
+
             var Case = await _mutualBankContext.Cases.
                Include("CaseSkil").Include("CaseSerAreaNavigation").
                Include("CaseUser").FirstOrDefaultAsync(m => m.CaseId == id);
