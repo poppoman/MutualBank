@@ -1,42 +1,6 @@
 ﻿
 //新增留言
-$(".messageboard-frame").on("click", "#commentbtn", function () {
-    /*var id = location.pathname.replace("/postpage/index/", "")*/
-    var id = document.getElementById("commentbtn").dataset.caseid;
-    var formData = new FormData();
-    formData.append("id", id);
-    formData.append("content", $("#exampleFormControlTextarea1").val());
-    $.ajax({
-        url: "/PostPage/AddComment",
-        type: "POST",
-        data: formData,
-        async: false,
-        cache: false,
-        contentType: false,
-        enctype: 'multipart/form-data',
-        processData: false,
-        }).done(function (res) {
-           alert("新增成功")
-        })
-         .fail(function (res) {
-            alert("登入後才能留言")
-         });
 
-  
-
-    var textareaVal = $("textarea:eq(0)").val()
-    $(".messageboard-frame").append("<div class='respone-mes-frame'></div>")
-    $(".respone-mes-frame").last().append("<div class='responer-pic'></div> <div class='pad-content'></div>")
-    $(".responer-pic").last().append("<a href=''><div class='pad-avatar'><img src='background.jpg' alt='無此圖片' class='respons-picture'></div></a>")
-    $(".pad-content").last().append("<div><div class='responser-name'>留言者1</div></div><div class='responser-context'><div class='text'></div></div><div class='response-day-button'><i class='fa-regular fa-clock'></i><span class='post-time'>XX 天前</span><span class='replay-btn'>回覆</span>")
-    $(".text").last().append(textareaVal);
-    $("textarea:eq(0)").val("");
-    $("#commentbtn").attr("disabled", "true");
-
-    var targetTop = $(".respone-mes-frame").last().offset().top
-    $(window).scrollTop(targetTop)
-
-});
 
 
 //新增回覆留言
