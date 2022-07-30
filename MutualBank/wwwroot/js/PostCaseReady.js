@@ -1,5 +1,4 @@
-﻿
-//-設定預約貼文可選取的時間(暫定14天內)
+﻿//-設定預約貼文可選取的時間(暫定14天內)
     let currentDate = new Date();
     function getDateString(date) {
         let monthJs = date.getMonth();

@@ -76,8 +76,8 @@
                 <div class="col-md-5 mb-2">
                     <label for="CaseSerArea" class="form-label">鄉鎮區</label>
                     <select class="form-select" id="CaseSerArea" name="CaseSerArea" v-model="CaseSerArea" required>
-                        <option v-show="isAreaSelected" selected="selected" value=-1 disabled>請先選擇縣市</option>
-                        <option v-for="item in areaTown" v-bind:value="item.areaId">{{item.areaTown}}</option>
+                        <option v-show="isAreaSelected" selected="selected" disabled>請先選擇縣市</option>
+                        <option v-for="item in areaTown">{{item}}</option>
                     </select>
                     <div class="invalid-feedback">
                         此欄位不可為空

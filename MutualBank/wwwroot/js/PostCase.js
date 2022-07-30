@@ -9,7 +9,7 @@ vmPostCase = new Vue({
         title: "",
         intro: "",
         serDate: "",
-        CaseSerArea: -1,
+        CaseSerArea: "請先選擇縣市",
         CaseNeedHelp: -1,
         CaseSkilId:-1
     },
@@ -38,6 +38,7 @@ vmPostCase = new Vue({
                 done(function (res) {
                     vmPostCase.isAreaSelected = false;
                     vmPostCase.areaTown = res;
+                    vmPostCase.CaseSerArea = res[0];
                 })
                 .fail(function (res) {
                     console.log(res);
@@ -54,8 +55,6 @@ vmPostCase = new Vue({
                     console.log(res);
                 });
         }
-
-
     },
     computed: {
         titleValid: function () {
@@ -69,7 +68,7 @@ vmPostCase = new Vue({
         },
         isSubmitAble: function () {
             if (this.title.length > 0 && this.intro.length > 0 && this.serDate.length > 0
-                && this.CaseSerArea != -1 && this.CaseNeedHelp != -1 &&this.CaseSkilId!=-1)
+                && this.CaseSerArea != "請先選擇縣市" && this.CaseNeedHelp != -1 &&this.CaseSkilId!=-1)
             {
                 return  false;
             }

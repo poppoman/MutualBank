@@ -57,5 +57,11 @@ namespace MutualBank.Controllers
             return View(Model);
         }
 
+
+        public IActionResult GetProfileSetting() 
+        {
+            return PartialView("ProfileSetting");
+        }
+
     }
 }

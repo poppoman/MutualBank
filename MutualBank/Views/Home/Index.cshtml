@@ -60,11 +60,10 @@
         </div>
 
         <div class="container-fluid">
-            <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4">
-                <div class="col" v-for="item in caseViewModel">
+            <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4" v-if="isModelExist">
+                <div class="col" v-for="item in casePageModel">
                     <div class="card mb-2 w-100">
                         <div class="imgBx">
-
                             <div class="card-tag">
                                 <span class="case-type" @*:data-skillid="item.SkillId" v-on:click="getTagModel"*@>
                                     <i class="fa-solid fa-square-h" v-if="item.CaseNeedHelp"></i>
@@ -82,11 +81,8 @@
                                     </div>
                                 </div>
                             </div>
-
                             <img v-bind:src="item.CasePhoto" class="card-img-top p-2" alt="image not found">
                         </div>
-
-
 
                         <div class="card-body">
                             <h5 class="card-title fw-400" title="item.CaseTitle">{{item.CaseTitle}}</h5>
@@ -107,7 +103,6 @@
                                                 <p class="infoText">{{item.CaseReleaseDate | showDate}}</p>
                                             </div>
                                         </div>
-
                                     </div>
                                     <div class="col-md-4 text-center p-0">
                                         <a class="btn text-nowrap" v-bind:href="'/PostPage/Index/'+item.CaseId">詳細</a>
@@ -119,6 +114,27 @@
                     </div>
                 </div>
             </div>
+            <div class="m-auto" v-else>
+                <div id="whenNoCase" class="d-flex justify-content-center align-items-center">
+                    <div>
+                        <img id="noCaseImg" src="https://pic.sopili.net/pub/emoji/twitter/2/72x72/1f47b.png">
+                    </div>
+                    <div>
+                        <h1 id="noCaseText" class="p-5 fw-400">
+                            沒有內容
+                        </h1>
+                    </div>
+                </div>
+            </div>
+
+            <div v-show="isModelExist">
+                <div id="loadingbar" class="justify-content-center align-items-center mt-5"
+                     v-bind:class={'d-flex':!isLoadingFinished,'d-none':isLoadingFinished}>
+                    <div class="spinner-border" role="status"></div>
+                    <span class="ms-3">Loading...</span>
+                </div>
+            </div>
+
         </div>
 
     </div>
@@ -136,13 +152,16 @@
         var vmIndex = new Vue({
             el: "#home",
             data: {
+                casePageModel: [],
                 caseViewModel: caseModel,
                 caseDataModel: caseModel,
                 tagList: tagListData,
                 sortByType: "null",
                 sortByTag: 0,
                 orderByOption: orderByDafult,
-                isOrderByDesc: 1
+                isOrderByDesc: 1,
+                pageCount: 8,
+                pageNumber: 0
             },
             methods: {
                 //=====
@@ -197,6 +216,10 @@
                 },
                 //依需求或技能拿模型
                 getTypeModel: function(e) {
+                    //init loading(page model) 
+                    console.log(this.pageNumber);
+                    this.casePageModel = [];
+                    this.pageNumber = 0;
                     //add class
                     var mainBtn = document.querySelectorAll(".mainBtn");
                     mainBtn.forEach(x => x.classList.remove("active"));
@@ -212,7 +235,7 @@
                     if (vmIndex.sortByTag != 0) {
                         vmIndex.caseViewModel = vmIndex.filterTagModel(vmIndex.caseViewModel, vmIndex.sortByTag);
                     }
-                    vmIndex.orderModelForSort();
+                    vmIndex.orderByOptionValue();
                 },
                 //依技能分類篩選Model(通用)
                 filterTagModel: function(vmModel, n) {
@@ -238,9 +261,9 @@
                     if (typeof (vmIndex.sortByType) == Boolean) {
                         vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseViewModel, vmIndex.sortByType);
                     }
-                    vmIndex.orderModelForSort();
+                    vmIndex.orderByOptionValue();
                 },
-                orderModelForSort: function() {
+                orderByOptionValue: function() {
                     var para = vmIndex.orderByOption;
                     var isDesc = vmIndex.isOrderByDesc;
 
@@ -324,7 +347,7 @@
                 },
                 //跳轉到User主頁
                 redirectToUserPage: function(e) {
-                    location.href= "/Profile/Index/" + e.target.dataset.userid;
+                    location.href = "/Profile/Index/" + e.target.dataset.userid;
                 },
                 //初始化排序(預設為降序)
                 initModelWithOrder: function() {
@@ -351,8 +374,28 @@
                     }
                 }
             },
+            computed: {
+                isLoadingFinished: function() {
+                    if (this.pageNumber == Math.ceil(this.caseDataModel.length/this.pageCount)) {
+                        return true;
+                    }
+                    return false;
+                },
+                isModelExist: function() {
+                    return this.casePageModel.length == 0 ? false : true;
+                }
+            },
+            watch: {
+                pageNumber: function() {
+                    var min = (this.pageNumber - 1) * (this.pageCount + 1);
+                    var pageData = this.caseViewModel.slice(min, min + this.pageCount)
+                    for (var i = 0; i < pageData.length; i++) {
+                        this.casePageModel.push(pageData[i]);
+                    }
+                    this.$forceUpdate();
+                }
+            },
             filters: {
-
                 showDate: function(e) {
                     if (e.includes("T")) {
                         return e.split("T")[0];
@@ -363,20 +406,18 @@
                 this.initModelWithOrder();
             },
             mounted: function() {
-
-                //地區標籤綁定關閉標籤事件
+                //地區標籤綁定關閉標籤事件，並顯示全部資料
                 var areaLabelCloseBtn = document.getElementById("areaLabelCloseBtn");
                 if (areaLabelCloseBtn != null) {
                     areaLabelCloseBtn.addEventListener("click", function(e) {
                         vmIndex.closeLabel(e);
-                        //畫面Model顯示全部資料
+                        //Model顯示全部資料
                         $.ajax({
                             url: "@Url.Action("GetAllCaseModel","Home")",
                             type: "GET"
                         })
                             .done(function(res) {
-                                var nval = JSON.parse(res);
-                                vmIndex.caseDataModel = vmIndex.caseViewModel = nval;
+                                vmIndex.caseDataModel = vmIndex.caseViewModel = JSON.parse(res);
                                 if (typeof (vmIndex.sortByType) == Boolean) {
                                     vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseDataModel, vmIndex.sortByType);
                                 }
@@ -396,6 +437,21 @@
                     iconSort.classList.toggle('fa-arrow-down-short-wide');
                     iconSort.classList.toggle('fa-arrow-up-short-wide');
                 });
+
+                //分頁功能
+                this.pageNumber = 1;
+                var self = this;
+
+                var loadingbar = document.getElementById("loadingbar");
+                var ob = new IntersectionObserver(function(x) {
+                    console.log(x);
+                    if (x[0].isIntersecting) {
+                        self.pageNumber += 1;
+                    }
+                },{
+                    threshold: 0.5
+                });
+                ob.observe(loadingbar);
             }
         });
 

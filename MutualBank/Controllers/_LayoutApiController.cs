@@ -20,14 +20,13 @@ namespace MutualBank.Controllers
         [HttpGet]
         public IQueryable<string> GetAreaCity()
         {
-
             var AreaCity = _mutualBankContext.Areas.Select(x => x.AreaCity).Distinct();
             return AreaCity;
         }
         [HttpGet]
-        public IQueryable<Area> GetAreaTown(string AreaCity)
+        public List<String> GetAreaTown(string AreaCity)
         {
-            var AreaTown = _mutualBankContext.Areas.Where(x => x.AreaCity == AreaCity);
+            var AreaTown = _mutualBankContext.Areas.Where(x => x.AreaCity == AreaCity).Select(x=>x.AreaTown).ToList();
             return AreaTown;
         }
 

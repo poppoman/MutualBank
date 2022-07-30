@@ -4,7 +4,10 @@ var vmNav = new Vue({
     data: {
         areaCity: [],
         areaTown: [],
-        isDefaultShow: true
+        isDefaultShowing: true,
+        isCitySelected: true,
+        selectedCity: '',
+        selectedTown: ''
     },
     methods: {
         getAreaCity: function () {
@@ -20,7 +23,13 @@ var vmNav = new Vue({
                 });
         },
         getAreaTown: function (e) {
-            var SelectedCity = e.target.value;
+            var SelectedCity = "";
+            if (typeof (e) == "object") {
+                SelectedCity = e.target.value;
+            }
+            else {
+                SelectedCity = e;
+            }
             $.ajax({
                 url: "/Nav/_LayoutApi/GetAreaTown",
                 type: "GET",
@@ -29,22 +38,25 @@ var vmNav = new Vue({
                 }
             }).
                 done(function (res) {
-                    vmNav.isDefaultShow = false;
-
+                    vmNav.isDefaultShowing = false;
                     vmNav.areaTown = res;
+                    //預設顯示第一筆資料
+                    if (typeof (e) == "object") {
+                        vmNav.selectedTown = res[0];
+                        vmNav.isCitySelected = false;
+                    }
                 })
                 .fail(function (res) {
                     console.log(res);
                 });
+            return;
         }
-        
     },
-    mounted: function () {
+    created: function () {
         //初始化縣市
         this.getAreaCity();
     }
 });
-
 
 
 //-RWD Manu控制
@@ -75,5 +87,4 @@ panelsToggle.addEventListener('click', function () {
         iconManu.classList.toggle('fa-bars');
         iconManu.classList.toggle('fa-xmark');
     }
-
 })

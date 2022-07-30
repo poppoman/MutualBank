@@ -19,6 +19,7 @@ namespace MutualBank.Controllers
         public IActionResult Index()
         {
             ViewBag.Tags = _mutualBankContext.Skills.OrderBy(x => x.SkillId).ToList();
+
             var Model = _mutualBankContext.Cases.Include("CaseSkil").Where(x=>x.CaseClosedDate>= DateTime.Now)
                 .Select(x => new CaseViewModel
                 {
@@ -45,8 +46,11 @@ namespace MutualBank.Controllers
         {
             ViewBag.Tags = _mutualBankContext.Skills.OrderBy(x => x.SkillId).ToList();
             ViewBag.Area = $"{Search.AreaCity} {Search.AreaTown}";
-            var Model = new List<CaseViewModel>{ };
+            ViewBag.LogArea = Search.AreaCity;
+            ViewBag.LogTown = Search.AreaTown;
+            ViewBag.LogKeyword = Search.Keyword;
 
+            var Model = new List<CaseViewModel>{ };
             var AreaId = -1;
             if (Search.AreaTown == null | Search.AreaTown == "區域")
             {
@@ -69,6 +73,7 @@ namespace MutualBank.Controllers
                 CasePhoto = Path.Combine(_filePath, x.CasePhoto),
                 CaseSerDate = x.CaseSerDate,
                 CaseSerArea = x.CaseSerArea,
+                CaseSerAreaName = $"{x.CaseSerAreaNavigation.AreaCity}{x.CaseSerAreaNavigation.AreaTown}",
                 CaseSkillId = x.CaseSkil.SkillId,
                 CaseSkillName = x.CaseSkil.SkillName,
                 CaseUserId = x.CaseUser.UserId,
@@ -84,7 +89,7 @@ namespace MutualBank.Controllers
             {
                 foreach (var c in AreaModel)
                 {
-                    if (c.CaseTitle.Contains(Search.Keyword) | c.CaseIntroduction.Contains(Search.Keyword))
+                    if (c.CaseTitle.Contains(Search.Keyword) | c.CaseIntroduction.Contains(Search.Keyword) | c.CaseSkillName.Contains(Search.Keyword))
                     {
                         Model.Add(c);
                     }
