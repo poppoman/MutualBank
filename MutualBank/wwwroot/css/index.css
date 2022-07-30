@@ -75,12 +75,14 @@
             font-weight: 400;
         }
 
-
+        #home .tagBar .sort .icon {
+            cursor: pointer;
+        }
         #home .tagBar .sort .icon i {
             position: relative;
             top: -2.5px;
             font-size: 20px;
-            cursor: pointer;
+            pointer-events:none;
             z-index: 5;
         }
 
