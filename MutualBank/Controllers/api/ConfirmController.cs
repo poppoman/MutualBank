@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using MutualBank.Extensions;
 using MutualBank.Models;
 using MutualBank.Models.ViewModels;
 using System.Configuration;
@@ -26,68 +28,25 @@ namespace MutualBank.Controllers.api
             _mutualBankContext = mutualBankContext;
             _configuration = configuration;
         }
-		[HttpGet]
-		public ActionResult<CaseTitle> helpme(string id)
-		{
-			var userid = _mutualBankContext.Logins.Where(x => x.LoginName == id).Select(x => x.LoginId).FirstOrDefault();
-			var casetitle = (_mutualBankContext.Cases.Where(x => x.CaseUserId == userid && x.CaseNeedHelp==true).Select(x => x.CaseTitle)).ToList();
-			var caseid = (_mutualBankContext.Cases.Where(x => x.CaseUserId == userid && x.CaseNeedHelp == true).Select(x => x.CaseId)).ToList();
-            List<string[]> msg = new List<string[]>();
-            List<string[]> msgUsername = new List<string[]>();
-			List<string> msgname = new List<string>();
-			foreach (int a in caseid)
-			{
-				var msgContent = _mutualBankContext.Messages.Where(x => x.MsgCaseId == a).Select(x => x.MsgContent).ToArray();
-				var msgUserid = (_mutualBankContext.Messages.Where(x => x.MsgCaseId == a).Select(x => x.MsgUserId)).ToList();
-				foreach (int b in msgUserid)
-				{
-					var Username = (_mutualBankContext.Users.Where(x => x.UserId == b).Select(x => x.UserNname)).FirstOrDefault();					
-					msgname.Add(Username);
-				}
-				msg.Add(msgContent);
-				msgUsername.Add(msgname.ToArray());
-				msgname.Clear();
-
-			}
-			CaseTitle helpme = new CaseTitle() 
-			{
-				caseid=caseid,
-				casetitle=casetitle,
-			};
-			//helpme.msgname = msgUsername;
-			//helpme.casemsg = msg;
-            return helpme;
-		}
 
 		[HttpGet]
-		public ActionResult<CaseTitle> helpyou(string id)
+		public List<CaseTitle> AllCase(string id) 
 		{
 			var userid = _mutualBankContext.Logins.Where(x => x.LoginName == id).Select(x => x.LoginId).FirstOrDefault();
-			var casetitle = (_mutualBankContext.Cases.Where(x => x.CaseUserId == userid && x.CaseNeedHelp==false).Select(x => x.CaseTitle)).ToList();
-			var caseid = (_mutualBankContext.Cases.Where(x => x.CaseUserId == userid && x.CaseNeedHelp == false).Select(x => x.CaseId)).ToList();
-			List<string[]> msg = new List<string[]>();
-			List<string[]> msgUsername = new List<string[]>();
-			List<string> msgname = new List<string>();
-			foreach (int a in caseid)
+			var caseidd  = _mutualBankContext.Cases.Where(x => x.CaseUserId == userid).Select(x=>x.CaseId).ToList();
+			var casetitlee = _mutualBankContext.Cases.Where(x => x.CaseUserId == userid).Select(x => x.CaseTitle).ToList();
+			var casehelp = _mutualBankContext.Cases.Where(x => x.CaseUserId == userid).Select(x => x.CaseNeedHelp).ToList();
+			
+			List<CaseTitle> c = new List<CaseTitle>();
+			for (int i = 0; i < caseidd.Count; i++)
 			{
-				var msgContent = _mutualBankContext.Messages.Where(x => x.MsgCaseId == a).Select(x => x.MsgContent).ToArray();
-				var msgUserid = (_mutualBankContext.Messages.Where(x => x.MsgCaseId == a).Select(x => x.MsgUserId)).ToList();
-				foreach (int b in msgUserid)
-				{
-					var Username = (_mutualBankContext.Users.Where(x => x.UserId == b).Select(x => x.UserNname)).FirstOrDefault();
-					msgname.Add(Username);
-				}
-				msg.Add(msgContent);
-				msgUsername.Add(msgname.ToArray());
-				msgname.Clear();
+				var msg = _mutualBankContext.Messages.Where(x => x.MsgCaseId == caseidd[i]).Select(x => x.MsgContent).ToList();
+				CaseTitle Case = new CaseTitle { caseid = caseidd[i] , casetitle = casetitlee[i], casehelp = casehelp[i],casemsg=msg };
+				c.Add(Case);
 			}
-			CaseTitle helpyou = new CaseTitle();
-			helpyou.casetitle = casetitle;
-			helpyou.caseid = caseid;
-			//helpyou.msgname = msgUsername;
-			//helpyou.casemsg = msg;
-			return helpyou;
+			return c;
 		}
+
 		[HttpGet]
 		public List<string> message(int id)
 		{
@@ -107,10 +66,15 @@ namespace MutualBank.Controllers.api
 		{
 			Error err = new Error();
 			var user = _mutualBankContext.Logins.FirstOrDefault(u => u.LoginName == userregister.LoginName);
+			var email = _mutualBankContext.Logins.FirstOrDefault(e => e.LoginEmail == userregister.LoginEmail);
 			//檢查欄位是否都有輸入
 			if (string.IsNullOrEmpty(userregister.LoginName) || string.IsNullOrEmpty(userregister.ConfirmPwd) || string.IsNullOrEmpty(userregister.LoginPwd) || string.IsNullOrEmpty(userregister.LoginEmail))
 			{
 				err.Message = "有誤";
+				err.AccMessage = "帳號不能為空";
+				err.ConfMessage = "確認密碼不能為空";
+				err.EmailMessage = "信箱不能為空";
+				err.PwdMessage = "密碼不能為空";
 				return err;
 			}
 			else if (user != null)
@@ -119,9 +83,15 @@ namespace MutualBank.Controllers.api
 				err.Message = "有誤";
 				return err;
 			}
-			else if(userregister.LoginPwd != userregister.ConfirmPwd)
+			else if (userregister.LoginPwd != userregister.ConfirmPwd)
 			{
 				err.ConfMessage = "密碼與確認密碼不一致";
+				err.Message = "有誤";
+				return err;
+			}
+			else if (email != null)
+			{
+				err.EmailMessage = "此組信箱已被註冊";
 				err.Message = "有誤";
 				return err;
 			}
@@ -140,13 +110,35 @@ namespace MutualBank.Controllers.api
 			if (string.IsNullOrEmpty(userlogin.LoginName) || string.IsNullOrEmpty(userlogin.LoginPwd))
 			{
 				err.Message = "有誤";
-				err.AccMessage = "";
+				err.AccMessage = "帳號不能為空";
+				err.PwdMessage = "密碼不能為空";
 				return err;
 			}
 			else if (user == null)
 			{
 				err.Message = "有誤";
 				err.AccMessage = "帳號或密碼錯誤";
+				err.PwdMessage = "帳號或密碼錯誤";
+				return err;
+			}
+			return err;
+		}
+
+		[HttpPost]
+		public ActionResult<Error> Confirmchangepwd(Userchangepwd userchangepwd)
+		{
+			Error err = new Error();
+			if (string.IsNullOrEmpty(userchangepwd.ConfirmPwd) || string.IsNullOrEmpty(userchangepwd.LoginPwd))
+			{
+				err.Message = "有誤";
+				err.ConfMessage = "帳號不能為空";
+				err.PwdMessage = "密碼不能為空";
+				return err;
+			}
+			else if (userchangepwd.ConfirmPwd != userchangepwd.LoginPwd)
+			{
+				err.Message = "有誤";
+				err.ConfMessage = "確認密碼與密碼不一致";
 				return err;
 			}
 			return err;
@@ -162,7 +154,6 @@ namespace MutualBank.Controllers.api
 				// 取出會員信箱
 				string UserEmail = user.LoginEmail;
 
-                // 取得系統自定密鑰，在 Web.config 設定
                 string SecretKey = _configuration.GetValue<string>("Email:SecretKey");
 
 					// 產生帳號+時間驗證碼
@@ -194,14 +185,14 @@ namespace MutualBank.Controllers.api
 				// 從信件連結回到重設密碼頁面
 				string receivePage = "UserLogin/resetPassword";
 
-					// 信件內容範本
+					// 信件內容
 					string mailContent = "請點擊以下連結，返回網站重新設定密碼，逾期 30 分鐘後，此連結將會失效。<br><br>";
 					//mailContent = $"{mailContent}<a href={webPath}{receivePage}?verify={sVerify}target=_blank>點此連結</a>";
 					mailContent = $"{mailContent}<a href={webPath}{receivePage}?verify={sVerify}>點此連結</a>";
 
 
 				// 信件主題
-				string mailSubject = "[測試]密碼變更請求";
+				string mailSubject = "[MutualBank]密碼變更請求";
 
 					//發信帳號密碼
 					string MailUserID = _configuration.GetValue<string>("Email:MailUserID"); 
@@ -223,12 +214,11 @@ namespace MutualBank.Controllers.api
 						client.Credentials = new NetworkCredential(MailUserID, MailUserPwd);//寄信帳密 
 						client.Send(mms); //寄出信件
 					}
-				error.Message = "已發送密碼變更信到您註冊的信箱，請到信箱確認。";
 				return error;
 			}
 			else
 			{
-				error.Message = "請輸入您的信箱";
+				error.Message = "請輸入您的帳號";
 				return error;
 			}
 			
@@ -237,46 +227,45 @@ namespace MutualBank.Controllers.api
 
 
 
-		public async Task<string> DoResetPwd(string id)
+		public ActionResult<Error> DoResetPwd(Userchangepwd userpwd)
 		{
-			Error error =  new Error();
+			Error err =  new Error();
 
-			//// 檢查是否有輸入密碼
-			//if (string.IsNullOrEmpty(inModel.NewUserPwd))
-			//{
-			//	outModel.ErrMsg = "請輸入新密碼";
-			//	return Json(outModel);
-			//}
-			//if (string.IsNullOrEmpty(inModel.CheckUserPwd))
-			//{
-			//	outModel.ErrMsg = "請輸入確認新密碼";
-			//	return Json(outModel);
-			//}
-			//if (inModel.NewUserPwd != inModel.CheckUserPwd)
-			//{
-			//	outModel.ErrMsg = "新密碼與確認新密碼不相同";
-			//	return Json(outModel);
-			//}
 			 var userID = HttpContext.Session.GetString("ResetPwdUserId");
 			// 檢查帳號 Session 是否存在
 			if (userID == null || userID.ToString() == "")
 			{
-				//outModel.ErrMsg = "無修改帳號";
-				//return Json(outModel);
-				return "final NOOOOOOOO";
+				err.Message = "有誤";
+				err.NoAccount = "查無此帳號";
+				return err;
 			}
-			else 
+			else if (string.IsNullOrEmpty(userpwd.ConfirmPwd) || string.IsNullOrEmpty(userpwd.LoginPwd))
 			{
-				var user = _mutualBankContext.Logins.FirstOrDefault(u=>u.LoginName ==userID);
+				err.Message = "有誤";
+				err.PwdMessage = "密碼不能為空";
+				err.ConfMessage = "確認密碼不能為空";
+				return err;
+			}
+			else if (userpwd.ConfirmPwd != userpwd.LoginPwd)
+			{
+				err.Message = "有誤";
+				err.ConfMessage = "密碼與確認密碼不相符";
+				return err;
+			}
+			else
+			{
+				var user = _mutualBankContext.Logins.FirstOrDefault(u => u.LoginName == userID);
 				if (user != null)
 				{
-					user.LoginPwd = id;
+					user.LoginPwd = userpwd.LoginPwd;
 					_mutualBankContext.SaveChanges();
-					return "final OKKKKKKKK";
+					return err;
 				}
-				else 
+				else
 				{
-					return "user = null";
+					err.Message = "有誤";
+					err.NoAccount = "查無此帳號";
+					return err;
 				}
 			}
 			

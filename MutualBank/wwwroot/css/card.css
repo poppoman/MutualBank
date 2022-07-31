@@ -1,6 +1,6 @@
 ﻿
 .card {
-    box-shadow: 5px 10px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 5px 10px 25px rgba(0, 0, 0, 0.05);
 }
 
     .card hr {
@@ -22,26 +22,26 @@
 
     .card .card-tag {
         position: absolute;
-        top: 15px;
+        top: 10px;
         left: 5px;
         margin: 0 -2px;
         color: var(--black);
     }
 
         .card .card-tag .case-type {
-            padding: 0 10px;
-            border-radius: 2px;
+            padding: 3px 10px;
             font-weight: 300;
             border: 0px solid var(--bg);
             background: rgb(255, 255, 255,0.7);
             color: rgb(30, 30, 30);
-            cursor:pointer;
+            cursor: pointer;
         }
             .card .card-tag .case-type:hover {
                 font-weight:400;
             }
             .card .card-tag .case-type i {
                 margin-left: 2px;
+                pointer-events:none;
             }
 
     .card div#card-info {
@@ -55,7 +55,7 @@
 
     .card .card-info {
         position: relative;
-        width: 60%;
+        width: auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -71,7 +71,6 @@
     }
 
     .card .card-title {
-/*        border-bottom: 1px solid var(--gray);*/ 
        transition: 0.2s;
         font-size: 22px;
         overflow: hidden;
@@ -103,12 +102,14 @@
             height: 40px;
             border-radius: 50%;
             overflow: hidden;
+            cursor: pointer;
         }
 
             .card .userPhoto .PhotoBx img {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
+                pointer-events:none;
             }
 
 

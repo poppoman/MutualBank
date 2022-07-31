@@ -6,37 +6,34 @@
     overflow: hidden;
 }
 
-#home .home {
-    position: relative;
-    margin-bottom: 100px;
-}
 #home #searchLabel {
-    display:flex;
-    margin-left:15px;
-}
-#home #searchLabel .searchLabel {
-    margin: 5px;
-    padding: 5px 10px;
-    font-size: 14px;
-    color: black;
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 2px;
-    border: 0;
+    display: flex;
+    margin-left: 15px;
 }
 
-#home #searchLabel .searchLabelClose {
-    color: gray;
-    background: white;
-    border-radius: 50%;
-    font-weight: 700;
-    border: 0px;
-    margin: 0 5px;
-    cursor: pointer;
-}
-
-    #home #searchLabel .searchLabelClose:hover {
+    #home #searchLabel .searchLabel {
+        margin: 5px;
+        padding: 5px 10px;
+        font-size: 14px;
         color: black;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 2px;
+        border: 0;
     }
+
+    #home #searchLabel .searchLabelClose {
+        color: gray;
+        background: white;
+        border-radius: 50%;
+        font-weight: 700;
+        border: 0px;
+        margin: 0 5px;
+        cursor: pointer;
+    }
+
+        #home #searchLabel .searchLabelClose:hover {
+            color: black;
+        }
 
 #home .typeBar {
     position: relative;
@@ -60,7 +57,7 @@
     }
 
 
-    #home .tagBar .sort {
+    #home .tagBar .order {
         position: relative;
         display: flex;
         justify-content: end;
@@ -68,33 +65,39 @@
         white-space: nowrap;
     }
 
-        #home .tagBar .sort span {
-            position: relative;
-            left: 20px;
-            color: var(--black);
-            margin-right: 30px;
-            font-size: 18px;
-            text-align: right;
-            font-weight: 400;
-        }
+    #home .tagBar .order span {
+        position: relative;
+        left: 20px;
+        color: var(--black);
+        margin-right: 30px;
+        font-size: 18px;
+        text-align: right;
+        font-weight: 400;
+    }
 
-
-        #home .tagBar .sort .icon i {
+    #home .tagBar .order .icon {
+        cursor: pointer;
+    }
+        #home .tagBar .order .icon i {
             position: relative;
             top: -2.5px;
             font-size: 20px;
-            cursor: pointer;
+            pointer-events: none;
             z-index: 5;
         }
 
-        #home .tagBar .sort .sortSelect {
-            position: relative;
-            right: 10px;
-            font-size: 16px;
-            text-align: left;
-            font-weight: 500;
-        }
+    #home .tagBar .order .orderSelect {
+        position: relative;
+        right: 10px;
+        font-size: 16px;
+        text-align: left;
+        font-weight: 500;
+    }
 
+#home select#orderModel {
+    border: 0;
+    padding: 1px;
+}
 
 
 /* RWD */

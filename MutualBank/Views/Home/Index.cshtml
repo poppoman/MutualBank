@@ -14,120 +14,115 @@
 }
 
     <div class="wrap" id="home">
-        <div id="searchLabel">
-            <div id="areaLabel">
-                @if (@ViewBag.Area != null)
-            {
-                <span class="searchLabel">@ViewBag.Area<button class="searchLabelClose" id="areaLabelCloseBtn">x</button></span>
-            }
-        </div>
-        <div id="typeLabel"></div>
-        <div id="tagLabel"></div>
 
-    </div>
-    <div class="home">
-        <div class="typeBar fs-24">
-            <button type="button" class="mainBtn" name="mainBtn" data-bit=true v-on:click="getTypeModel">
-                <i class="fa-solid fa-square-h"></i> 需要幫忙
-            </button>
-            <button type="button" class="mainBtn" name="mainBtn" data-bit=false v-on:click="getTypeModel">
-                <i class="fa-solid fa-square-poll-horizontal"></i> 提供技能
-            </button>
-        </div>
+        <div class="home container">
+            <div class="typeBar fs-24">
+                <button type="button" class="mainBtn" name="mainBtn" data-order="type-Help" v-on:click="getOrderModels">
+                    <i class="fa-solid fa-square-h"></i><span>&nbsp;需要幫忙</span>
+                </button>
+                <button type="button" class="mainBtn" name="mainBtn" data-order="type-Skill" v-on:click="getOrderModels">
+                    <i class="fa-solid fa-square-poll-horizontal"></i><span>&nbsp;提供技能</span>
+                </button>
+            </div>
 
-        <div class="tagBar">
-            <div class="tags fs-16">
-                <span class="btnSortCase active" data-skillid=0 v-on:click="getTagModel" name="">全部</span>
-                <span class="btnSortCase" v-for="item in tagList" :data-skillid="item.SkillId" v-on:click="getTagModel" name="">{{item.SkillName}}</span>
-
-                <div class="m-0 p-0">
-                    <span></span>
+            <div class="tagBar">
+                <div class="tags fs-16">
+                    <span class="btnSortCase active" data-order="skillid-0" v-on:click="getOrderModels">全部</span>
+                    <span class="btnSortCase" v-for="item in tagList" :data-order="'skillid-'+item.SkillId" v-on:click="getOrderModels">{{item.SkillName}}</span>
+                </div>
+                <div class="order">
+                    <span>排序：</span>
+                    <select class="orderSelect" id="orderModel" :data-order="'order-'+orderByOption" v-model="orderByOption" v-on:change="getOrderModels">
+                        <option value="releaseDate" selected>發佈時間</option>
+                        <option value="messageCount">留言數</option>
+                        <option value="expireDate">期限</option>
+                    </select>
+                    <div id="sorting" class="icon" data-order="seq-desc" v-on:click="getOrderModels">
+                        <i id="iconSort" class="fa-solid fa-arrow-down-short-wide"></i>
+                    </div>
                 </div>
             </div>
 
-            <div class="sort">
-                <span>排序：</span>
-                <select class="sortSelect" id="orderModel" v-on:change="orderModel">
-                    <option value="releaseDate">發佈時間</option>
-                    <option value="messageCount">留言數</option>
-                    <option value="expireDate">期限</option>
-                </select>
-                <div class="icon" v-on:click="orderAscOrDesc">
-                    <i class="fa-solid fa-arrow-down-short-wide"></i>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="container-fluid">
-            <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4">
-                <div class="col" v-for="item in caseViewModel">
-                    <div class="card mb-2 w-100">
-                        <div class="imgBx">
-
-                            <div class="card-tag">
-                                <span class="case-type" :data-skillid="item.SkillId" v-on:click="getTagModel">
-                                    <i class="fa-solid fa-square-h" v-if="item.CaseNeedHelp"></i>
-                                    <i class="fa-solid fa-square-poll-horizontal" v-else></i> {{item.CaseSkillName}}
-                                </span>
-                            </div>
-                            <div class="d-flex w-100 justify-content-center" id="card-info">
-                                <div class="card-info">
-                                    <div>
-                                        <i class="fa-solid fa-location-dot"></i> {{item.CaseSerAreaName}}
-                                    </div>
-
-                                    <div>
-                                        <i class="fa-solid fa-comment-dots"></i> {{item.MessageCount}}
-                                    </div>
+            <div class="container-fluid">
+                <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4" v-if="isModelExist">
+                    <div class="col" v-for="item in casePageModel">
+                        <div class="card mb-2 w-100">
+                            <div class="imgBx">
+                                <div class="card-tag">
+                                    <span class="case-type" :data-order="'skillid-'+item.CaseSkillId" v-on:click="getOrderModels">
+                                        <i class="fa-solid fa-square-h" v-if="item.CaseNeedHelp"></i>
+                                        <i class="fa-solid fa-square-poll-horizontal" v-else></i>&nbsp{{item.CaseSkillName}}
+                                    </span>
                                 </div>
-                            </div>
-
-                            <img v-bind:src="item.CasePhoto" class="card-img-top p-2" alt="image not found">
-                        </div>
-
-
-
-                        <div class="card-body">
-                            <h5 class="card-title fw-400" title="item.CaseTitle">{{item.CaseTitle}}</h5>
-                            <div><p class="card-text mt-1 fw-300">{{item.CaseIntroduction}}</p></div>
-                            <hr />
-                            <div class="container mt-3 p-0">
-                                <div class="row">
-                                    <div class="col-md-8 col">
-
-                                        <div class="row">
-                                            <div class="userPhoto">
-                                                <div class="PhotoBx">
-                                                    <img src="https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg"
-                                                         :data-caseid="item.CaseId" v-on:click="redirectToCasePage">
-                                                </div>
-                                            </div>
-                                            <div class="col-6 text-start align-items-center userInfo">
-                                                <p class="infoTitle">{{item.CaseUserName}}</p>
-                                                <p class="infoText">{{item.CaseReleaseDate | showDate}}</p>
-                                            </div>
+                                <div class="d-flex w-100 justify-content-center" id="card-info">
+                                    <div class="card-info">
+                                        <div class="me-2">
+                                            <i class="fa-solid fa-location-dot"></i>&nbsp;{{item.CaseSerAreaName}}
                                         </div>
 
+                                        <div>
+                                            <i class="fa-solid fa-comment-dots"></i>&nbsp;{{item.MessageCount}}
+                                        </div>
                                     </div>
-                                    <div class="col-md-4 text-center p-0">
-                                        <a class="btn text-nowrap" v-bind:href="'/PostPage/Index/'+item.CaseId">詳細</a>
+                                </div>
+                                <img v-bind:src="item.CasePhoto" class="card-img-top p-2" alt="image not found">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title fw-400" title="item.CaseTitle">{{item.CaseTitle}}</h5>
+                                <div><p class="card-text mt-1 fw-300">{{item.CaseIntroduction}}</p></div>
+                                <hr />
+                                <div class="container mt-3 p-0">
+                                    <div class="row">
+                                        <div class="col-md-8 col">
+
+                                            <div class="row">
+                                                <div class="userPhoto">
+                                                    <div class="PhotoBx" v-bind:data-userid="item.CaseUserId" v-on:click="redirectToUserPage">
+                                                        <img src="https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg">
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 text-start align-items-center userInfo">
+                                                    <p class="infoTitle">{{item.CaseUserName}}</p>
+                                                    <p class="infoText">{{item.CaseReleaseDate | showDate}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 text-center p-0">
+                                            <a class="btn text-nowrap" v-bind:href="'/PostPage/Index/'+item.CaseId">詳細</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
+                    </div>
+                </div>
+                <div class="m-auto" v-else>
+                    <div id="whenNoCase" class="d-flex justify-content-center align-items-center">
+                        <div>
+                            <img id="noCaseImg" src="https://pic.sopili.net/pub/emoji/twitter/2/72x72/1f47b.png">
+                        </div>
+                        <div>
+                            <h1 id="noCaseText" class="p-5 fw-400">
+                                沒有相關內容
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+
+                <div v-show="isModelExist">
+                    <div id="loadingbar" class="justify-content-center align-items-center mt-5"
+                     v-bind:class={'d-flex':!isLoadingFinished,'d-none':isLoadingFinished}>
+                        <div class="spinner-border" role="status"></div>
+                        <span class="ms-3">Loading...</span>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
-</div>
 
 
 
-@section Scripts{
+    @section Scripts{
 
     <script>
         var caseModel = @Html.Raw(modelDataString);
@@ -137,224 +132,146 @@
         var vmIndex = new Vue({
             el: "#home",
             data: {
-                caseViewModel: caseModel,
+                casePageModel: [],
+                caseFilterModel: caseModel,
                 caseDataModel: caseModel,
                 tagList: tagListData,
                 sortByType: "null",
                 sortByTag: 0,
                 orderByOption: orderByDafult,
-                isOrderByDesc: 1
+                isOrderByDesc: 1,
+                pageCount: 8,
+                pageNumber: 0,
+                isLoadingFinished: false
             },
             methods: {
-                //=====
-                //Sort
-                //建立篩選標籤到畫面(通用)
-                addLabel: function(posId, txt, clickEvent) {
-                    posId.innerHTML = "";
-                    var span = document.createElement("span");
-                    span.classList.add("searchLabel");
-                    span.innerText = txt;
-                    var button = document.createElement("button");
-                    button.classList.add("searchLabelClose");
-                    button.innerText = "x";
-                    span.append(button);
-                    posId.append(span);
-                    button.addEventListener("click", clickEvent);
-                },
-                //關閉篩選標籤(通用)
-                closeLabel: function(e) {
-                    var parentDiv = e.target.parentElement.parentElement;
-                    parentDiv.innerHTML = "";
-                },
-                closeTypeLabel: function(e) {
-                    //移除標籤並清除對應data(恢復初始值)
-                    vmIndex.closeLabel(e);
-                    vmIndex.sortByType = "null";
-                    //更新畫面模型
+                getOrderModels: function(e) {
+                    var datasetOrder = e.target.dataset.order;
+                    var keyword = e.target.dataset.order.split("-")[1];
+                    if (datasetOrder.includes("type")) {
+                        var mainBtn = document.querySelectorAll(".mainBtn");
+                        if (!e.target.classList.contains("active")) {
+                            this.sortByType = keyword == "Help" ? true : false;
+                            //add class
+                            mainBtn.forEach(x => x.classList.remove("active"));
+                            e.target.classList.add("active");
+                        }
+                        else {
+                            this.sortByType = "null";
+                            e.target.classList.remove("active");
+                        }
+                    }
+                    else if (datasetOrder.includes("skillid")) {
+                        this.sortByTag = keyword;
+                        //add class
+                        var btnSortCase = document.querySelectorAll(".btnSortCase");
+                        btnSortCase.forEach(x => x.classList.remove("active"));
+                        btnSortCase[keyword].classList.add("active");
+                    }
+                    else if (datasetOrder.includes("seq")) {
+                        //toggle class
+                        iconSort.classList.toggle('fa-arrow-down-short-wide');
+                        iconSort.classList.toggle('fa-arrow-up-short-wide');
+                        if (keyword == "desc") {
+                            sorting.dataset.order = "seq-asc";
+                        }
+                        else {
+                            sorting.dataset.order = "seq-desc";
+                        }
+                        this.isOrderByDesc = keyword == "desc" ? -1 : 1;
+                    }
 
-                    if (vmIndex.sortByTag != 0) {
-                        vmIndex.caseViewModel = vmIndex.filterTagModel(vmIndex.caseDataModel, vmIndex.sortByTag);
+                    //1.sort by tag
+                    var f1 = [];
+                    if (this.sortByTag != "0") {
+                        f1 = vmIndex.caseDataModel.filter(x => x.CaseSkillId == vmIndex.sortByTag);
                     }
                     else {
-                        vmIndex.caseViewModel = vmIndex.caseDataModel;
+                        f1 = vmIndex.caseDataModel;
                     }
-                },
-                closeTagLabel: function(e) {
-                    //移除標籤並清除對應data(恢復初始值)
-                    vmIndex.closeLabel(e);
-                    vmIndex.sortByTag = 0;
-                    //更新畫面模型
-                    if (typeof (vmIndex.sortByType) == Boolean) {
-                        vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseDataModel, vmIndex.sortByType);
+                    //2.sort by type
+                    var f2 = [];
+                    if (this.sortByType != "null") {
+                        f2 = f1.filter(x => x.CaseNeedHelp == vmIndex.sortByType);
                     }
                     else {
-                        vmIndex.caseViewModel = vmIndex.caseDataModel;
+                        f2 = f1;
                     }
+                    //3.order by option
+                    this.caseFilterModel = this.orderByOptionValue(f2);
+                    //update pagemodel
+                    this.isLoadingFinished = true;
+                    this.pageNumber = 0;
+                    this.casePageModel.length = 0;
+                    this.isLoadingFinished = false;
                 },
-                //依需求或技能篩選Model(通用)
-                filterTypeModel: function(vmModel, b) {
-                    //vmModel can be DataModel or ViewModel
-                    return vmModel.filter(x => x.CaseNeedHelp == b);
-                },
-                //依需求或技能拿模型
-                getTypeModel: function(e) {
-                    //add class
-                    var mainBtn = document.querySelectorAll(".mainBtn");
-                    mainBtn.forEach(x => x.classList.remove("active"));
-                    e.target.classList.add("active");
-                    //get type model
-                    var bitString = e.target.dataset.bit;
-                    var bit = bitString == "true" ? true : false;
-                    vmIndex.sortByType = bit;
-                    //vmIndex.addLabel(typeLabel, e.target.innerText, vmIndex.closeTypeLabel);
-
-                    vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseDataModel, bit);
-
-                    if (vmIndex.sortByTag != 0) {
-                        vmIndex.caseViewModel = vmIndex.filterTagModel(vmIndex.caseViewModel, vmIndex.sortByTag);
-                    }
-                    vmIndex.orderModelForSort();
-                },
-                //依技能分類篩選Model(通用)
-                filterTagModel: function(vmModel, n) {
-                    //0 =>all case
-                    if (n == 0) {
-                        return vmIndex.caseDataModel;
-                    }
-                    return vmModel.filter(x => x.CaseSkillId == n);
-                },
-                //依技能分類拿模型
-                getTagModel: function(e) {
-                    //add class
-                    var btnSortCase = document.querySelectorAll(".btnSortCase");
-                    btnSortCase.forEach(x => x.classList.remove("active"));
-                    e.target.classList.add("active");
-                    //get tag model
-                    var skillid = e.target.dataset.skillid;
-                    vmIndex.sortByTag = skillid;
-                    //vmIndex.addLabel(tagLabel, e.target.innerText, vmIndex.closeTagLabel);
-                    vmIndex.caseViewModel = vmIndex.filterTagModel(vmIndex.caseDataModel, skillid);
-
-                    //more filter
-                    if (typeof (vmIndex.sortByType) == Boolean) {
-                        vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseViewModel, vmIndex.sortByType);
-                    }
-                    vmIndex.orderModelForSort();
-                },
-                orderModelForSort: function() {
-                    var para = vmIndex.orderByOption;
-                    var isDesc = vmIndex.isOrderByDesc;
-
-                    switch (para) {
+                //排序功能
+                orderByOptionValue: function(dataModel) {
+                    var isDesc = this.isOrderByDesc;
+                    switch (this.orderByOption) {
                         case "releaseDate":
-                            vmIndex.orderByReleaseDate(isDesc);
+                            return this.orderByReleaseDate(isDesc, dataModel);
                             break;
                         case "messageCount":
-                            vmIndex.orderByMessageCount(isDesc);
+                            return this.orderByMessageCount(isDesc, dataModel);
                             break;
                         case "expireDate":
-                            vmIndex.orderByExpireDate(isDesc);
+                            return this.orderByExpireDate(isDesc, dataModel);
                             dafault:
                             break;
                     }
                 },
-                //=====
-                //Order
-                orderModel: function(e) {
-                    var para = vmIndex.orderByOption = e.target.value;
-                    //升序或降序
-                    var isDesc = vmIndex.isOrderByDesc;
-
-                    switch (para) {
-                        case "releaseDate":
-                            vmIndex.orderByReleaseDate(isDesc);
-                            break;
-                        case "messageCount":
-                            vmIndex.orderByMessageCount(isDesc);
-                            break;
-                        case "expireDate":
-                            vmIndex.orderByExpireDate(isDesc);
-                            dafault:
-                            break;
-                    }
-                },
-                orderAscOrDesc: function() {
-                    var isDesc = vmIndex.isOrderByDesc = -vmIndex.isOrderByDesc;
-                    var para = vmIndex.orderByOption;
-                    switch (para) {
-                        case "releaseDate":
-                            vmIndex.orderByReleaseDate(isDesc);
-                            break;
-                        case "messageCount":
-                            vmIndex.orderByMessageCount(isDesc);
-                            break;
-                        case "expireDate":
-                            vmIndex.orderByExpireDate(isDesc);
-                            dafault:
-                            break;
-                    }
-                },
-                //排序
-                orderByReleaseDate: function(intDesc) {
-                    //紀錄降升序狀態
-                    intDesc == 1 ? vmIndex.isOrderByDesc = 1 : vmIndex.isOrderByDesc = -1;
-                    return vmIndex.caseViewModel.sort(function(a, b) {
+                orderByReleaseDate: function(intDesc, dataModel) {
+                    return dataModel.sort(function(a, b) {
                         return b.CaseReleaseDate > a.CaseReleaseDate ? intDesc : -intDesc
                     });
                 },
-                orderByExpireDate: function(intDesc) {
-                    //紀錄降升序狀態
-                    intDesc == 1 ? vmIndex.isOrderByDesc = 1 : vmIndex.isOrderByDesc = -1;
-                    return vmIndex.caseViewModel.sort(function(a, b) {
+                orderByExpireDate: function(intDesc, dataModel) {
+                    return dataModel.sort(function(a, b) {
                         return b.CaseExpireDate > a.CaseReleaseDate ? intDesc : -intDesc
                     });
                 },
-                orderByMessageCount: function(intDesc) {
+                orderByMessageCount: function(intDesc, dataModel) {
                     if (intDesc == 1) {
-                        vmIndex.isOrderByDesc = 1;
-                        return vmIndex.caseViewModel.sort(function(a, b) {
+                        return dataModel.sort(function(a, b) {
                             return b.MessageCount - a.MessageCount
                         });
                     }
                     else {
-                        vmIndex.isOrderByDesc = -1;
-                        return vmIndex.caseViewModel.sort(function(a, b) {
+                        return dataModel.sort(function(a, b) {
                             return a.MessageCount - b.MessageCount
                         });
                     }
                 },
-                //跳轉到Case主頁
-                redirectToCasePage: function(e) {
-                    var href = "/PostPage/Index/" + e.target.dataset.caseid;
-                    e.target.href = href;
+                //跳轉到User主頁
+                redirectToUserPage: function(e) {
+                    location.href = "/Profile/Index/" + e.target.dataset.userid;
                 },
-                //初始化排序(預設為降序)
-                initModelWithOrder: function() {
-                    var para = this.orderByOption;
-
-                    switch (para) {
-                        case "releaseDate":
-                            return this.caseViewModel.sort(function(a, b) {
-                                return b.CaseReleaseDate > a.CaseReleaseDate ? 1 : -1
-                            });
-                            break;
-                        case "messageCount":
-
-                            return this.caseViewModel.sort(function(a, b) {
-                                return b.MessageCount - a.MessageCount
-                            });
-                            break;
-                        case "expireDate":
-                            return this.caseViewModel.sort(function(a, b) {
-                                return b.CaseExpireDate > a.CaseReleaseDate ? 1 : -1
-                            });
-                            dafault:
-                            break;
+            },
+            computed: {
+                isModelExist: function() {
+                    return this.caseFilterModel.length == 0 ? false : true;
+                }
+            },
+            watch: {
+                pageNumber: function() {
+                    if (this.pageNumber > 0) {
+                        var min = (this.pageNumber - 1) * (this.pageCount + 1);
+                        var pageData = this.caseFilterModel.slice(min, min + this.pageCount)
+                        for (var i = 0; i < pageData.length; i++) {
+                            this.casePageModel.push(pageData[i]);
+                        }
+                        this.$forceUpdate();
+                    }
+                    if (this.pageNumber == Math.ceil(this.caseFilterModel.length / this.pageCount)) {
+                        this.isLoadingFinished = true;
+                    }
+                    else {
+                        this.isLoadingFinished = false;
                     }
                 }
             },
             filters: {
-
                 showDate: function(e) {
                     if (e.includes("T")) {
                         return e.split("T")[0];
@@ -362,42 +279,21 @@
                 }
             },
             created: function() {
-                this.initModelWithOrder();
+                this.caseFilterModel = this.orderByOptionValue(this.caseDataModel);
             },
             mounted: function() {
-
-                //地區標籤綁定關閉標籤事件
-                var areaLabelCloseBtn = document.getElementById("areaLabelCloseBtn");
-                if (areaLabelCloseBtn != null) {
-                    areaLabelCloseBtn.addEventListener("click", function(e) {
-                        vmIndex.closeLabel(e);
-                        //畫面Model顯示全部資料
-                        $.ajax({
-                            url: "@Url.Action("GetAllCaseModel","Home")",
-                            type: "GET"
-                        })
-                            .done(function(res) {
-                                var nval = JSON.parse(res);
-                                vmIndex.caseDataModel = vmIndex.caseViewModel = nval;
-                                if (typeof (vmIndex.sortByType) == Boolean) {
-                                    vmIndex.caseViewModel = vmIndex.filterTypeModel(vmIndex.caseDataModel, vmIndex.sortByType);
-                                }
-                                if (vmIndex.sortByTag != -1) {
-                                    vmIndex.caseViewModel = vmIndex.filterTagModel(vmIndex.caseViewModel, vmIndex.sortByTag);
-                                }
-                            })
-                            .fail(function(res) {
-                                console.log(res);
-                            });
-                    });
-                }
-
-                //點選order icon時切換圖示
-                var iconSort = document.querySelector('.tagBar .sort .icon i');
-                iconSort.addEventListener('click', function() {
-                    iconSort.classList.toggle('fa-arrow-down-short-wide');
-                    iconSort.classList.toggle('fa-arrow-up-short-wide');
+                //分頁功能
+                this.pageNumber = 1;
+                var self = this;
+                var loadingbar = document.getElementById("loadingbar");
+                var ob = new IntersectionObserver(function(x) {
+                    if (x[0].isIntersecting) {
+                        self.pageNumber += 1;
+                    }
+                }, {
+                    threshold: 0.1
                 });
+                ob.observe(loadingbar);
             }
         });
 

@@ -1,10 +1,13 @@
-﻿//初始化Area資料
-var vmNav = new Vue({
+﻿var vmNav = new Vue({
     el: "#navBar",
     data: {
         areaCity: [],
         areaTown: [],
-        isDefaultShow: true
+        isDefaultShowing: true,
+        isCitySelected: true,
+        selectedCity: '',
+        selectedTown: '',
+        userPoint: 0
     },
     methods: {
         getAreaCity: function () {
@@ -20,7 +23,13 @@ var vmNav = new Vue({
                 });
         },
         getAreaTown: function (e) {
-            var SelectedCity = e.target.value;
+            var SelectedCity = "";
+            if (typeof (e) == "object") {
+                SelectedCity = e.target.value;
+            }
+            else {
+                SelectedCity = e;
+            }
             $.ajax({
                 url: "/Nav/_LayoutApi/GetAreaTown",
                 type: "GET",
@@ -29,22 +38,35 @@ var vmNav = new Vue({
                 }
             }).
                 done(function (res) {
-                    vmNav.isDefaultShow = false;
-
+                    vmNav.isDefaultShowing = false;
                     vmNav.areaTown = res;
+                    //區域資料預設為顯示第一筆
+                    if (typeof (e) == "object") {
+                        vmNav.selectedTown = res[0];
+                        vmNav.isCitySelected = false;
+                    }
                 })
                 .fail(function (res) {
                     console.log(res);
                 });
+        },
+        getUserpoint: function () {
+            fetch("/Nav/_LayoutApi/GetUserPoint")
+                .then(res =>
+                    res.json()
+                )
+                .then(data => {
+                    vmNav.userPoint = data;
+                })
+                .catch(x =>
+                    console.log(x));
         }
-        
     },
-    mounted: function () {
-        //初始化縣市
+    created: function () {
         this.getAreaCity();
+        this.getUserpoint();
     }
 });
-
 
 
 //-RWD Manu控制
@@ -62,33 +84,10 @@ iconManu.addEventListener('click', function () {
 })
 
 
-//-postQuery 點選+號後顯示面板
-//let btnPost = document.querySelector('.topR .barManu li:first-child');
-//let panelPost = document.querySelector('.postLink');
-//btnPost.addEventListener('click', function () {
-//    panelPost.classList.toggle('active');
-//    開啟背景的點擊關閉功能
-//    panelsToggle.classList.add('bgOn');
-//    同時關閉barManu，並將X恢復為原icon
-//    barManu.classList.remove('active');
-//    iconManu.classList.toggle('fa-bars');
-//    iconManu.classList.toggle('fa-xmark');
-
-//})
-////點擊x關閉面板
-//let iconPost = document.querySelector('.wrap-panel .iconPost');
-//iconPost.addEventListener('click', function () {
-//    panelsToggle.classList.remove('On');
-//    panelsToggle.classList.remove('bgOn');
-//    panelPost.classList.remove('active');
-
-//});
-
 //-點擊背景時關閉面板
 panelsToggle.addEventListener('click', function () {
     panelcity.classList.remove('active');
     panelTown.classList.remove('active');
-    //panelPost.classList.remove('active');
     barManu.classList.remove('active');
     panelsToggle.classList.remove('On');
     panelsToggle.classList.remove('bgOn');
@@ -98,5 +97,4 @@ panelsToggle.addEventListener('click', function () {
         iconManu.classList.toggle('fa-bars');
         iconManu.classList.toggle('fa-xmark');
     }
-
 })

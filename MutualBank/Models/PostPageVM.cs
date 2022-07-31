@@ -26,10 +26,7 @@ namespace MutualBank.Models
 
         public string? LoginHPhoto { get; set; }
 
-        public int? MsgCaseId { get; set; }
-        public DateTime MsgAddDate { get; set; }
-        public int? MsgUserId { get; set; }
-        public string? MsgContent { get; set; }
+        public string? AreaTownname { get; set; }
 
     }
 }

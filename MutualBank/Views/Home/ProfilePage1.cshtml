@@ -38,7 +38,7 @@
                   @* <p class="text-muted mb-1"  > 暱稱 </p> *@
                   @* <p class="text-muted mb-4">{ 座 右 銘 }</p> *@
                   <hr>
-                  <button type="button" class="btn btn-primary"> 編輯 </button>
+                       <a href="/Home/ProfileUpdate"  class="btn btn-info">編輯</a>
                 </div>
               </div>
               <!-- 左方 選單 -->
@@ -141,7 +141,7 @@
                       <p class="mb-0">工作經歷</p>
                     </div>
                     <div class="col-sm-9">
-                      <label class="text-muted mb-0">{{user.userCv}} </label>
+                      <label class="text-muted mb-0">{{user.userResume}} </label>
                     </div>
                   </div>
                   <hr>
@@ -151,7 +151,7 @@
                       <p class="mb-0">個人簡介</p>
                     </div>
                     <div class="col-sm-9">
-                      <label class="text-muted mb-0">晶圓代工大廠台積電(2330)公布2022年6月自結合併營收1758.74億元，雖月減5.29％、仍年增18.46％，改寫歷史次高。第二季合併營收5341.4億元，季增8.77％、年增達43.53％，連8季改寫新高。累計上半年合併營收1.02兆元、年增達39.57％，續創同期新高。</label>
+                      <label class="text-muted mb-0">{{user.userCv}}</label>
                     </div>
                   </div>
                 </div>

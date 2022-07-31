@@ -3,18 +3,14 @@
 @{
     ViewData["Title"] = "Index";
 }
-@{
-    var msgDataString = Newtonsoft.Json.JsonConvert.SerializeObject((List<MessageVM>)ViewBag.messages);
-    var msgDataStringCh = Newtonsoft.Json.JsonConvert.SerializeObject((List<MessageChVM>)ViewBag.msgChild);
-}
 @section Styles
     {
     <link rel="stylesheet" href="~/css/postpage.css" asp-append-version="true" />
 
 }
 
-    <main id="postpage">
-        <div class="postpage" id="postpage">
+    <main id="postpage" class="container">
+        <div class="postpage container-fluid" id="postpage">
             <div class="page-top">
                 <div class="page-title"> @Html.DisplayFor(Model=>Model.CaseTitle) </div>
                 <div calss="need">@Html.DisplayFor(Model=>Model.SkillName)</div>
@@ -31,7 +27,7 @@
                 <div class="author">
                     <span class="author-pic-name">
                         <span class="authorpicture-frame">
-                            <img src="@Html.DisplayFor(model=>model.UserPhoto)" alt="" onerror="this.src = '/postpage/userhphotonull.svg';this.onerror = null" class="author-picture">
+                            <img src="@Html.DisplayFor(model=>model.UserPhoto)" alt="" onerror="this.src = 'https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="author-picture">
                         </span>
                         <span class="author-name">
                             <h2 href="" style="padding-left:20px; font-size:16px" class="authorname">@Html.DisplayFor(Model=>Model.UserNName)</h2>
@@ -54,7 +50,7 @@
                             <span>
                                 <i class="fa-solid fa-location-dot"></i>
                             </span>
-                            <span style="padding-left:5px ">地點：<span>@Html.DisplayFor(Model=>Model.Areacity)</span></span>
+                            <span style="padding-left:5px ">地點：<span>@Html.DisplayFor(Model=>Model.Areacity)@Html.DisplayFor(Model=>Model.AreaTownname)</span></span>
                         </div>
                     </div>
                 </div>
@@ -78,7 +74,7 @@
                     <div class="comment-frame">
                         <div>
                             <div class="user-pic">
-                                <img src="@Html.DisplayFor(model=>model.LoginHPhoto)" alt="" onerror="this.src = '/postpage/userhphotonull.svg';this.onerror = null" class="author-picture">
+                                <img src="@Html.DisplayFor(model=>model.LoginHPhoto)" alt="" onerror="this.src = 'https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="author-picture">
                             </div>
                         </div>
 
@@ -88,19 +84,7 @@
                             <div class="statics-text">0/200字</div>
                         </div>
                         <div class="col-auto">
-                            <input type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" id="commentbtn" disabled data-caseid="@Model.CaseId" value="留言" />
-                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                             aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-body">
-                                            <i class="fa-solid fa-thumbs-up"></i>
-                                            新增成功
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <input type="button" class="btn btn-primary"  id="commentbtn" disabled data-caseid="@Model.CaseId" value="留言" v-on:click="addcoment" />
                         </div>
 
                     </div>
@@ -112,52 +96,51 @@
                         <div class="responer-pic">
                             <a href="">
                                 <div class="pad-avatar">
-                                    <img src="{{item.MagUserPhoto}}" alt="" onerror="this.src = '/postpage/userhphotonull.svg';this.onerror = null" class="respons-picture">
+                                    <img src="{{item.magUserPhoto}}" alt="" onerror="this.src='https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="respons-picture">
                                 </div>
                             </a>
                         </div>
 
                         <div class="pad-content">
                             <div>
-                                <div class="responser-name">{{item.MsgUserName}}</div>
+                                <div class="responser-name">{{item.msgUserName}}</div>
                             </div>
                             <div class="responser-context">
                                 <div class="text">
-                                    {{item.MsgContent}}
+                                    {{item.msgContent}}
                                 </div>
                             </div>
                             <div class="response-day-button">
                                 <i class="fa-regular fa-clock"></i>
-                                <span class="post-time">留言日期：{{item.MsgAddDate|showDate}}</span>
+                                <span class="post-time">留言日期：{{item.msgAddDate|showDate}}</span>
                                 <span class="replay-btn">回覆</span>
 
                             </div>
                             <!-- 回應小孩 -->
-                            <div class="comment-bother-frame" v-for="item in msglistch">
+                            <div class="comment-bother-frame" v-for="x in item.Mychildinhouse">
                                 <div class="comment-bother">
                                     <a href="" class="comment-pic-frame">
                                         <div style="width: 24px; height: 24px;" class="avatar-frame">
-                                            <img src="background.jpg" alt="無此圖片" class="comment-bother-pic">
+                                            <img src="{{x.childtoUserHphoto}}" alt="" onerror="this.src='https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="comment-bother-pic">
                                         </div>
                                     </a>
                                     <div class="comment-brother-re">
                                         <div class="responser-name-frame">
-                                            <a class="responser-name" href="">{{item.MsgUserName}}</a>
+                                            <a class="responser-name" href="">{{x.childname}}</a>
                                             <div class="reply-user">
-                                                <span>回覆給：</span>
+                                                <span>回覆給：<span>{{x.childtoUsername}}</span></span>
                                                 <div class="comment-bother">
                                                     <a href="">
-                                                        <img src="background.jpg" alt="無此圖片" class="comment-bother-pic">
+                                                        <img src="{{x.childHphoto}}" alt="" onerror="this.src='https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="comment-bother-pic">
                                                     </a>
                                                 </div>
-                                                <a>名稱</a>
                                             </div>
 
                                         </div>
-                                        <div class="text">回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容回覆內容</div>
+                                        <div class="text">{{x.childcontent}}</div>
                                         <div class="response-day-button">
                                             <i class="fa-regular fa-clock"></i>
-                                            <span class="post-time">XX 天前</span>
+                                            <span class="post-time">留言日期：{{x.childaddDate|showDate}}</span>
                                             <span class="replay-btn">回覆</span>
                                         </div>
                                     </div>
@@ -195,14 +178,14 @@
     {
 
     <script>
-        var msgData = @Html.Raw(msgDataString);
-        var msgDataCh = @Html.Raw(msgDataStringCh)
+        var msgData = @Html.Raw(ViewBag.tmessages);
+        console.log(typeof(msgData))
         let PP = new Vue({
             el: "#postpage",
             data: {
                 msglist: msgData,
-                msglistch: msgDataCh
             },
+
             filters: {
                 showDate: function(e) {
                     if (e.includes("T")) {
@@ -210,6 +193,42 @@
                     }
                 }
             },
+
+            methods: {
+                addcoment: function() {
+                    var id = document.getElementById("commentbtn").dataset.caseid;
+                    var formData = new FormData();
+                    formData.append("id", id);
+                    formData.append("content", $("#exampleFormControlTextarea1").val());
+                    $.ajax({
+                        url: "/PostPage/AddComment",
+                        type: "POST",
+                        data: formData,
+                        async: false,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function(res) {
+                            alert("新增成功");
+                            console.log(res)
+                            console.log(PP.msglist)
+                            PP.msglist.push(res)
+
+                            $("textarea:eq(0)").val("");
+                            $("#commentbtn").attr("disabled", "true");
+                             var targetTop = $(".respone-mes-frame").last().offset().top;
+                            $(window).scrollTop(targetTop);
+                            
+                        },
+                        error: function(res) {
+                            alert("新增失敗")
+                        }
+                    });
+                    
+
+                }
+            }
+
 
         })
     </script>

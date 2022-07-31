@@ -18,7 +18,6 @@
 
     @await RenderSectionAsync("Styles", required: false)
     @await RenderSectionAsync("ScriptsReady",required:false)
-
 </head>
 
 <body>
@@ -29,15 +28,18 @@
                 <form class="m-auto" method="get" action="@Url.Action("Search","Home")">
                     <div class="search">
                         <div class="area m-1 me-0">
-                                <select class="selectList" id="AreaCity" name="AreaCity" v-on:change="getAreaTown">
-                                    <option class="selectOption" v-for="item in areaCity" >{{item}}</option>
-                                </select>
+                            <select class="selectList" id="AreaCity" name="AreaCity" v-model="selectedCity" v-on:change="getAreaTown">
+                                <option class="selectOption" v-show="isDefaultShowing" disabled>縣市</option>
+                                <option class="selectOption" v-for="item in areaCity" :value="item">{{item}}</option>
+                            </select>
+
                         </div>
                         <div class="city m-1">
-                                <select class="selectList" id="AreaTown" name="AreaTown">
-                                    <option class="selectOption" selected="selected" v-show="isDefaultShow" disabled>區域</option>
-                                    <option class="selectOption" v-for="item in areaTown" v-bind:data-areaid="item.areaId">{{item.areaTown}}</option>
-                                </select>
+                            <select class="selectList" id="AreaTown" name="AreaTown" v-model="selectedTown">
+                                <option class="selectOption" v-show="isDefaultShowing" disabled>區域</option>
+                                <option class="selectOption" v-show="isCitySelected" disabled>請先選擇縣市</option>
+                                <option class="selectOption" v-for="item in areaTown" v-bind:data-areaid="item.areaId" :value="item">{{item}}</option>
+                            </select>
                         </div>
                         <input type="text" id="KeyWord" name="KeyWord" placeholder="輸入關鍵字">
                         <button class="searchBtn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -62,22 +64,9 @@
 
     <div class="wrap-panel">
         <div class="panelsToggle"></div>
-        <div class="postLink">
-            <i class="iconPost fa-solid fa-xmark"></i>
-            <div class="title">
-
-                <span>Hello</span>
-                <p>今天想要貼些什麼呢？</p>
-            </div>
-            <div class="link">
-                <a class="butn poHelp" asp-page="/Home/Index">新增需求</a>
-                <a class="butn poSkill" asp-page="/Home/Index">提供技能</a>
-            </div>
-        </div>
     </div>
 
-    <div class="container fromNav">
-
+    <div class="container-fuild fromNav">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -89,12 +78,77 @@
         </div>
     </footer>
 
+
     <script src="https://kit.fontawesome.com/d0f99bafb2.js" crossorigin="anonymous"></script>
-    <script src="~/js/_Layout.js"></script>
+    <script src="~/js/_Layout.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        //保留User上次搜尋的地區與關鍵字
+        var logArea = "@Html.Raw(ViewBag.LogArea)";
+        var logTown = "@Html.Raw(ViewBag.LogTown)";
+
+        if (logArea != "") {
+            vmNav.getAreaTown(logArea);
+            vmNav.selectedCity = logArea;
+        }
+        else {
+            vmNav.selectedCity = "縣市";
+        }
+        if (logArea != "") {
+            vmNav.selectedTown = logTown;
+
+        }
+        else {
+            vmNav.selectedTown = "區域";
+        }
+        var logKeyWord = "@Html.Raw(ViewBag.LogKeyWord)";
+        var KeyWord = document.getElementById("KeyWord");
+        KeyWord.value = logKeyWord;
+    </script>
+    @*@if (User.Identity.IsAuthenticated)
+    {
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+    <script>
+    toastr.options =
+    {
+    "closeButton": false,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": true,
+    "positionClass": "toast-bottom-right",
+    "preventDuplicates": false,
+    "onclick": function () { location.href = "/Home/ProfilePageAjax"; },
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "5000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+    }
+
+    var userName = "@User.Identity.Name";
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/messageHub").build();
+
+    connection.start().then(function() {
+    connection.invoke("Online", userName);
+    }).catch (function(err) {
+    return console.error(err.toString());
+    });
+    connection.on("UserOnline", function(user, UserId,Msg) {
+    toastr["success"](`目前有${Msg}則未讀訊息`, `歡迎您 ${user}`)
+    });
+
+    </script>
+    }*@
 </body>
+
 
 </html>

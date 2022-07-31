@@ -1,22 +1,66 @@
-.profileBackground { /*  背景 */
-    background-color: #eee;
+hr {
+    height: 0.5px;
 }
-#namecard1{          /* 姓名卡 外框色 */
-    background-color: #fdfdb5 ;
-    border-radius: 20%;
-}
-#namecard2{         /* 姓名卡 被景色 */
-    background-color: #fdfdb5;
-    border-radius: 20%;
+.card {
+    box-shadow: 5px 10px 25px rgba(0, 0, 0, 0.05);
 }
 
-.Proitemsbtn{         /* 左方表單 按鈕色 */
-    border-radius: 5%;
-    background-color: #ffc9c2;   
+#namecard1 { /* 姓名卡 外框色 */
+    border-radius: 5px;
 }
-.ulitems li{        /* 左方表單 背景色*/
-    background-color: #dfffdc;
+    #namecard1 .avatarBx {
+        width:150px;
+        height:150px;
+        overflow:hidden;
+        border-radius:50%;
+    }
+        #namecard1 .avatarBx img {
+            width:100%;
+            height:100%;
+            object-fit:cover;
+        }
+    #namecard1 .btn {
+        background:var(--white);
+        font-size:18px;
+    }
+    #namecard1 .btn:hover {
+        background: var(--bg);
+    }
+        #namecard2 { /* 姓名卡 被景色 */
+            border-radius: 5px;
+        }
+
+.Proitemsbtn { /* 左方表單 按鈕色 */
+    border-radius: 5px;
 }
-.card-body{          /* 訊息背景色 */
-    background-color: #dcf1ff;
+
+
+#userDetails .card {
+    border-radius: 5px;
+}
+#profileMenu .card-body {
+    bottom: 0;
+}
+
+    #profileitems button {
+        border: 0;
+        border-radius: 5px;
+        background: transparent;
+    }
+
+#profileitems li {
+    cursor: pointer;
+}
+#profileitems li:hover {
+    background: var(--bg);
+}
+
+#profileMenu li span {
+    font-size: 18px;
+    letter-spacing: 0.1rem;
+    pointer-events:none;
+}
+#profileitems i {
+    font-size: 24px;
+    pointer-events: none;
 }

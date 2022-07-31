@@ -1,0 +1,152 @@
+﻿div#appPf {
+    position: relative;
+    top: -30px;
+}
+.bgBx {
+    position: absolute;
+    width: 100%;
+    height: 240px;
+    overflow: hidden;
+}
+
+    .bgBx img {
+        min-width: 100%;
+        object-fit: cover;
+    }
+
+.archiment {
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    position: absolute;
+    right: 40px;
+    top: 20px;
+    padding: 20px;
+    width: 140px;
+    height: 140px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.profileUser {
+    position: relative;
+    top: 144px;
+}
+
+div#sec1 {
+    padding: 20px;
+}
+
+.userPhotoBx {
+    position: relative;
+    top: 0px;
+    left: 0px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+    .userPhotoBx img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.userTitle {
+    position: relative;
+    width: auto;
+    top: 80px;
+    left: 20px;
+    white-space: nowrap;
+}
+
+.hrUp {
+    position: relative;
+    top: -10px;
+    height: 0.1px !important;
+}
+
+
+div#sec2 {
+    position: relative;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 50px;
+    background: var(--white);
+    box-shadow: 5px 10px 15px rgba(0, 0, 0, 0.02);
+}
+
+.solidBx {
+    position: absolute;
+    width: 140px;
+    height: 1.5px;
+    top: 29px;
+    background: var(--bg);
+}
+
+.info .part {
+    position: relative;
+    margin: 20px;
+    min-height: 70px;
+}
+
+.info .part-major {
+    position: relative;
+    bottom: 15px;
+}
+
+.info span {
+    position: relative;
+    margin-left: 7px;
+    font-size: 16px;
+}
+
+.info P {
+    position: relative;
+    margin-top: 5px;
+    margin-left: 10px;
+    font-weight: 300;
+}
+
+
+div#sec3 {
+    position: relative;
+    padding: 0;
+    margin-bottom: 70px;
+}
+
+div#whenNoCase {
+    position: relative;
+    width: 100%;
+    height: 360px;
+    border-radius: 5px;
+    background: var(--white);
+    box-shadow: 5px 10px 15px rgba(0, 0, 0, 0.02);
+}
+
+.noCaseBx {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    padding: 20px;
+}
+
+    .noCaseBx img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+.noCaseBgBx {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+}
+
+    .noCaseBgBx .asBgImg {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
