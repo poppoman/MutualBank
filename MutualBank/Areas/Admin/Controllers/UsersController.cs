@@ -11,20 +11,25 @@ using MutualBank.Models;
 namespace MutualBank.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Route("[controller]")]
     public class UsersController : Controller
     {
         private readonly MutualBankContext _context;
+        
 
         public UsersController(MutualBankContext context)
         {
             _context = context;
         }
 
+        [HttpGet]
+        [Route("Index")]
         // GET: Admin/Users
         public async Task<IActionResult> Index()
         {
             var query = _context.Users.Include(UserNav => UserNav.User1).Select(u => new UserLogin
             {
+                LoginId = u.User1.LoginId,
                 LoginName = u.User1.LoginName,
                 LoginPwd = u.User1.LoginPwd,
                 LoginEmail = u.User1.LoginEmail,
@@ -32,8 +37,7 @@ namespace MutualBank.Areas.Admin.Controllers
                 LoginAddDate = u.User1.LoginAddDate,
                 LoginActive = u.User1.LoginActive,
                 UserId = u.UserId,
-                UserLname = u.UserLname,
-                UserFname = u.UserFname,
+                UserFullname = u.UserFname+ u.UserLname,
                 UserNname = u.UserNname,
                 UserEmail = u.UserEmail,
                 UserSex = u.UserSex,
@@ -49,9 +53,6 @@ namespace MutualBank.Areas.Admin.Controllers
             });
 
             return View(query);
-            //return _context.Users != null ?
-            //            View(_context.Users) :
-            //            Problem("Entity set 'MutualBankContext.Users'  is null.");
 
         }
 
@@ -96,10 +97,11 @@ namespace MutualBank.Areas.Admin.Controllers
             return View(user);
         }
 
+        [HttpGet]
+        [Route("Edit/{id}")]
         // GET: Admin/Users/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit([FromRoute(Name ="id")]int? id)
         {
-            
             if (id == null || _context.Users == null)
             {
                 return NotFound();
@@ -109,17 +111,46 @@ namespace MutualBank.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            return View(user);
+            var LoginQuery = _context.Logins.Where(l => l.LoginId == user.UserId);
+            var result = _context.Users.Include(UserNav => UserNav.User1).Where(u => u.UserId == id).Select(u => new UserLogin
+            {
+                LoginId = u.User1.LoginId,
+                LoginName = u.User1.LoginName,
+                LoginPwd = u.User1.LoginPwd,
+                LoginEmail = u.User1.LoginEmail,
+                LoginLevel = u.User1.LoginLevel,
+                LoginAddDate = u.User1.LoginAddDate,
+                LoginActive = u.User1.LoginActive,
+                UserId = u.UserId,
+                UserLname = u.UserLname,
+                UserFname = u.UserFname,
+                UserNname = u.UserNname,
+                UserEmail = u.UserEmail,
+                UserSex = u.UserSex,
+                UserHphoto = u.UserHphoto,
+                UserBirthday = u.UserBirthday,
+                UserSkillId = u.UserSkillId,
+                UserAreaId = u.UserAreaId,
+                UserCV = u.UserCv,
+                UserResume = u.UserResume,
+                UserSchool = u.UserSchool,
+                UserFaculty = u.UserFaculty,
+                UserPoint = u.UserPoint,
+            });
+
+            return View(result);
         }
 
         // POST: Admin/Users/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
+        [Route("Edit/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,UserLname,UserFname,UserNname,UserSex,UserHphoto,UserEmail,UserBirthday,UserSkillId,UserAreaId,UserCv,UserResume,UserSchool,UserFaculty,UserPoint")] User user)
+        public async Task<IActionResult> Edit([FromRoute(Name ="id")]int id, [Bind("UserId,UserLname,UserFname,UserNname,UserSex,UserHphoto,UserEmail,UserBirthday,UserSkillId,UserAreaId,UserCv,UserResume,UserSchool,UserFaculty,UserPoint")] User user, [Bind("LoginId,LoginName,LoginPwd,LoginEmail,LoginLevel,LoginAddDate,LoginActive")] Login login)
         {
-            if (id != user.UserId)
+            if (id != user.UserId || id != login.LoginId)
             {
                 return NotFound();
             }
@@ -129,11 +160,12 @@ namespace MutualBank.Areas.Admin.Controllers
                 try
                 {
                     _context.Update(user);
+                    _context.Update(login);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(user.UserId))
+                    if (!UserExists(user.UserId) || !LoginExists(login.LoginId))
                     {
                         return NotFound();
                     }
@@ -143,8 +175,35 @@ namespace MutualBank.Areas.Admin.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
+               
+
             }
-            return View(user);
+            var query = _context.Users.Include(UserNav => UserNav.User1).Select(u => new UserLogin
+            {
+                LoginId = u.User1.LoginId,
+                LoginName = u.User1.LoginName,
+                LoginPwd = u.User1.LoginPwd,
+                LoginEmail = u.User1.LoginEmail,
+                LoginLevel = u.User1.LoginLevel,
+                LoginAddDate = u.User1.LoginAddDate,
+                LoginActive = u.User1.LoginActive,
+                UserId = u.UserId,
+                UserLname = u.UserLname,
+                UserFname = u.UserFname,
+                UserNname = u.UserNname,
+                UserEmail = u.UserEmail,
+                UserSex = u.UserSex,
+                UserHphoto = u.UserHphoto,
+                UserBirthday = u.UserBirthday,
+                UserSkillId = u.UserSkillId,
+                UserAreaId = u.UserAreaId,
+                UserCV = u.UserCv,
+                UserResume = u.UserResume,
+                UserSchool = u.UserSchool,
+                UserFaculty = u.UserFaculty,
+                UserPoint = u.UserPoint,
+            });
+            return View(query);
         }
 
         // GET: Admin/Users/Delete/5
@@ -187,6 +246,10 @@ namespace MutualBank.Areas.Admin.Controllers
         private bool UserExists(int id)
         {
           return (_context.Users?.Any(e => e.UserId == id)).GetValueOrDefault();
+        }
+        private bool LoginExists(int id)
+        {
+            return (_context.Logins?.Any(e => e.LoginId == id)).GetValueOrDefault();
         }
     }
 }

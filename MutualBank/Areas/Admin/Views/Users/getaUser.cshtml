@@ -1,0 +1,51 @@
+﻿
+@{
+    List<string> data = ViewBag.aUser;
+    var jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(data);
+}
+
+<script>
+    var user = @Html.Raw(jsonString);
+</script>
+
+<div class="container">
+    <table class="table-responsive table-light table-hover">
+        <thead>
+            <tr>
+                <td>姓氏</td>
+                <td>名字</td>
+                <td>暱稱</td>
+                <td>性別</td>
+                <td>生日</td>
+                <td>技能</td>
+                <td>居住地</td>
+                <td>履歷</td>
+                <td>工作經歷</td>
+                <td>學校</td>
+                <td>科系</td>
+                <td>擁有點數</td>               
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>姓氏</td>
+                <td>名字</td>
+                <td>暱稱</td>
+                <td>性別</td>
+                <td>生日</td>
+                <td>技能</td>
+                <td>居住地</td>
+                <td>履歷</td>
+                <td>工作經歷</td>
+                <td>學校</td>
+                <td>科系</td>
+                <td>擁有點數</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+
+</script>

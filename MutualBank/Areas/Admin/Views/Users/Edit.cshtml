@@ -1,4 +1,4 @@
-﻿@model MutualBank.Models.User;
+﻿@model MutualBank.Areas.Admin.Models.ViewModel.UserLogin;
 
 @{
     ViewData["Title"] = "Edit";
@@ -14,7 +14,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="UserId" />
             <div class="form-group">
-                <div>@Model.UserId</div>                
+                <div>@Model.UserId</div>
                 <span asp-validation-for="UserLname" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -58,9 +58,9 @@
                 <span asp-validation-for="UserAreaId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UserCv" class="control-label"></label>
-                <input asp-for="UserCv" class="form-control" />
-                <span asp-validation-for="UserCv" class="text-danger"></span>
+                <label asp-for="UserCV" class="control-label"></label>
+                <input asp-for="UserCV" class="form-control" />
+                <span asp-validation-for="UserCV" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="UserResume" class="control-label"></label>

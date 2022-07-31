@@ -9,8 +9,15 @@
     --tag: #67dd55;
     --bg: #ececec;
     --bg-saveyellow: #f39412;
+    --bg-lightyellow: #ffca5f;
+    --color-252: #696969;
+    --color-253: #828282;
+    --color-254: #BEBEBE;
+    --color-255: #dfdfdf;
+    --RoyalBlue: #3f448c;
 }
 
+/* Button 樣式 */
 .btn-simple {
     background-color: var(--white);
     border-radius: 1rem;
@@ -21,29 +28,73 @@
     border-radius: 1rem;
 }
 
-
 .btn-saveyellow {
-    color: var(--white);
-    background-color: var(--bg-saveyellow);
-    border-color: var(--bg-saveyellow);
+    color: var(--black);
+    background-color: var(--bg-lightyellow);
+    border-color: var(--bg-lightyellow);
     border-radius: 1rem;
 }
 .btn-saveyellow:hover {
     color: var(--white);
-    background-color: #6e6e6e;
-    border-color: #6e6e6e;
+    background-color: var(--color-253);
+    border-color: var(--color-253);
+    border-radius: 1rem;
+}
+
+.btn-lightyellow {
+    color: var(--black);
+    background-color: var(--bg-lightyellow);
+    border-color: var(--bg-lightyellow);
+    border-radius: 1rem;
+}
+.btn-lightyellow:hover {
+    color: var(--white);
+    background-color: var(--color-253);
+    border-color: var(--color-253);
+    border-radius: 1rem;
+}
+
+.btn-image {
+    color: var(--black);
+    background-color: var(--bg-lightyellow);
+    border-color: var(--bg-lightyellow);
+    border-radius: 1rem;
+}
+.btn-image:hover {
+    color: var(--black);
+    background-color: var(--color-255);
+    border-color: var(--color-254);
+    border: solid, 1px;
     border-radius: 1rem;
 }
 
 .btn-backtolist {
-    color: #fff;
-    background-color: #878787;
-    border-color: #878787;
+    color: var(--black);
+    background-color: var(--color-254);
+    border-color: var(--color-254);
+    border-radius: 1rem;
 }
 .btn-backtolist:hover{
-    color: #fff;
-    background-color: #6e6e6e;
-    border-color: #6e6e6e;
+    color: var(--white);
+    background-color: var(--color-253);
+    border-color: var(--color-253);
+    border-radius: 1rem;
+}
+
+/* Backgroudcolor 樣式 */
+.bg-saveyellow{
+    color: var(--white);
+    background-color: var(--bg-saveyellow);
+}
+
+.bg-lightyellow{
+    color: var(--black);
+    background-color: var(--bg-lightyellow);
+}
+
+.bg-royalblue{
+    color: var(--white);
+    background-color: var(--RoyalBlue);
 }
 
 .aspect-ratio-box {

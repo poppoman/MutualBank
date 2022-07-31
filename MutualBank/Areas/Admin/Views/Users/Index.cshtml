@@ -1,16 +1,13 @@
 ﻿@model IEnumerable<MutualBank.Areas.Admin.Models.ViewModel.UserLogin>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "使用者資料管理 - 首頁";
 }
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1>使用者資料管理 - 首頁</h1>
 </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <div class="table-responsive">
 <table class="table">
     <thead>
@@ -19,59 +16,23 @@
                 @Html.DisplayNameFor(model => model.LoginName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LoginPwd)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.LoginEmail)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.LoginLevel)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LoginAddDate)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.LoginActive)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UserLname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserFname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserNname)
+                @Html.DisplayNameFor(model => model.UserFullname)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.UserSex)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserHphoto)
-            </th>
+            </th>            
             <th>
                 @Html.DisplayNameFor(model => model.UserBirthday)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserSkillId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserAreaId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserCV)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserResume)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserSchool)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserFaculty)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserPoint)
-            </th>
+            </th>            
             <th></th>
         </tr>
     </thead>
@@ -82,63 +43,41 @@
                 @Html.DisplayFor(modelItem => item.LoginName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.LoginPwd)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.LoginEmail)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.LoginLevel)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.LoginAddDate)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.LoginActive)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.UserLname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserFname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserNname)
+                @Html.DisplayFor(modelItem => item.UserFullname)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.UserSex)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.UserHphoto)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.UserBirthday)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.UserSkillId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserAreaId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserCV)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserResume)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserSchool)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserFaculty)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserPoint)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.UserId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a>
+                <a class="btn btn-image align-baseline" asp-action="Edit" asp-route-id="@item.UserId">                    
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="24" width="24"
+                         class="feather feather-home align-middle"
+	                     viewBox="0 0 194.436 194.436" style="enable-background:new 0 0 194.436 194.436;" xml:space="preserve">
+                        <g>
+	                        <path d="M192.238,34.545L159.894,2.197C158.487,0.79,156.579,0,154.59,0c-1.989,0-3.897,0.79-5.303,2.196l-32.35,32.35
+		                        c-0.004,0.004-0.008,0.01-0.013,0.014L54.876,96.608c-1.351,1.352-2.135,3.166-2.193,5.076l-1.015,33.361
+		                        c-0.063,2.067,0.731,4.068,2.193,5.531c1.409,1.408,3.317,2.196,5.303,2.196c0.076,0,0.153-0.001,0.229-0.004l33.36-1.018
+		                        c1.909-0.058,3.724-0.842,5.075-2.192l94.41-94.408C195.167,42.223,195.167,37.474,192.238,34.545z M154.587,61.587L132.847,39.85
+		                        l21.743-21.743l21.738,21.741L154.587,61.587z M89.324,126.85l-22.421,0.685l0.682-22.422l54.655-54.656l21.741,21.738
+		                        L89.324,126.85z"/>
+	                        <path d="M132.189,117.092c-4.142,0-7.5,3.357-7.5,7.5v54.844H15.001V69.748h54.844c4.142,0,7.5-3.357,7.5-7.5s-3.358-7.5-7.5-7.5
+		                        H7.501c-4.142,0-7.5,3.357-7.5,7.5v124.687c0,4.143,3.358,7.5,7.5,7.5h124.687c4.142,0,7.5-3.357,7.5-7.5v-62.344
+		                        C139.689,120.449,136.331,117.092,132.189,117.092z"/>
+                        </g>
+                    </svg>
+                </a>
             </td>
         </tr>
 }
