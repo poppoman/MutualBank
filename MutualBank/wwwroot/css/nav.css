@@ -11,7 +11,7 @@
 }
 .fromNav {
     position: relative;
-    top: 70px;
+    top: 50px;
     margin-bottom:200px;
 }
 body {
@@ -100,7 +100,7 @@ a {
             margin-left: 50px;
             width: 70%;
             background: var(--bg);
-            border-radius: 8px;
+            border-radius: 5px;
         }
             .navBar .topL .search .selectList {
                 background: var(--bg);
@@ -155,7 +155,7 @@ a {
         .navBar .topR .barManu li {
             position: relative;
             border-radius: 5px;
-            margin-right: 15px;
+            margin-left:15px;
             padding: 10px;
             font-size: 16px;
             font-weight: 500;
@@ -173,20 +173,16 @@ a {
             margin: auto;
         }
 
-        .navBar .topR .barManu li:first-child span {
-            display: none;
+        .wrap-panel {
+            position: fixed;
+            width: 100vw;
+            min-height: 100vh;
+            margin: auto;
+            line-height: 1.3;
+            overflow: hidden;
+            z-index: 99;
+            pointer-events: none;
         }
-
-.wrap-panel {
-    position: fixed;
-    width: 100vw;
-    min-height: 100vh;
-    margin: auto;
-    line-height: 1.3;
-    overflow: hidden;
-    z-index: 99;
-    pointer-events: none;
-}
 
 .panelsToggle {
     transition: 0.5s;
@@ -205,99 +201,8 @@ a {
     opacity: 100;
 }
 
-/*.postLink.active {
-    opacity: 100;
-    top: 0;
-    pointer-events: auto;
-}
-.postLink {
-    position: fixed;
-    display: block;
-    opacity: 0;
-    padding: 15px;
-    border-radius: 5px;
-    text-align: center;
-    padding: 10px;
-    margin: auto;
-    top: -30px;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: 400px;
-    height: 240px;
-    background: var(--white);
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.03);
-    transition: 0.8s;
-    pointer-events: none;
-}
-
-    .postLink i {
-        position:absolute;
-        right:1.5rem;
-        top:1rem;
-        font-size:24px;
-    }
-    .postLink .title {
-        line-height: 2;
-    }
-
-    .postLink.active .title span {
-        top: 0;
-        opacity: 1;
-        font-size: 38px;
-        border-bottom: 6px solid var(--skill);
-    }
-
-    .postLink .title span {
-        position: relative;
-        top: -5px;
-        opacity: 0;
-        font-size: 30px;
-        transition: 0.7s;
-        border-bottom: 0 solid var(--black);
-    }
-
-    .postLink.active .title p {
-        top: 5px;
-        opacity: 1;
-    }
-
-    .postLink .title p {
-        position: relative;
-        top: -15px;
-        opacity: 0;
-        font-size: 18px;
-    }
-
-    .postLink .link {
-        position: relative;
-        margin: auto;
-        padding: 0 10px;
-        display: flex;
-        grid-template-columns: repeat(2,1fr);
-        justify-content: space-evenly;
-        align-items: center;
-        width: 100%;
-        height: 35%;
-    }
-        .postLink .link .butn {
-            position: relative;
-            font-size: 24px;
-            margin: 10px;
-            padding: 15px 12px;
-            border-radius: 5px;
-            font-weight: 500;
-            color: var(--black);
-            background: var(--bg);
-            transition: 0.4s;
-        }
-            .postLink .link .butn:hover {
-                background: var(--help);
-            }*/
-
-
 /* RWD */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     /*  將橫向導航列，轉為直向，並收到畫面外 */
     .navBar .topR .barManu {
         position: absolute;
@@ -342,14 +247,15 @@ a {
         top: 55px;
         margin: auto;
     }
-    /*切換文字與icon*/
-    .navBar .topR .barManu li:first-child i {
-        display: none;
-    }
 
-    .navBar .topR .barManu li:first-child span {
-        display: block;
+    .navBar .topL .search {
+        width: 90%;
     }
+        .navBar .topL .search i {
+            left: 92%;
+            top: 18%;
+            font-size: 22px;
+        }
 }
 
 @media(max-width:480px) {

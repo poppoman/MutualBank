@@ -1,5 +1,4 @@
-﻿//初始化Area資料
-var vmNav = new Vue({
+﻿var vmNav = new Vue({
     el: "#navBar",
     data: {
         areaCity: [],
@@ -7,7 +6,8 @@ var vmNav = new Vue({
         isDefaultShowing: true,
         isCitySelected: true,
         selectedCity: '',
-        selectedTown: ''
+        selectedTown: '',
+        userPoint: 0
     },
     methods: {
         getAreaCity: function () {
@@ -40,7 +40,7 @@ var vmNav = new Vue({
                 done(function (res) {
                     vmNav.isDefaultShowing = false;
                     vmNav.areaTown = res;
-                    //預設顯示第一筆資料
+                    //區域資料預設為顯示第一筆
                     if (typeof (e) == "object") {
                         vmNav.selectedTown = res[0];
                         vmNav.isCitySelected = false;
@@ -49,12 +49,22 @@ var vmNav = new Vue({
                 .fail(function (res) {
                     console.log(res);
                 });
-            return;
+        },
+        getUserpoint: function () {
+            fetch("/Nav/_LayoutApi/GetUserPoint")
+                .then(res =>
+                    res.json()
+                )
+                .then(data => {
+                    vmNav.userPoint = data;
+                })
+                .catch(x =>
+                    console.log(x));
         }
     },
     created: function () {
-        //初始化縣市
         this.getAreaCity();
+        this.getUserpoint();
     }
 });
 

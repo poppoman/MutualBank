@@ -29,23 +29,17 @@
                 <div class="tags fs-16">
                     <span class="btnSortCase active" data-order="skillid-0" v-on:click="getOrderModels">全部</span>
                     <span class="btnSortCase" v-for="item in tagList" :data-order="'skillid-'+item.SkillId" v-on:click="getOrderModels">{{item.SkillName}}</span>
-
-                    <div class="m-0 p-0">
-                        <span></span>
-                    </div>
                 </div>
-
-                <div class="sort">
+                <div class="order">
                     <span>排序：</span>
-                    <select class="sortSelect" id="orderModel" :data-order="'order-'+orderByOption" v-model="orderByOption" v-on:change="getOrderModels">
+                    <select class="orderSelect" id="orderModel" :data-order="'order-'+orderByOption" v-model="orderByOption" v-on:change="getOrderModels">
                         <option value="releaseDate" selected>發佈時間</option>
                         <option value="messageCount">留言數</option>
                         <option value="expireDate">期限</option>
                     </select>
-                    <div id="sorting" class="icon" data-order="order-desc" v-on:click="getOrderModels">
+                    <div id="sorting" class="icon" data-order="seq-desc" v-on:click="getOrderModels">
                         <i id="iconSort" class="fa-solid fa-arrow-down-short-wide"></i>
                     </div>
-
                 </div>
             </div>
 
@@ -73,7 +67,6 @@
                                 </div>
                                 <img v-bind:src="item.CasePhoto" class="card-img-top p-2" alt="image not found">
                             </div>
-
                             <div class="card-body">
                                 <h5 class="card-title fw-400" title="item.CaseTitle">{{item.CaseTitle}}</h5>
                                 <div><p class="card-text mt-1 fw-300">{{item.CaseIntroduction}}</p></div>
@@ -99,7 +92,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -157,12 +149,17 @@
                     var datasetOrder = e.target.dataset.order;
                     var keyword = e.target.dataset.order.split("-")[1];
                     if (datasetOrder.includes("type")) {
-                        this.sortByType = keyword == "Help" ? true : false;
-                        //add class
                         var mainBtn = document.querySelectorAll(".mainBtn");
-                        mainBtn.forEach(x => x.classList.remove("active"));
-                        e.target.classList.add("active");
-
+                        if (!e.target.classList.contains("active")) {
+                            this.sortByType = keyword == "Help" ? true : false;
+                            //add class
+                            mainBtn.forEach(x => x.classList.remove("active"));
+                            e.target.classList.add("active");
+                        }
+                        else {
+                            this.sortByType = "null";
+                            e.target.classList.remove("active");
+                        }
                     }
                     else if (datasetOrder.includes("skillid")) {
                         this.sortByTag = keyword;
@@ -171,27 +168,26 @@
                         btnSortCase.forEach(x => x.classList.remove("active"));
                         btnSortCase[keyword].classList.add("active");
                     }
-                    else if (datasetOrder.includes("order")) {
-                        var sorting = document.getElementById("sorting");
-                        var iconSort = document.getElementById("iconSort");
+                    else if (datasetOrder.includes("seq")) {
                         //toggle class
                         iconSort.classList.toggle('fa-arrow-down-short-wide');
                         iconSort.classList.toggle('fa-arrow-up-short-wide');
                         if (keyword == "desc") {
-                            sorting.dataset.order = "order--asc";
+                            sorting.dataset.order = "seq-asc";
                         }
                         else {
-                            sorting.dataset.order = "order-desc";
+                            sorting.dataset.order = "seq-desc";
                         }
                         this.isOrderByDesc = keyword == "desc" ? -1 : 1;
                     }
+
                     //1.sort by tag
                     var f1 = [];
-                    if (this.sortByTag == "0") {
-                        f1 = vmIndex.caseDataModel;
+                    if (this.sortByTag != "0") {
+                        f1 = vmIndex.caseDataModel.filter(x => x.CaseSkillId == vmIndex.sortByTag);
                     }
                     else {
-                        f1 = vmIndex.caseDataModel.filter(x => x.CaseSkillId == vmIndex.sortByTag);
+                        f1 = vmIndex.caseDataModel;
                     }
                     //2.sort by type
                     var f2 = [];

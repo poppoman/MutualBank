@@ -57,7 +57,7 @@
     }
 
 
-    #home .tagBar .sort {
+    #home .tagBar .order {
         position: relative;
         display: flex;
         justify-content: end;
@@ -65,34 +65,34 @@
         white-space: nowrap;
     }
 
-        #home .tagBar .sort span {
-            position: relative;
-            left: 20px;
-            color: var(--black);
-            margin-right: 30px;
-            font-size: 18px;
-            text-align: right;
-            font-weight: 400;
-        }
+    #home .tagBar .order span {
+        position: relative;
+        left: 20px;
+        color: var(--black);
+        margin-right: 30px;
+        font-size: 18px;
+        text-align: right;
+        font-weight: 400;
+    }
 
-        #home .tagBar .sort .icon {
-            cursor: pointer;
-        }
-        #home .tagBar .sort .icon i {
+    #home .tagBar .order .icon {
+        cursor: pointer;
+    }
+        #home .tagBar .order .icon i {
             position: relative;
             top: -2.5px;
             font-size: 20px;
-            pointer-events:none;
+            pointer-events: none;
             z-index: 5;
         }
 
-        #home .tagBar .sort .sortSelect {
-            position: relative;
-            right: 10px;
-            font-size: 16px;
-            text-align: left;
-            font-weight: 500;
-        }
+    #home .tagBar .order .orderSelect {
+        position: relative;
+        right: 10px;
+        font-size: 16px;
+        text-align: left;
+        font-weight: 500;
+    }
 
 #home select#orderModel {
     border: 0;

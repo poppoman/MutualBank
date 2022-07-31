@@ -1,16 +1,16 @@
-﻿ @if (User.Identity.IsAuthenticated)
+﻿@if (User.Identity.IsAuthenticated)
 {
-    <li><a><i class="fa-solid fa-diamond" style="font-size:12px;color:var(--help)"></i> 23</a></li>
-    <li><a asp-action="ProfilePageAjax" asp-controller="Home">個人頁面</a></li>
-    <li><a href="/Home/ProfilePageAjax?page=postcase"><i class="fa-solid fa-square-plus"></i> 新增貼文</a></li>
-    <li><a asp-controller="UserLogin" asp-action="Logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> 登出</a></li>
-    
+    <li><a><i class="fa-solid fa-diamond" style="font-size:12px;color:var(--help)"></i>&nbsp;{{userPoint}}</a></li>
+    <li><a href="/Home/ProfilePageAjax?page=postcase"><i class="fa-solid fa-square-plus"></i>&nbsp;新增貼文</a></li>
+    <li><a asp-action="ProfilePageAjax" asp-controller="Home"><i class="fa-solid fa-user"></i>&nbsp;帳戶</a></li>
+
+    <li><a asp-controller="UserLogin" asp-action="Logout"><i class="fa-solid fa-arrow-right-from-bracket"></i>&nbsp;登出</a></li>
+
 }
 else
 {
-  <li><a asp-controller="UserLogin" asp-action="Register"><i class="fa-solid fa-right-to-bracket"></i> 註冊</a></li>
-  <li><a asp-controller="UserLogin" asp-action="Login"><i class="fa-solid fa-right-to-bracket"></i> 登入</a></li>
+    <li><a asp-controller="UserLogin" asp-action="Register"><i class="fa-solid fa-right-to-bracket"></i>&nbsp;註冊</a></li>
+    <li><a asp-controller="UserLogin" asp-action="Login"><i class="fa-solid fa-right-to-bracket"></i>&nbsp;登入</a></li>
 }
 
 
-    

@@ -45,42 +45,58 @@ namespace MutualBank.Controllers
         public IActionResult Search(SearchKeyword Search)
         {
             ViewBag.Tags = _mutualBankContext.Skills.OrderBy(x => x.SkillId).ToList();
-            ViewBag.Area = $"{Search.AreaCity} {Search.AreaTown}";
             ViewBag.LogArea = Search.AreaCity;
             ViewBag.LogTown = Search.AreaTown;
             ViewBag.LogKeyword = Search.Keyword;
 
-            var Model = new List<CaseViewModel>{ };
-            var AreaId = -1;
-            if (Search.AreaTown == null | Search.AreaTown == "區域")
+            var AreaModel =new List<CaseViewModel> { };
+            if (Search.AreaCity == null)
             {
-                ViewBag.Area = $"{Search.AreaCity}";
-                AreaId = _mutualBankContext.Areas.Where(x => x.AreaCity == Search.AreaCity).Select(x => x.AreaId).FirstOrDefault();
+                //if user did not select city
+                AreaModel = _mutualBankContext.Cases.Include("CaseSkil").Where(x => x.CaseClosedDate >= DateTime.Now).Select(x => new CaseViewModel
+                {
+                    CaseId = x.CaseId,
+                    CaseNeedHelp = x.CaseNeedHelp,
+                    CaseReleaseDate = x.CaseReleaseDate,
+                    CaseExpireDate = x.CaseExpireDate,
+                    CaseTitle = x.CaseTitle,
+                    CaseIntroduction = x.CaseIntroduction,
+                    CasePhoto = Path.Combine(_filePath, x.CasePhoto),
+                    CaseSerDate = x.CaseSerDate,
+                    CaseSerArea = x.CaseSerArea,
+                    CaseSerAreaName = $"{x.CaseSerAreaNavigation.AreaCity}{x.CaseSerAreaNavigation.AreaTown}",
+                    CaseSkillId = x.CaseSkil.SkillId,
+                    CaseSkillName = x.CaseSkil.SkillName,
+                    CaseUserId = x.CaseUser.UserId,
+                    CaseUserName = x.CaseUser.UserNname,
+                    MessageCount = x.Messages.Count
+                }).ToList();
             }
             else
             {
-                ViewBag.Area = $"{Search.AreaCity} {Search.AreaTown}";
-                AreaId = _mutualBankContext.Areas.Where(x => x.AreaTown == Search.AreaTown).Select(x => x.AreaId).FirstOrDefault();
+                var AreaId = _mutualBankContext.Areas.Where(x => x.AreaTown == Search.AreaTown).Select(x => x.AreaId).FirstOrDefault();
+                AreaModel = _mutualBankContext.Cases.Include("CaseSkil")
+                    .Where(x => x.CaseSerArea == AreaId & x.CaseClosedDate >= DateTime.Now).Select(x => new CaseViewModel
+                {
+                    CaseId = x.CaseId,
+                    CaseNeedHelp = x.CaseNeedHelp,
+                    CaseReleaseDate = x.CaseReleaseDate,
+                    CaseExpireDate = x.CaseExpireDate,
+                    CaseTitle = x.CaseTitle,
+                    CaseIntroduction = x.CaseIntroduction,
+                    CasePhoto = Path.Combine(_filePath, x.CasePhoto),
+                    CaseSerDate = x.CaseSerDate,
+                    CaseSerArea = x.CaseSerArea,
+                    CaseSerAreaName = $"{x.CaseSerAreaNavigation.AreaCity}{x.CaseSerAreaNavigation.AreaTown}",
+                    CaseSkillId = x.CaseSkil.SkillId,
+                    CaseSkillName = x.CaseSkil.SkillName,
+                    CaseUserId = x.CaseUser.UserId,
+                    CaseUserName = x.CaseUser.UserNname,
+                    MessageCount = x.Messages.Count
+                }).ToList();
             }
-            var AreaModel = _mutualBankContext.Cases.Include("CaseSkil").Where(x => x.CaseSerArea == AreaId).Select(x => new CaseViewModel
-            {
-                CaseId = x.CaseId,
-                CaseNeedHelp = x.CaseNeedHelp,
-                CaseReleaseDate = x.CaseReleaseDate,
-                CaseExpireDate = x.CaseExpireDate,
-                CaseTitle = x.CaseTitle,
-                CaseIntroduction = x.CaseIntroduction,
-                CasePhoto = Path.Combine(_filePath, x.CasePhoto),
-                CaseSerDate = x.CaseSerDate,
-                CaseSerArea = x.CaseSerArea,
-                CaseSerAreaName = $"{x.CaseSerAreaNavigation.AreaCity}{x.CaseSerAreaNavigation.AreaTown}",
-                CaseSkillId = x.CaseSkil.SkillId,
-                CaseSkillName = x.CaseSkil.SkillName,
-                CaseUserId = x.CaseUser.UserId,
-                CaseUserName = x.CaseUser.UserNname,
 
-            }).ToList();
-
+            var Model = new List<CaseViewModel> { };
             if (Search.Keyword == null)
             {
                 Model = AreaModel;
@@ -97,30 +113,6 @@ namespace MutualBank.Controllers
 
             }
             return View("Index", Model);
-        }
-
-        public string GetAllCaseModel()
-        {
-            var Model = _mutualBankContext.Cases.Include("CaseSkil").Include("Messages").Include("CaseSerAreaNavigation")
-                .Select(x => new CaseViewModel
-                {
-                    CaseId = x.CaseId,
-                    CaseNeedHelp = x.CaseNeedHelp,
-                    CaseReleaseDate = x.CaseReleaseDate,
-                    CaseExpireDate = x.CaseExpireDate,
-                    CaseTitle = x.CaseTitle,
-                    CaseIntroduction = x.CaseIntroduction,
-                    CasePhoto = Path.Combine(_filePath, x.CasePhoto),
-                    CaseSerDate = x.CaseSerDate,
-                    CaseSerArea = x.CaseSerArea,
-                    CaseSkillId = x.CaseSkil.SkillId,
-                    CaseSkillName = x.CaseSkil.SkillName,
-                    CaseUserId = x.CaseUser.UserId,
-                    CaseUserName = x.CaseUser.UserNname,
-                    MessageCount = x.Messages.Count
-                }) ;
-            var ModelJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model);
-            return ModelJson;
         }
 
         public IActionResult Privacy()
