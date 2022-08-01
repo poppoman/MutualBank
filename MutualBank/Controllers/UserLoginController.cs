@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Mvc;
 using MutualBank.Models;
 using MutualBank.Models.ViewModels;
@@ -131,6 +132,7 @@ namespace MutualBank.Controllers
 
         }
         #endregion
+        #region 忘記密碼
         public IActionResult forgetPassword()
         {
             return View();
@@ -190,6 +192,21 @@ namespace MutualBank.Controllers
             // 驗證碼檢查成功，加入 Session
             HttpContext.Session.SetString("ResetPwdUserId", UserID);
             return View();
+        }
+        #endregion
+        public IActionResult FacebookLogin()
+        {
+            var auth = new AuthenticationProperties()
+            {
+                RedirectUri = "/UserLogin/FacebookResponse"
+            };
+            return Challenge(auth, FacebookDefaults.AuthenticationScheme);
+        }
+        public async Task<IActionResult> FacebookResponse()
+        {
+            var data = await HttpContext.AuthenticateAsync(FacebookDefaults.AuthenticationScheme);
+            
+            return RedirectToAction("Index", "Home");
         }
     }
 }

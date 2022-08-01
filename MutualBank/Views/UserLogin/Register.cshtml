@@ -1,72 +1,73 @@
-﻿<div class="offset-2 col-8">
-    <div id="homeContent" class="container cn mb-5">
-        <form id="form" action="/UserLogin/Register" method="post" onsubmit="return false" novalidate >
-            <div class="row pt-3">
-                <div class="col-12">
-                    <h4 class="postTitle mb-2">註冊帳戶</h4>
-                </div>
-                <div class="col-12 mb-3">
-                    <label for="LoginName" class="form-label">帳號</label>
-                    <input type="text" class="form-control " 
-                           id="LoginName" name="LoginName" v-model="Account" placeholder="" required>
-                    <div class="invalid-feedback">
-                        <div id="Accerrormsg"></div>
+﻿<div class="container">
+    <div class="offset-2 col-8">
+        <div id="homeContent" class="container cn mb-5">
+            <form id="form" action="/UserLogin/Register" method="post" onsubmit="return false" novalidate>
+                <div class="row pt-3">
+                    <div class="col-12">
+                        <h4 class="postTitle mb-2">註冊帳戶</h4>
                     </div>
-                    
-                </div>
+                    <div class="col-12 mb-3">
+                        <label for="LoginName" class="form-label">帳號</label>
+                        <input type="text" class="form-control "
+                               id="LoginName" name="LoginName" v-model="Account" placeholder="" required>
+                        <div class="invalid-feedback">
+                            <div id="Accerrormsg"></div>
+                        </div>
 
-                <div class="col-12 mb-3">
-                    <label for="LoginPwd" class="form-label">密碼</label>
-                    <input type="password" class="form-control" 
-                           id="LoginPwd" name="LoginPwd" v-model="Password" placeholder="" required>
-                    <div class="invalid-feedback">
-                        <div id="Pwderrormsg"></div>
                     </div>
-                    
-                </div>
-                <div class="col-12 mb-3">
-                    <label for="ConfirmPwd" class="form-label">確認密碼</label>
-                    <input type="password" class="form-control" 
-                           id="ConfirmPwd" name="ConfirmPwd" v-model="ConfirmPwd" placeholder="" required>
-                    <div class="invalid-feedback">
-                        <div id="Conferrormsg"></div>
+
+                    <div class="col-12 mb-3">
+                        <label for="LoginPwd" class="form-label">密碼</label>
+                        <input type="password" class="form-control"
+                               id="LoginPwd" name="LoginPwd" v-model="Password" placeholder="" required>
+                        <div class="invalid-feedback">
+                            <div id="Pwderrormsg"></div>
+                        </div>
+
                     </div>
-                    
-                </div>
-                <div class="col-12 mb-3">
-                    <label for="LoginEmail" class="form-label">註冊信箱</label>
-                    <input type="text" class="form-control" 
-                           id="LoginEmail" name="LoginEmail" v-model="Email" placeholder="例如XXX@mail.com" required>
-                    <div class="invalid-feedback">
-                        <div id="Emailerrormsg"></div>
+                    <div class="col-12 mb-3">
+                        <label for="ConfirmPwd" class="form-label">確認密碼</label>
+                        <input type="password" class="form-control"
+                               id="ConfirmPwd" name="ConfirmPwd" v-model="ConfirmPwd" placeholder="" required>
+                        <div class="invalid-feedback">
+                            <div id="Conferrormsg"></div>
+                        </div>
+
                     </div>
+                    <div class="col-12 mb-3">
+                        <label for="LoginEmail" class="form-label">註冊信箱</label>
+                        <input type="text" class="form-control"
+                               id="LoginEmail" name="LoginEmail" v-model="Email" placeholder="例如XXX@mail.com" required>
+                        <div class="invalid-feedback">
+                            <div id="Emailerrormsg"></div>
+                        </div>
+                    </div>
+                    <div class="col-12 text-center">
+                        <button class="postBtn w-25 mt-4" type="submit" v-on:click="sub">註冊</button>
+                    </div>
+
                 </div>
-                <div class="col-12 text-center">
-                    <button class="postBtn w-25 mt-4" type="submit" v-on:click="sub">註冊</button>
-                </div>
-                
-            </div>
-        </form>
-        <!-- Modal -->
-@*<div class="modal fade" id="success" tabindex="-1" aria-labelledby="successModalLabe" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
+            </form>
+            <!-- Modal -->
+            @*<div class="modal fade" id="success" tabindex="-1" aria-labelledby="successModalLabe" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="successModalLabe">註冊成功</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <h5 class="modal-title" id="successModalLabe">註冊成功</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                確認或{{count}}秒後導向登入畫面
+            確認或{{count}}秒後導向登入畫面
             </div>
             <div class="modal-footer">
-                <button type="button" class="postBtn">確定</button>
+            <button type="button" class="postBtn">確定</button>
             </div>
+            </div>
+            </div>
+            </div>*@
         </div>
     </div>
-</div>*@
-    </div>
 </div>
-
 
 
 @section Scripts {
@@ -111,13 +112,13 @@
                         .then(function(res) {
                             console.log("m = ", res);
                             if (res.accMessage != null) { document.getElementById("LoginName").setAttribute("class", "form-control is-invalid"); $('#Accerrormsg').text(res.accMessage); }
-                            else {document.getElementById("LoginName").setAttribute("class", "form-control is-valid") }
-                            if (res.pwdMessage != null) { document.getElementById("LoginPwd").setAttribute("class", "form-control is-invalid"); $('#Pwderrormsg').text(res.pwdMessage);}
-                            else {document.getElementById("LoginPwd").setAttribute("class", "form-control is-valid") }
-                            if (res.confMessage != null) { document.getElementById("ConfirmPwd").setAttribute("class", "form-control is-invalid"); $('#Conferrormsg').text(res.confMessage);}
-                            else {document.getElementById("ConfirmPwd").setAttribute("class", "form-control is-valid") }
-                            if (res.emailMessage != null) { document.getElementById("LoginEmail").setAttribute("class", "form-control is-invalid"); $('#Emailerrormsg').text(res.emailMessage);}
-                            else {document.getElementById("LoginEmail").setAttribute("class", "form-control is-valid") }
+                            else { document.getElementById("LoginName").setAttribute("class", "form-control is-valid") }
+                            if (res.pwdMessage != null) { document.getElementById("LoginPwd").setAttribute("class", "form-control is-invalid"); $('#Pwderrormsg').text(res.pwdMessage); }
+                            else { document.getElementById("LoginPwd").setAttribute("class", "form-control is-valid") }
+                            if (res.confMessage != null) { document.getElementById("ConfirmPwd").setAttribute("class", "form-control is-invalid"); $('#Conferrormsg').text(res.confMessage); }
+                            else { document.getElementById("ConfirmPwd").setAttribute("class", "form-control is-valid") }
+                            if (res.emailMessage != null) { document.getElementById("LoginEmail").setAttribute("class", "form-control is-invalid"); $('#Emailerrormsg').text(res.emailMessage); }
+                            else { document.getElementById("LoginEmail").setAttribute("class", "form-control is-valid") }
                             if (res.message == null) {
                                 $("#form").attr("onsubmit", "retrun true");
                                 $("#form").submit();
@@ -130,60 +131,58 @@
                             console.log("err = ", res);
                         });
                 },
-                countDown:function() {
+                countDown: function() {
                     console.log(this.count);
-                    if (this.count == 0) 
-                    {
+                    if (this.count == 0) {
                         location.href = "/UserLogin/Login";
                     }
-                    else 
-                    {
-                        this.count = this.count- 1;
+                    else {
+                        this.count = this.count - 1;
                         window.setTimeout(this.countDown, 1000);
                     }
-                    
+
                 },
-                success:function()
-                {
-                    swal("註冊成功!", "點擊確認或3秒後導向登入畫面", "success", {button: "確認", timer: 3000})
-                    .then((value) => {
-                    location.href = "/UserLogin/Login";});
+                success: function() {
+                    swal("註冊成功!", "點擊確認或3秒後導向登入畫面", "success", { button: "確認", timer: 3000 })
+                        .then((value) => {
+                            location.href = "/UserLogin/Login";
+                        });
                 }
             },
         });
     </script>
 }
-@section Styles
-{
+    @section Styles
+    {
     <style>
-        .cn {
-        position: relative;
-        border-radius: 5px;
-        padding: 10px 40px 30px;
-        background: var(--white);
-        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.03);
-    }
-    .postTitle {
-        font-weight: 700;
-    }
-    .postBtn {
-        border: 0px;
-        padding: 5px 10px;
-        border-radius: 5px;
-        font-size: 18px;
-        background: var(--help);
-        font-weight: 700;
-    }
-    .postBtn:hover {
-            background: var(--help1);
+            .cn {
+            position: relative;
+            border-radius: 5px;
+            padding: 10px 40px 30px;
+            background: var(--white);
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.03);
         }
-        h6 {
-        font-weight: 700;
-    }
-    h4::before {
-            content: '';
-            padding-right: 10px;
-            border-left: 5px solid var(--help);
+        .postTitle {
+            font-weight: 700;
         }
-</style>
+        .postBtn {
+            border: 0px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 18px;
+            background: var(--help);
+            font-weight: 700;
+        }
+        .postBtn:hover {
+                background: var(--help1);
+            }
+            h6 {
+            font-weight: 700;
+        }
+        h4::before {
+                content: '';
+                padding-right: 10px;
+                border-left: 5px solid var(--help);
+            }
+    </style>
 }
