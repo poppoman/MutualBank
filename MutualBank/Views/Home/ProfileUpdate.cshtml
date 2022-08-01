@@ -1,36 +1,43 @@
 ﻿@*會員資訊內容頁*@
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 <div>
-    <div class="row g-5" style="padding: 50px 100px 10px 200px;" id="userDetails">
+    <div class="container">
+    <div class="row g-5 " style="padding: 15px 100px 10px 200px;" id="userDetails">
         <div class="col-md-8 col-lg-8 px-3">
             <div class="d-flex align-items-center mb-2">
-                <h4 class="mb-0 d-inline-block">會員資訊</h4>
+                <h4 class="mb-0 d-inline-block">
+                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="25"  fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
+                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                        <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z"/>
+                      </svg>會員資訊</h4>
             </div>
             <form class="needs-validation" novalidate="">
                 <div class="row g-3">
                     <div class="col-sm-6">
                         <label for="lastName" class="form-label">姓</label>
-                        <input type="text" class="form-control" id="lastName" placeholder="" v-model="user.userLname" required="">
+                        <input type="text" class="form-control ; border border-primary" id="lastName" placeholder="" v-model="user.userLname" required="">
                         <div class="invalid-feedback">
                         </div>
                     </div>
 
                     <div class="col-sm-6">
                         <label for="firstName" class="form-label">名</label>
-                        <input type="text" class="form-control" id="firstName" placeholder="" v-model="user.userFname" required="">
+                        <input type="text" class="form-control ; border border-primary" id="firstName" placeholder="" v-model="user.userFname" required="">
                         <div class="invalid-feedback">
                         </div>
                     </div>
 
                     <div class="col-sm-6">
                         <label for="nickName" class="form-label">暱稱</label>
-                        <input type="text" class="form-control" id="nickName" placeholder="" v-model="user.userNname" required="">
+                        <input type="text" class="form-control ; border border-primary" id="nickName" placeholder="" v-model="user.userNname" required="">
                         <div class="invalid-feedback"></div>
                     </div>
 
                      <div class="col-md-6">
                         <label for="sex" class="form-label">性別</label>
-                        <select class="form-select" id="sex"  required="" v-model="user.userSex" >  
-                            <option value="1"></option>
+                        <select class="form-select ; border border-primary" id="sex"   required="" v-model="user.userSex" >  
+                            <option class="display" >請選擇</option>
                             <option>男</option>
                             <option>女</option>
                         </select>
@@ -41,7 +48,7 @@
 
                     <div class="col-md-6">
                         <label for="city" class="form-label">所在城市</label>
-                        <select class="form-control" id="city" required="" v-model="user.userAreaId">
+                        <select class="form-control ; border border-primary" id="city" required="" v-model="user.userAreaId">
                             <option value="1">台北市</option>  <!-- v-for="(item,index) in items" v-bind:value="index">{{item.CityName} -->
                             <option value="2">新北市</option>
                             <option value="3">桃園市</option>
@@ -53,7 +60,7 @@
 
                     <div class="col-md-6">
                         <label for="town" class="form-label">所在區域</label>
-                        <select class="form-control" id="town" required="" v-model="user.userTownId">
+                        <select class="form-control ; border border-primary" id="town" required="" v-model="user.userTownId">
                             <option value="1">信義區</option>
                             <option value="2">內湖區</option>
                             <option value="3">松山區</option>
@@ -65,7 +72,7 @@
             
                     <div class="col-sm-6">
                         <label for="birthday" class="form-label">生日(西元)</label>
-                        <input type="text" class="form-control" id="birthday" placeholder="" v-model="user.userBirthday" required="">
+                        <input type="text" class="form-control ; border border-primary" id="birthday" placeholder="" v-model="user.userBirthday" required="">
                         <div class="invalid-feedback">
                             Valid birthday is required.
                         </div>
@@ -73,7 +80,7 @@
 
                     <div class="col-sm-6">
                         <label for="UResume" class="form-label">個人簡介</label>
-                        <input type="text" class="form-control" id="UResume" placeholder="" v-model="user.userResume" required="">
+                        <input type="text" class="form-control ; border border-primary" id="UResume" placeholder="" v-model="user.userResume" required="">
                         <div class="invalid-feedback">
                             Valid birthday is required.
                         </div>
@@ -81,28 +88,31 @@
 
                     <div class="col-sm-12">
                         <label for="profileCv" class="form-label">個人簡介</label>
-                        <textarea type="text" class="form-control" id="profileCv" placeholder="" v-model="user.userCv" style="height: 200px;" required=""></textarea>
+                        <textarea type="text" class="form-control ; border border-primary" id="profileCv" placeholder="" v-model="user.userCv" style="height: 110px;" required=""></textarea>
                         <div class="invalid-feedback">
                             Valid birthday is required.
                         </div>
                     </div>
 
-                    <a href="/Home/ProfilePage1" class="btn btn-info rounded-3 btn-primary mx-3" style="font-size: 15px;" type="submit" v-on:click="UpdateUsers">
+                    <button class="btn btn-info rounded-3 btn-primary mx-3 " style="font-size: 15px; flex-shrink:1;" id="saveUpdate" type="button" v-on:click="UpdateUsers">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-save"
                              viewBox="0 0 16 16">
                             <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z" />
                         </svg>
                         儲存
-                    </a>
+                    </button>                   
                 </div>
+                     
             </form>
         </div>
-        
+        </div>
     </div>
 </div>
 
+
+
 <script>
-    var ve = new Vue({
+      var ve = new Vue({
       data:{
         user:[],
         apple: "123"
@@ -139,11 +149,16 @@
                         'Content-type': 'application/json'
                     })
                 })
-                    .then(resp => resp.json())
-                    .catch(error => console.log("error", error))
-                    .then(response => console.log("success", response));
-           
-            }
-        }
+                     .then(resp => resp.json())
+                     .then(response =>{
+                        swal("Good job!", "已修改完成!", "success")                        
+                        .then(function(){
+                            window.location.href = "/Home/ProfilePageAjax"
+                        })
+
+                     })
+                     .catch(error => console.log("error", error))                                        
+            }           
+        }       
     }).$mount('#userDetails')
 </script>
