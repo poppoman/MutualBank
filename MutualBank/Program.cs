@@ -14,14 +14,61 @@ builder.Services.AddDbContext<MutualBankContext>(options =>
     options.UseSqlServer(MutualBankconnectionString));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(opt =>
     {
-        opt.LoginPath = "/UserLogin/Login";    }).AddFacebook(opt =>
+        opt.LoginPath = "/UserLogin/Login";
+    }).AddFacebook(opt =>
     {
-        opt.AppId = "741689577101199";
-        opt.AppSecret = "e3cc6db3b7f507e363bc20ae80021735";
+        opt.AppId = builder.Configuration.GetSection("OAuth:FacebookAppId").Value;
+        opt.AppSecret = builder.Configuration.GetSection("OAuth:FacebookAppSecret").Value;
+        opt.Events = new OAuthEvents
+        {
+            OnTicketReceived = ctx =>
+                {
+                    var db = ctx.HttpContext.RequestServices.GetRequiredService<MutualBankContext>();
+                    var Name = ctx.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+                    var Email = ctx.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+                    var Fname = ctx.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName)?.Value;
+                    var Lname = ctx.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Surname)?.Value;
+                    var UID = ctx.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                    var user = db.Logins.FirstOrDefault(u => u.LoginName == Name && u.LoginEmail == Email);
+                    if (user == null)
+                    {
+                        var newuser = new Login
+                        {
+                            LoginName = Name,
+                            LoginPwd = Name,
+                            LoginEmail = Email
+                        };
+                        db.Logins.Add(newuser);
+                        db.SaveChanges();
+                        var user2 = db.Logins.Where(u => u.LoginName == Name).FirstOrDefault();
+                        var newuser2 = new MutualBank.Models.User
+                        {
+                            UserEmail = Email,
+                            UserNname = Name,
+                            UserId = user2.LoginId,
+                            UserFname = Fname,
+                            UserLname = Lname
+                        };
+                        db.Users.Add(newuser2);
+                        db.SaveChanges();
+                        user = user2;
+                    }
+                    var claims = new List<Claim>
+                    {
+                    new Claim(ClaimTypes.Name, Name),
+                    new Claim("UserId", user.LoginId.ToString())
+                    };
+                    ctx.Principal.Identities.First().AddClaims(claims);
+                    return Task.CompletedTask;
+                },
+        };
+    })
+    .AddGoogle(opt => {
+        opt.ClientId = builder.Configuration["OAuth:GoogleAppId"];
+        opt.ClientSecret = builder.Configuration["OAuth:GoogleAppSecret"];
         opt.Events = new OAuthEvents
         {
             OnTicketReceived = ctx =>
@@ -33,34 +80,34 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                 var Lname = ctx.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Surname)?.Value;
                 var UID = ctx.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
                 var user = db.Logins.FirstOrDefault(u => u.LoginName == Name && u.LoginEmail == Email);
-                if (user == null)
-                {
-                    var newuser = new Login
-                    {
-                        LoginName = Name,
-                        LoginPwd = Name,
-                        LoginEmail = Email
-                    };
-                    db.Logins.Add(newuser);
-                    db.SaveChanges();
-                    var user2 = db.Logins.Where(u => u.LoginName == Name).FirstOrDefault();
-                    var newuser2 = new MutualBank.Models.User
-                    {
-                        UserEmail = Email,
-                        UserNname = Name,
-                        UserId = user2.LoginId,
-                        UserFname = Fname,
-                        UserLname = Lname
-                    };
-                    db.Users.Add(newuser2);
-                    db.SaveChanges();
-                    user = user2;
-                }
+                //if (user == null)
+                //{
+                //    var newuser = new Login
+                //    {
+                //        LoginName = Name,
+                //        LoginPwd = Name,
+                //        LoginEmail = Email
+                //    };
+                //    db.Logins.Add(newuser);
+                //    db.SaveChanges();
+                //    var user2 = db.Logins.Where(u => u.LoginName == Name).FirstOrDefault();
+                //    var newuser2 = new MutualBank.Models.User
+                //    {
+                //        UserEmail = Email,
+                //        UserNname = Name,
+                //        UserId = user2.LoginId,
+                //        UserFname = Fname,
+                //        UserLname = Lname
+                //    };
+                //    db.Users.Add(newuser2);
+                //    db.SaveChanges();
+                //    user = user2;
+                //}
                 var claims = new List<Claim>
-                {
+                    {
                     new Claim(ClaimTypes.Name, Name),
-                    new Claim("UserId", user.LoginId.ToString())
-                };
+                    //new Claim("UserId", user.LoginId.ToString())
+                    };
                 ctx.Principal.Identities.First().AddClaims(claims);
                 return Task.CompletedTask;
             },

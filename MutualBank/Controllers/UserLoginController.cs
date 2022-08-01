@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
 using MutualBank.Models;
 using MutualBank.Models.ViewModels;
@@ -194,6 +195,7 @@ namespace MutualBank.Controllers
             return View();
         }
         #endregion
+        #region OAuth
         public IActionResult FacebookLogin()
         {
             var auth = new AuthenticationProperties()
@@ -208,5 +210,21 @@ namespace MutualBank.Controllers
             
             return RedirectToAction("Index", "Home");
         }
+        public IActionResult GoogleLogin()
+        {
+            var auth = new AuthenticationProperties()
+            {
+                RedirectUri = "/UserLogin/GoogleResponse"
+            };
+            return Challenge(auth, GoogleDefaults.AuthenticationScheme);
+        }
+        public async Task<IActionResult> GoogleResponse()
+        {
+            var data = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+
+            return RedirectToAction("Index", "Home");
+        }
+        #endregion
+
     }
 }
