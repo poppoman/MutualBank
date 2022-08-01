@@ -26,10 +26,15 @@ namespace MutualBank.Controllers
             var AreaTown = _mutualBankContext.Areas.Where(x => x.AreaCity == AreaCity).Select(x=>x.AreaTown).ToList();
             return AreaTown;
         }
-        public string GetUserPoint() 
+        public string GetUserPoint()
         {
-            var UserId=this.User.GetId();
-            return Convert.ToString(_mutualBankContext.Users.Where(x => x.UserId == UserId).Select(x => x.UserPoint).First());
-        } 
+            var points = "null";
+            if (User.Identity.IsAuthenticated)
+            {
+                var UserId = this.User.GetId();
+                points = Convert.ToString(_mutualBankContext.Users.Where(x => x.UserId == UserId).Select(x => x.UserPoint).First());
+            }
+            return points;
+        }
     }
 }

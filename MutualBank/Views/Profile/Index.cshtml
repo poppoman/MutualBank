@@ -9,14 +9,13 @@
 <div class="container-filud p-0" id="appPf">
     <!-- 全版底圖 -->
     <div class="bgBx">
-        <img src="https://images.unsplash.com/photo-1541450805268-4822a3a774ca?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80">
+        <img id="bgImg" src="">
     </div>
     <div class="container">
         <div class="archiment text-nowrap">
             <h5><i class="fa-solid fa-hand-point-up"></i>&nbsp;{{pointTitle}}</h5>
                 <p>持有點數<strong id="userPoint">&nbsp;{{pfModel.UserPoint}}</strong></p>
         </div>
-
     </div>
     <!-- all -->
     <div class="container profileUser">
@@ -176,7 +175,6 @@
 
 @section Scripts{
     <script>
-        //Vue
         var profileData = @Html.Raw(profileDataString);
         var caseData = @Html.Raw(ViewBag.Case);
         var vmPF = new Vue({
@@ -186,7 +184,6 @@
                 caseModel: caseData
             },
             filters: {
-
                 showDate: function(e) {
                     if (e.includes("T")) {
                         return e.split("T")[0];
@@ -215,9 +212,18 @@
                 }
             }
         });
-
-
-
+        //隨機背景圖
+        var bgImg = document.getElementById("bgImg");
+        fetch("/Img/Profile/ProfileBg.json")
+            .then((res) => { return res.json() })
+            .then((data) => {
+                var random = Math.floor(Math.random() * 11);
+                bgImg.setAttribute("src", data[random].ImgUrl);
+            })
+            .catch((err) => {
+                console.log(err);
+                bgImg.setAttribute("src", "https://images.unsplash.com/photo-1541450805268-4822a3a774ca?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80");
+            });
         //當沒有貼文時，顯示隨機內容
         function randomNoCaseText(max, textId) {
             var number = Math.floor(Math.random() * max);
@@ -238,7 +244,6 @@
                     break;
             }
         }
-
         function randomNoCaseImg(max, imgId) {
             var number = Math.floor(Math.random() * max);
             switch (number) {
@@ -259,10 +264,12 @@
             }
         }
 
-        var noCaseText = document.getElementById("noCaseText");
-        randomNoCaseText(4, noCaseText);
-        var noCaseImg = document.getElementById("noCaseImg");
-        randomNoCaseImg(4, noCaseImg);
+        if (vmPF.caseModel.length == 0) {
+            var noCaseText = document.getElementById("noCaseText");
+            randomNoCaseText(4, noCaseText);
+            var noCaseImg = document.getElementById("noCaseImg");
+            randomNoCaseImg(4, noCaseImg);
+        }
 
     </script>
 
