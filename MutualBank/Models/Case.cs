@@ -27,6 +27,8 @@ namespace MutualBank.Models
         public string? CasePhoto { get; set; }
         public string? CaseSerDate { get; set; }
         public int? CaseSerArea { get; set; }
+        public int CasePoint { get; set; }
+        public bool CaseIsExecute { get; set; }
 
         public virtual Area? CaseSerAreaNavigation { get; set; }
         public virtual Skill CaseSkil { get; set; } = null!;

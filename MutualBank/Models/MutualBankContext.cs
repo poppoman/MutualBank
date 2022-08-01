@@ -73,6 +73,8 @@ namespace MutualBank.Models
                     .HasMaxLength(200)
                     .HasColumnName("Case_Introduction");
 
+                entity.Property(e => e.CaseIsExecute).HasColumnName("Case_IsExecute");
+
                 entity.Property(e => e.CaseNeedHelp)
                     .HasColumnName("Case_NeedHelp")
                     .HasComment("0提供 1需要");
@@ -81,6 +83,8 @@ namespace MutualBank.Models
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("Case_Photo");
+
+                entity.Property(e => e.CasePoint).HasColumnName("Case_Point");
 
                 entity.Property(e => e.CaseReleaseDate)
                     .HasColumnType("datetime")
@@ -197,9 +201,7 @@ namespace MutualBank.Models
 
             modelBuilder.Entity<Point>(entity =>
             {
-                entity.Property(e => e.PointId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("Point_ID");
+                entity.Property(e => e.PointId).HasColumnName("Point_ID");
 
                 entity.Property(e => e.PointAddDate)
                     .HasColumnType("datetime")
@@ -207,6 +209,8 @@ namespace MutualBank.Models
                     .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.PointCaseId).HasColumnName("Point_CaseID");
+
+                entity.Property(e => e.PointIsDone).HasColumnName("Point_IsDone");
 
                 entity.Property(e => e.PointNeedHelp).HasColumnName("Point_NeedHelp");
 
