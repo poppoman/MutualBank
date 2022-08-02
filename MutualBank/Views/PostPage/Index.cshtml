@@ -80,11 +80,11 @@
 
                         <div class="textarea-box">
                             <textarea type="text" class="form-control" id="exampleFormControlTextarea1" placeholder="請輸入你的訊息"
-                                  maxlength="200" rows="3" name="content"></textarea>
-                            <div class="statics-text">0/200字</div>
+                                  maxlength="200" rows="3" name="content" v-model="value"></textarea>
+                            <div class="statics-text"><span>{{wordvalue}}</span>/200字</div>
                         </div>
                         <div class="col-auto">
-                            <input type="button" class="btn btn-primary"  id="commentbtn" disabled data-caseid="@Model.CaseId" value="留言" v-on:click="addcoment" />
+                            <input type="button" class="btn btn-primary" id="commentbtn" disabled data-caseid="@Model.CaseId" value="留言" v-on:click="addcoment" />
                         </div>
 
                     </div>
@@ -102,8 +102,10 @@
                         </div>
 
                         <div class="pad-content">
-                            <div>
+                            <div class="responser-name-frame">
                                 <div class="responser-name">{{item.msgUserName}}</div>
+                                <span class="comment-id" hidden>{{item.msgId}}</span>
+                                <span class="responser-name-id" hidden>{{item.msgUserId}}</span>
                             </div>
                             <div class="responser-context">
                                 <div class="text">
@@ -113,11 +115,11 @@
                             <div class="response-day-button">
                                 <i class="fa-regular fa-clock"></i>
                                 <span class="post-time">留言日期：{{item.msgAddDate|showDate}}</span>
-                                <span class="replay-btn">回覆</span>
+                                <input type="button" class="replay-btn" v-on:click="recommentre"  value="回覆" />
 
                             </div>
                             <!-- 回應小孩 -->
-                            <div class="comment-bother-frame" v-for="x in item.Mychildinhouse">
+                            <div class="comment-bother-frame" v-for="x in item.mychildinhouse">
                                 <div class="comment-bother">
                                     <a href="" class="comment-pic-frame">
                                         <div style="width: 24px; height: 24px;" class="avatar-frame">
@@ -141,33 +143,28 @@
                                         <div class="response-day-button">
                                             <i class="fa-regular fa-clock"></i>
                                             <span class="post-time">留言日期：{{x.childaddDate|showDate}}</span>
-                                            <span class="replay-btn">回覆</span>
+                                            <input type="button" class="replay-btn" v-on:click="recommentreboy" value="回覆"/>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- 回應訊息輸入 -->
-                            <!-- <div class="comment-bother-frame-input">
-                                <div class="comment-bother-input">
-                                    <a href="" class="comment-pic-frame">
-                                        <div style="width: 24px; height: 24px;" class="avatar-frame">
-                                            <img src="background.jpg" alt="無此圖片" class="comment-bother-pic">
+                                 </div>
+                                <!-- 回應訊息輸入 -->
+                                <form asp-action='AddreComment' asp-controller='PostPage' id="comment-bother-frame-input-top" class="comment-bother-frame-input-top" hidden>
+                                    <div class='comment-bother-frame-input'>
+                                        <span id='comment-id' name="parentid" hidden></span>
+                                        <span id='comment-touser-id' name="touserid" hidden></span>
+                                        <div class='comment-bother-input'>
+                                            <div class='textarea-box'>
+                                                <textarea type='text' class='form-control responeenter' id='exampleFormControlTextarea2' maxlength='200' rows='3' name="content" v-model="valuecd"></textarea>
+                                                <div class='statics-text'><span>{{wordvaluecd}}</span>/200字</div>
+                                            </div>
+                                            <div class='col-auto-input'>
+                                                <input type='button' class='btn btn-primary' data-bs-toggle='button' id='commentbtmre' value='留言' v-on:click="addrecomment" />
+                                            </div>
                                         </div>
-                                    </a>
-                                        <div class="textarea-box">
-                                            <textarea type="text" class="form-control" id="exampleFormControlTextarea1" placeholder="請輸入你的訊息"
-                                                maxlength="200" rows="3"></textarea>
-                                            <div class="statics-text">0/200字</div>
-                                        </div>
-                                        <div class="col-auto-input">
-                                            <button type="button" class="btn btn-primary" disabled data-bs-toggle="button" id=commentbtmre>留言</button>
-                                        </div>
-
                                     </div>
-                                </div> -->
-                            <!--  -->
+                                </form>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -179,11 +176,14 @@
 
     <script>
         var msgData = @Html.Raw(ViewBag.tmessages);
-        console.log(typeof(msgData))
         let PP = new Vue({
             el: "#postpage",
             data: {
                 msglist: msgData,
+                value:"",
+                valuecd:"",
+
+
             },
 
             filters: {
@@ -210,25 +210,88 @@
                         processData: false,
                         success: function(res) {
                             alert("新增成功");
-                            console.log(res)
-                            console.log(PP.msglist)
                             PP.msglist.push(res)
-
                             $("textarea:eq(0)").val("");
                             $("#commentbtn").attr("disabled", "true");
-                             var targetTop = $(".respone-mes-frame").last().offset().top;
+                            var targetTop = $(".respone-mes-frame").last().offset().top;
                             $(window).scrollTop(targetTop);
-                            
+
                         },
                         error: function(res) {
                             alert("新增失敗")
                         }
                     });
-                    
+                },
+                recommentre: function(e) {
+                    $(e.target).parents(".response-day-button").siblings("#comment-bother-frame-input-top").removeAttr("hidden")
+                    var tousername = $(e.target).parents(".response-day-button").siblings(".responser-name-frame").children(".responser-name").text()
+                    var touserid = $(e.target).parents(".response-day-button").siblings(".responser-name-frame").children(".responser-name-id").text()
+                    var commentid = $(e.target).parents(".response-day-button").siblings(".responser-name-frame").children(".comment-id").text()
 
-                }
-            }
 
+                    $(".responeenter").attr("placeholder", "回覆給：" + tousername)
+                    $("#comment-touser-id").text(touserid)
+                    $("#comment-id").text(commentid)
+
+                    //if ($(".textarea-box").length == 1 & b.length >= 1) {
+
+                    //    $(".form-control").attr("placeholder", "回覆給：" + tousername)
+                    //    $("#comment-touser-id").text(touserid)
+                    //    $("#comment-id").text(commentid)
+                    //};
+
+                },
+                recommentreboy: function(e) { 
+                  $(e.target).parents(".comment-bother-frame").siblings("#comment-bother-frame-input-top").removeAttr("hidden")
+                  var tousername = $(e.target).parents(".response-day-button").siblings(".responser-name-frame").children(".responser-name").text()
+                  var touserid = $(e.target).parents(".response-day-button").siblings(".responser-name-frame").children(".responser-name-id").text()
+                  var commentid = $(e.target).parents(".response-day-button").siblings(".responser-name-frame").children(".comment-id").text()
+
+                  $(".responeenter").attr("placeholder", "回覆給：" + tousername)
+                    $("#comment-touser-id").text(touserid)
+                    $("#comment-id").text(commentid)
+
+                },
+                addrecomment: function(e) {
+                    var id = $("#commentbtn").data("caseid");
+                    var textval = $(e.target).parents(".col-auto-input").siblings(".textarea-box").children(".responeenter").val()
+                    var formData = new FormData();
+                    formData.append("id", id);
+                    formData.append("content", textval);
+                    formData.append("parentid", $("#comment-id").text());
+                    formData.append("touserid", $("#comment-touser-id").text());
+                    var y = $("#comment-id").text(); 
+                    $.ajax({
+                        url: "/PostPage/AddreComment",
+                        type: "POST",
+                        data: formData,
+                        async: false,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function(res) {
+                            alert("新增成功");
+                            var msglistindex = PP.msglist.findIndex(x => x.msgId == y)
+                            PP.msglist[msglistindex].mychildinhouse.push(res)
+                            $(".comment-bother-frame-input-top").attr("hidden","hidden")
+                        },
+                        error: function(res) {
+                            alert("新增失敗");
+                        },
+                    });
+                },
+
+            },
+
+            computed: {
+                wordvalue: function() {   
+                    return this.value.length;
+                },
+                wordvaluecd: function() {   
+                    return this.valuecd.length;
+                },
+
+            },
 
         })
     </script>

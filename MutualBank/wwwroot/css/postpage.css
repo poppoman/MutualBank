@@ -283,6 +283,8 @@
     color: #f5aa38;
     margin-left: 10px;
     cursor: pointer;
+    border: 0;
+    background: transparent;
 }
 
 .reply-user {

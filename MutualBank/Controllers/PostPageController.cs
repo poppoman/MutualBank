@@ -29,6 +29,7 @@ namespace MutualBank.Controllers
             var messages = _mutualBankContext.Messages.Include("MsgCase").Include("MsgUser").
                     Where(c => c.MsgCaseId == id & c.MsgParentId == null).Select(x => new 
                     {
+                        msgId = x.MsgId,
                         msgCaseId = x.MsgCaseId,
                         msgAddDate = x.MsgAddDate,
                         msgContent = x.MsgContent,
@@ -148,43 +149,55 @@ namespace MutualBank.Controllers
                 MsgParentId = comment.MsgParentId,
                 MsgUserId = comment.MsgUserId,
                 MsgUserName = User.UserNname,
-                MsgtoUserName = Case.CaseUser.UserHphoto,
+                MsgtoUserName = Case.CaseUser.UserNname,
             };
 
             
             return Json(vm);
         }
 
-        [HttpGet]
-        public JsonResult GetComment(int id)
+        [HttpPost]
+        [Authorize]
+        public ActionResult AddreComment(int id, string content,int parentid,int touserid)
         {
-            var messages = _mutualBankContext.Messages.Include("MsgCase").Include("MsgUser").
-                   Where(c => c.MsgCaseId == id & c.MsgParentId == null).Select(p => new
-                   {
-                       MsgCaseId = p.MsgCaseId,
-                       MsgAddDate = p.MsgAddDate,
-                       MsgContent = p.MsgContent,
-                       MsgUserId = p.MsgUserId,
-                       MsgtoUserName = p.MsgToUser.UserNname, /*被留言者*/
-                       MsgUserName = p.MsgUser.UserNname,/*留言者*//*$"{x.MsgUser.UserFname}{x.MsgUser.UserLname}"*/
-                       MagUserPhoto = p.MsgUser.UserHphoto, /*留言者照片*/
-                       MsgParentId = p.MsgParentId,
-                       Mychildinhouse = _mutualBankContext.Messages.Include("MsgUser").Where(q => q.MsgParentId == p.MsgId & q.MsgParentId != null).Select(y => new
-                       {
-                           childname = y.MsgUser.UserNname,
-                           childtoUsername = y.MsgToUser.UserNname,
-                           childHphoto = y.MsgUser.UserHphoto,
-                           childtoUserHphoto = y.MsgToUser.UserHphoto,
-                           childcontent = y.MsgContent,
-                           childaddDate = y.MsgAddDate,
+            var USER = this.User.GetId();
+            var Case = _mutualBankContext.Cases.
+               Include("CaseSkil").Include("CaseSerAreaNavigation").
+               Include("CaseUser").FirstOrDefault(m => m.CaseId == id);
+            var User = _mutualBankContext.Users.Include("User1").Include("UserNavigation").Include("UserSkill").Where(x => x.UserId == USER).First();
+            var toUser =_mutualBankContext.Users.Include("User1").Include("UserNavigation").Include("UserSkill").Where(x => x.UserId == touserid).First();
 
-                       }).ToList()
+            var recomment = new Message()
+            {
+                MsgAddDate = DateTime.Now,
+                MsgContent = content,
+                MsgCaseId = Case.CaseId,
+                MsgUserId = USER,
+                MsgToUserId = touserid,
+                MsgParentId = parentid,
+                MsgIsRead = false,
+            };
 
-                   }).ToList();
+            _mutualBankContext.Add(recomment);
+            _mutualBankContext.SaveChangesAsync();
 
-            var res = Newtonsoft.Json.JsonConvert.SerializeObject(messages);
-            return Json(res);
+            msgnewVM vm = new msgnewVM()
+            {
+                childname = User.UserNname,
+                childtoUsername = toUser.UserNname,
+                childHphoto = User.UserHphoto,
+                childtoUserHphoto = toUser.UserHphoto,
+                childcontent = recomment.MsgContent,
+                childaddDate = recomment.MsgAddDate,
+            };
+
+
+            return Json(vm);
+
         }
+
+
+
     }
 }
 
