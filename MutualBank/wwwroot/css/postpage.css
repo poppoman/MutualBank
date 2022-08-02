@@ -55,14 +55,11 @@
     align-items: flex-start;
     flex-direction: row;
     justify-content: space-around;
-    height: 400px;
     padding-top: 20px;
     padding-bottom: 20px;
 }
 
 .author-pic {
-    width: 65%;
-    height: 100%;
     float: left;
     padding-left: 20px;
 }
@@ -105,7 +102,6 @@
     flex-direction: column;
     float: right;
     flex-shrink: 0;
-    margin-left: 30px;
     padding-left: 30px;
 }
 

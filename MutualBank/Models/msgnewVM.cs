@@ -18,6 +18,9 @@
         public DateTime childaddDate { get; set; }
         public string? childtoUsername { get; set; }
         public string? childtoUserHphoto { get; set; }
+        public int? childparentid { get; set; }
+        public int? chileuserid { get; set; }
+
 
 
 

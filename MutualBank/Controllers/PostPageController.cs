@@ -46,6 +46,8 @@ namespace MutualBank.Controllers
                             childtoUserHphoto = y.MsgToUser.UserHphoto,
                             childcontent = y.MsgContent,
                             childaddDate = y.MsgAddDate,
+                            childparentid = y.MsgParentId,
+                            chileuserid = y.MsgUserId,
 
                         }).ToList()
 
@@ -189,6 +191,9 @@ namespace MutualBank.Controllers
                 childtoUserHphoto = toUser.UserHphoto,
                 childcontent = recomment.MsgContent,
                 childaddDate = recomment.MsgAddDate,
+                childparentid = recomment.MsgParentId,
+                chileuserid = recomment.MsgUserId,
+
             };
 
 

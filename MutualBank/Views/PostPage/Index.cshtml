@@ -12,19 +12,19 @@
     <main id="postpage" class="container">
         <div class="postpage container-fluid" id="postpage">
             <div class="page-top">
-                <div class="page-title"> @Html.DisplayFor(Model=>Model.CaseTitle) </div>
+                <div class="page-title fs-2"> @Html.DisplayFor(Model=>Model.CaseTitle) </div>
                 <div calss="need">@Html.DisplayFor(Model=>Model.SkillName)</div>
             </div>
             <!-- 圖片與資訊 -->
-            <div class="page-botton">
+            <div class="page-botton row">
                 <!-- 圖片 -->
-                <div class="author-pic">
+                <div class="author-pic col-xs-1 col-md-5 col-xl-6">
                     <div class="pic-frame">
                         <img src="@Html.DisplayFor(Model=>Model.CasePhoto)" alt="無此圖片">
                     </div>
                 </div>
                 <!-- 資訊 -->
-                <div class="author">
+                <div class="author col-md-5 col-sm-10 col-xl-6">
                     <span class="author-pic-name">
                         <span class="authorpicture-frame">
                             <img src="@Html.DisplayFor(model=>model.UserPhoto)" alt="" onerror="this.src = 'https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="author-picture">
@@ -96,7 +96,7 @@
                         <div class="responer-pic">
                             <a href="">
                                 <div class="pad-avatar">
-                                    <img src="{{item.magUserPhoto}}" alt="" onerror="this.src='https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="respons-picture">
+                                    <img src="item.magUserPhoto" alt="" onerror="this.src='https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="respons-picture">
                                 </div>
                             </a>
                         </div>
@@ -115,7 +115,7 @@
                             <div class="response-day-button">
                                 <i class="fa-regular fa-clock"></i>
                                 <span class="post-time">留言日期：{{item.msgAddDate|showDate}}</span>
-                                <input type="button" class="replay-btn" v-on:click="recommentre"  value="回覆" />
+                                <input type="button" class="replay-btn" v-on:click="recommentre" value="回覆" />
 
                             </div>
                             <!-- 回應小孩 -->
@@ -123,17 +123,19 @@
                                 <div class="comment-bother">
                                     <a href="" class="comment-pic-frame">
                                         <div style="width: 24px; height: 24px;" class="avatar-frame">
-                                            <img src="{{x.childtoUserHphoto}}" alt="" onerror="this.src='https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="comment-bother-pic">
+                                            <img src="x.childtoUserHphoto" alt="" onerror="this.src='https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="comment-bother-pic">
                                         </div>
                                     </a>
                                     <div class="comment-brother-re">
                                         <div class="responser-name-frame">
                                             <a class="responser-name" href="">{{x.childname}}</a>
+                                            <span class="comment-id-ch" hidden>{{x.childparentid}}</span>
+                                            <span class="responser-name-id-ch" hidden>{{x.chileuserid}}</span>
                                             <div class="reply-user">
                                                 <span>回覆給：<span>{{x.childtoUsername}}</span></span>
                                                 <div class="comment-bother">
                                                     <a href="">
-                                                        <img src="{{x.childHphoto}}" alt="" onerror="this.src='https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="comment-bother-pic">
+                                                        <img src="x.childHphoto" alt="" onerror="this.src='https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="comment-bother-pic">
                                                     </a>
                                                 </div>
                                             </div>
@@ -143,27 +145,27 @@
                                         <div class="response-day-button">
                                             <i class="fa-regular fa-clock"></i>
                                             <span class="post-time">留言日期：{{x.childaddDate|showDate}}</span>
-                                            <input type="button" class="replay-btn" v-on:click="recommentreboy" value="回覆"/>
+                                            <input type="button" class="replay-btn" v-on:click="recommentreboy" value="回覆" />
                                         </div>
                                     </div>
                                 </div>
-                                 </div>
-                                <!-- 回應訊息輸入 -->
-                                <form asp-action='AddreComment' asp-controller='PostPage' id="comment-bother-frame-input-top" class="comment-bother-frame-input-top" hidden>
-                                    <div class='comment-bother-frame-input'>
-                                        <span id='comment-id' name="parentid" hidden></span>
-                                        <span id='comment-touser-id' name="touserid" hidden></span>
-                                        <div class='comment-bother-input'>
-                                            <div class='textarea-box'>
-                                                <textarea type='text' class='form-control responeenter' id='exampleFormControlTextarea2' maxlength='200' rows='3' name="content" v-model="valuecd"></textarea>
-                                                <div class='statics-text'><span>{{wordvaluecd}}</span>/200字</div>
-                                            </div>
-                                            <div class='col-auto-input'>
-                                                <input type='button' class='btn btn-primary' data-bs-toggle='button' id='commentbtmre' value='留言' v-on:click="addrecomment" />
-                                            </div>
+                            </div>
+                            <!-- 回應訊息輸入 -->
+                            <form asp-action='AddreComment' asp-controller='PostPage' id="comment-bother-frame-input-top" class="comment-bother-frame-input-top" hidden>
+                                <div class='comment-bother-frame-input'>
+                                    <span id='comment-id-resp' name="parentid" hidden></span>
+                                    <span id='comment-touser-id' name="touserid" hidden></span>
+                                    <div class='comment-bother-input'>
+                                        <div class='textarea-box'>
+                                            <textarea type='text' class='form-control responeenter' id='exampleFormControlTextarea2' maxlength='200' rows='3' name="content" v-model="valuecd"></textarea>
+                                            <div class='statics-text'><span>{{wordvaluecd}}</span>/200字</div>
+                                        </div>
+                                        <div class='col-auto-input'>
+                                            <input type='button' class='btn btn-primary respbtn' data-bs-toggle='button' id='commentbtmre' value='留言' v-on:click="addrecomment" disabled/>
                                         </div>
                                     </div>
-                                </form>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -180,8 +182,8 @@
             el: "#postpage",
             data: {
                 msglist: msgData,
-                value:"",
-                valuecd:"",
+                value: "",
+                valuecd: "",
 
 
             },
@@ -223,33 +225,41 @@
                     });
                 },
                 recommentre: function(e) {
-                    $(e.target).parents(".response-day-button").siblings("#comment-bother-frame-input-top").removeAttr("hidden")
+                    $("textarea").val("");
+                    $(".comment-bother-frame-input-top").attr("hidden", "hidden")
+                    var y = $("[name=content]").length
+                    var z = $("[name=content]:hidden").length
                     var tousername = $(e.target).parents(".response-day-button").siblings(".responser-name-frame").children(".responser-name").text()
                     var touserid = $(e.target).parents(".response-day-button").siblings(".responser-name-frame").children(".responser-name-id").text()
                     var commentid = $(e.target).parents(".response-day-button").siblings(".responser-name-frame").children(".comment-id").text()
+                    $(".responeenter").attr("placeholder", "回覆給：" + tousername)
+                    $("#comment-touser-id").text(touserid)
+                    $("#comment-id-resp").text(commentid)
 
+
+                    if (z + 1 == y) {
+                        $(e.target).parents(".response-day-button").siblings("#comment-bother-frame-input-top").removeAttr("hidden")
+                    };
+
+                },
+                recommentreboy: function(e) {
+                    $("textarea").val("");
+                    $(".comment-bother-frame-input-top").attr("hidden", "hidden")
+                    
+                    var tousername = $(e.target).parents(".response-day-button").siblings(".responser-name-frame").children(".responser-name").text()
+                    var touserid = $(e.target).parents(".response-day-button").siblings(".responser-name-frame").children(".responser-name-id-ch").text()
+                    var commentid = $(e.target).parents(".response-day-button").siblings(".responser-name-frame").children(".comment-id-ch").text()
 
                     $(".responeenter").attr("placeholder", "回覆給：" + tousername)
                     $("#comment-touser-id").text(touserid)
-                    $("#comment-id").text(commentid)
+                    $("#comment-id-resp").text(commentid)
 
-                    //if ($(".textarea-box").length == 1 & b.length >= 1) {
 
-                    //    $(".form-control").attr("placeholder", "回覆給：" + tousername)
-                    //    $("#comment-touser-id").text(touserid)
-                    //    $("#comment-id").text(commentid)
-                    //};
-
-                },
-                recommentreboy: function(e) { 
-                  $(e.target).parents(".comment-bother-frame").siblings("#comment-bother-frame-input-top").removeAttr("hidden")
-                  var tousername = $(e.target).parents(".response-day-button").siblings(".responser-name-frame").children(".responser-name").text()
-                  var touserid = $(e.target).parents(".response-day-button").siblings(".responser-name-frame").children(".responser-name-id").text()
-                  var commentid = $(e.target).parents(".response-day-button").siblings(".responser-name-frame").children(".comment-id").text()
-
-                  $(".responeenter").attr("placeholder", "回覆給：" + tousername)
-                    $("#comment-touser-id").text(touserid)
-                    $("#comment-id").text(commentid)
+                    var y = $("[name=content]").length
+                    var z = $("[name=content]:hidden").length
+                    if (z + 1 == y) {
+                        $(e.target).parents(".comment-bother-frame").siblings("#comment-bother-frame-input-top").removeAttr("hidden")
+                    }
 
                 },
                 addrecomment: function(e) {
@@ -258,9 +268,9 @@
                     var formData = new FormData();
                     formData.append("id", id);
                     formData.append("content", textval);
-                    formData.append("parentid", $("#comment-id").text());
+                    formData.append("parentid", $("#comment-id-resp").text());
                     formData.append("touserid", $("#comment-touser-id").text());
-                    var y = $("#comment-id").text(); 
+                    var y = $("#comment-id-resp").text();
                     $.ajax({
                         url: "/PostPage/AddreComment",
                         type: "POST",
@@ -273,7 +283,8 @@
                             alert("新增成功");
                             var msglistindex = PP.msglist.findIndex(x => x.msgId == y)
                             PP.msglist[msglistindex].mychildinhouse.push(res)
-                            $(".comment-bother-frame-input-top").attr("hidden","hidden")
+                            $(".comment-bother-frame-input-top").attr("hidden", "hidden")
+                            $("textarea").val("");
                         },
                         error: function(res) {
                             alert("新增失敗");
@@ -284,10 +295,10 @@
             },
 
             computed: {
-                wordvalue: function() {   
+                wordvalue: function() {
                     return this.value.length;
                 },
-                wordvaluecd: function() {   
+                wordvaluecd: function() {
                     return this.valuecd.length;
                 },
 
