@@ -1,0 +1,42 @@
+﻿.modal-backdrop.fade.show.active {
+    z-index: 1056;
+}
+div#confirmModal {
+    z-index: 1057;
+}
+.selectList {
+    background: white;
+    cursor: pointer;
+}
+
+.userItem {
+    padding: 10px 10px 10px 50px;
+}
+
+    .userItem:hover {
+        background: #f5f5f5;
+    }
+    .userItem.active {
+        background: var(--bg);
+    }
+
+.userPhotoBx {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+    .userPhotoBx img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.inputPoint {
+    position: relative;
+    border-radius: 20px;
+    border: 0;
+    background: var(--bg);
+    padding: 10px;
+}
