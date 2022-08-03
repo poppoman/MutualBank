@@ -20,26 +20,26 @@
     <div id="vmEle" class="col-4 col-sm-8 col-md-6 col-lg-4">
         <form id="Userpost" action="post" enctype="multipart/form-data">
             <div class="text-danger"></div>
-            <input type="hidden" id="userId" name="userId" v-model="changedUserData.UserId"/>
+            <input type="hidden" id="userId" name="userId" v-model="changedUserData.userId"/>
             @*啟用編輯的區域*@
             <div id="editSec">
                 <div class="form-group">
                     <label for="userLname" class="form-label">姓氏</label>
-                    <input type="text" id="userLname" name="userLname" v-model="changedUserData.UserLname" class="form-control rounded-pill ps-3" />
+                    <input type="text" id="userLname" name="userLname" v-model="changedUserData.userLname" class="form-control rounded-pill ps-3" />
                     <div class="valid-feedback">
                       OK
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="userFname" class="form-label">名字</label>
-                    <input type="text" id="userFname" name="userFname" v-model="changedUserData.UserFname" class="form-control rounded-pill ps-3" />
+                    <input type="text" id="userFname" name="userFname" v-model="changedUserData.userFname" class="form-control rounded-pill ps-3" />
                     <div class="valid-feedback">
                       OK
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="userNname" class="form-label">暱稱</label>
-                    <input type="text" id="userNname" name="userNname" v-model="changedUserData.UserNname" class="form-control rounded-pill ps-3" />
+                    <input type="text" id="userNname" name="userNname" v-model="changedUserData.userNname" class="form-control rounded-pill ps-3" />
                     <div class="valid-feedback">
                       OK
                     </div>
@@ -56,62 +56,63 @@
                 <input type="hidden" id="validationHphoto" />
                 <div class="form-group">
                     <label for="userEmail" class="form-label">電子郵件</label>
-                    <input type="email" id="userEmail" name="userEmail" v-model="changedUserData.UserEmail" class="form-control rounded-pill ps-3" />
+                    <input type="email" id="userEmail" name="userEmail" v-model="changedUserData.userEmail" class="form-control rounded-pill ps-3" />
                     <div class="invalid-feedback">
                       不是可用的電子郵件格式
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="userBirthday" class="form-label">出生日期</label>
-                    <input type="datetime-local" id="userBirthday" name="userBirthday" v-model="changedUserData.UserBirthday" class="form-control rounded-pill ps-3" />
+                    <input type="datetime-local" id="userBirthday" name="userBirthday" v-model="changedUserData.userBirthday" class="form-control rounded-pill ps-3" />
                     <div class="valid-feedback">
                       OK
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="userSkillId" class="form-label">技能</label>
-                    <input type="number" id="userSkillId" name="userSkillId" v-model="changedUserData.UserSkillId" class="form-control rounded-pill ps-3" />
+                    <input type="number" id="userSkillId" name="userSkillId" v-model="changedUserData.userSkillId" class="form-control rounded-pill ps-3" />
                     <div class="valid-feedback">
                       OK
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="userAreaId" class="form-label">居住區域</label>
-                    <input type="number" id="userAreaId" name="userAreaId" v-model="changedUserData.UserAreaId" class="form-control rounded-pill ps-3" />
+                    <input type="number" id="userAreaId" name="userAreaId" v-model="changedUserData.userAreaId" class="form-control rounded-pill ps-3" />
                     <div class="valid-feedback">
                       OK
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="userCv" class="form-label pe-3">簡歷</label>
-                    <textarea maxlength="200" id="userCv" name="userCv" form="Userpost" class="form-control rounded-10" v-model="changedUserData.UserCv"></textarea>
+                    <textarea maxlength="200" id="userCv" name="userCv" form="Userpost" class="form-control rounded-10" v-model="changedUserData.userCv"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="userResume" class="form-label pe-3">履歷</label>
-                    <textarea maxlength="200" id="userResume" name="userResume" form="Userpost" class="form-control rounded-10" v-model="changedUserData.UserResume"></textarea>
+                    <textarea maxlength="200" id="userResume" name="userResume" form="Userpost" class="form-control rounded-10" v-model="changedUserData.userResume"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="userSchool" class="form-label">學校</label>
-                    <input type="text" id="userSchool" name="userSchool" class="form-control rounded-pill ps-3" v-model="changedUserData.UserSchool"/>
+                    <input type="text" id="userSchool" name="userSchool" class="form-control rounded-pill ps-3" v-model="changedUserData.userSchool"/>
                     <div class="valid-feedback">
                       OK
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="userFaculty" class="form-label">科系</label>
-                    <input type="text" id="userFaculty" name="userFaculty"  class="form-control rounded-pill ps-3" v-model="changedUserData.UserFaculty" />
+                    <input type="text" id="userFaculty" name="userFaculty"  class="form-control rounded-pill ps-3" v-model="changedUserData.userFaculty" />
                     <div class="valid-feedback">
                       OK
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="userPoint" class="form-label">擁有點數</label>
-                    <input type="number" id="userPoint" name="userPoint" class="form-control rounded-pill ps-3" v-model="changedUserData.UserPoint" />
+                    <input type="number" id="userPoint" name="userPoint" class="form-control rounded-pill ps-3" v-model="changedUserData.userPoint" />
                     <div class="valid-feedback">
                       OK
                     </div>
                 </div>
             </div>
+            @*按鈕列*@
             <div class="pt-3">
                 <button type="button" class="btn btn-backtolist">重設</button>
                 <input type="reset" value="reset"/>
@@ -124,19 +125,16 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'
-    integrity='sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=='
-    crossorigin='anonymous'></script>
+
 <script>
 var user = @Html.Raw(jsonString);
 var userId = @id;
-
 var vm = new Vue({
     el: "#vmEle",
     data: {
         userData: user,
         changedUserData: user,
-        selectedSex: user.UserSex,
+        selectedSex: user.userSex,
         selectList: [
             { bool: null, text: "未設定" },
             { bool: false, text: "女" },
@@ -146,13 +144,14 @@ var vm = new Vue({
     methods: {
         formSubmit: function(e) {
             e.preventDefault();
-            var postData = $('#Userpost').serialize();            
+            var postData = $('#Userpost').serializeObject()
             $.ajax({
                 url: `/api/ApiUser/updateaUser2/${userId}`,
                 data: postData,
                 type: 'POST',
-                dataType: 'json'
+                dataType: "json"
             }).done(function(json) {
+                console.log("成功");
                 console.log(json);
             }).fail(function(xhr, status) {
                 console.log('出現錯誤，無法完成!');
@@ -176,12 +175,32 @@ var vm = new Vue({
 });
 </script>
 
+
+@*切換模式-按鈕-事件*@
 @section Scripts{
     <script>
         //參數宣告
         var inp = $('#editSec input');
         var sp = $('#editText');
         var bool = true;
+        var changedUser = vm.changedUserData;
+
+        //方法宣告
+        $.fn.serializeObject = function() {
+            var o = {};
+            var a = this.serializeArray();
+            $.each(a, function() {
+                if (o[this.name]) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
 
         //input 初始化
         inp.prop('readonly', 'true');
