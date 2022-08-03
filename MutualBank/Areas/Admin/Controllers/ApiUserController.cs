@@ -106,18 +106,16 @@ namespace MutualBank.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [Route("updateaUser/{Id}")]
+        [Route("updateaUser/rawdata/{Id}")]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public IActionResult updateUser([FromRoute(Name ="Id")]int userId,[FromBody]UserApiModel jsonUser)
+        public IActionResult updateUserRawdata([FromRoute(Name ="Id")]int userId,[FromBody]UserApiModel jsonUser)
         {
             var userModel = _context.Users.Where(u => u.UserId == userId).FirstOrDefault();
-
             if (!UserExists(userId) || userModel == null)
             {
                 return NotFound();
             }
-            ;
             try
             {
                 _context.Users.Update(CorrespondTheValue(userModel, jsonUser));
@@ -130,11 +128,11 @@ namespace MutualBank.Areas.Admin.Controllers
             }
         }
 
-        //物件進來，POST 方式，根據表單 name
+        //json 物件進來，POST 方式，根據表單name欄位 serialize 成 json (string)
         [HttpPost]
-        [Route("updateaUser2/{Id}")]
+        [Route("updateaUser/{Id}")]
         [Produces("application/json")]
-        public IActionResult updateUser2([FromRoute(Name = "Id")] int userId, [FromForm]UserApiModel jsonUser)
+        public IActionResult updateUser([FromRoute(Name = "Id")] int userId, [FromForm]UserApiModel jsonUser)
         {
             var userModel = _context.Users.Where(u => u.UserId == userId).FirstOrDefault();
             if (!UserExists(userId) || userModel == null)
