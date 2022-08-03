@@ -20,15 +20,15 @@ namespace MutualBank.Controllers
             return View();
         }
         public IActionResult GetPostCase()
-        {   
+        {
             return PartialView("PostCase");
         }
         public IActionResult GetCaseList()
         {
             return PartialView("CaseList");
         }
-        
-            public IActionResult GetExecuteCase()
+
+        public IActionResult GetExecuteCase()
         {
             return PartialView("ExecuteCase");
         }
@@ -37,11 +37,11 @@ namespace MutualBank.Controllers
             var result = _mutualBankContext.Skills.ToList();
             return result;
         }
-        
+
         [HttpGet]
         public string GetUserCaseModel()
         {
-            var UserId = this.User.GetId();
+            var UserId = User.GetId();
             var PhotoFileFolder = Path.Combine("/Img", "CasePhoto");
             var Model = _mutualBankContext.Cases.Include("CaseSkil").Include("Messages")
                 .Where(x => x.CaseUserId == UserId).Select(x => new CaseViewModel
@@ -50,7 +50,7 @@ namespace MutualBank.Controllers
                     CaseNeedHelp = x.CaseNeedHelp,
                     CaseReleaseDate = x.CaseReleaseDate,
                     CaseExpireDate = x.CaseExpireDate,
-                    IsCaseExpire=DateTime.Now >= x.CaseExpireDate?true:false,
+                    IsCaseExpire = DateTime.Now >= x.CaseExpireDate ? true : false,
                     CaseTitle = x.CaseTitle,
                     CaseIntroduction = x.CaseIntroduction,
                     CasePhoto = Path.Combine(PhotoFileFolder, x.CasePhoto),
@@ -71,7 +71,7 @@ namespace MutualBank.Controllers
         [HttpPost]
         public void AddCase(Case NewCase)
         {
-            NewCase.CaseUserId = this.User.GetId();
+            NewCase.CaseUserId = User.GetId();
             NewCase.CaseTitle = NewCase.CaseTitle.Trim();
             NewCase.CaseIntroduction = NewCase.CaseIntroduction.Trim();
             NewCase.CaseAddDate = DateTime.Now;
@@ -99,36 +99,37 @@ namespace MutualBank.Controllers
             //_mutualBankContext.SaveChanges();
         }
 
-        public JsonResult GetExecuteCaseModel() {
-            var id = this.User.GetId();
-            //var id = 10;
-            //var TargetUserIdx=_mutualBankContext
+        public JsonResult GetExecuteCaseModel()
+        {
+            var id = User.GetId();
 
             var CaseModel = _mutualBankContext.Cases.Include("CaseUser").Include("Points").Include("CaseSkil")
                 .Where(x => x.CaseUserId == id & x.CaseIsExecute == true & x.CaseClosedDate == null)
-                .Select(x => new {
-                    CaseId = x.CaseId,
-                    CaseTitle = x.CaseTitle,
-                    CaseUserId = x.CaseUserId,
-                    CaseSkillName=x.CaseSkil.SkillName,
-                    CasePoint = x.CasePoint,
+                .Select(x => new 
+                {
+                    CaseId=x.CaseId,
+                    CaseTitle=x.CaseTitle,
+                    CaseUserId=x.CaseUserId,
+                    CaseSkillName = x.CaseSkil.SkillName,
+                    CasePoint=x.CasePoint,
                     IsNeed = x.CaseNeedHelp,
                     TargetUserId = x.Points.Where(y => y.PointNeedHelp != x.CaseNeedHelp)
                     .Select(y => y.PointUserId).First(),
                     TransDate = x.Points.Where(y => y.PointUserId == x.CaseUserId).Select(y => y.PointAddDate).First()
                 }).ToList();
 
+
             return Json(Newtonsoft.Json.JsonConvert.SerializeObject(CaseModel));
         }
 
 
-        public IActionResult CaseDone(int CaseId) 
+        public IActionResult CaseDone(int CaseId)
         {
             //update case
-            var Case=_mutualBankContext.Cases.Where(x => x.CaseId == CaseId).First();
+            var Case = _mutualBankContext.Cases.Where(x => x.CaseId == CaseId).First();
             Case.CaseClosedDate = DateTime.Now;
 
-            var PointLog =_mutualBankContext.Points.Where(x => x.PointUserId == Case.CaseUserId & x.PointCaseId == CaseId).First();
+            var PointLog = _mutualBankContext.Points.Where(x => x.PointUserId == Case.CaseUserId & x.PointCaseId == CaseId).First();
             var PointTragetLog = _mutualBankContext.Points.Where(x => x.PointUserId != Case.CaseUserId & x.PointCaseId == CaseId).First();
             PointLog.PointIsDone = PointTragetLog.PointIsDone = true;
             //trans & update point
@@ -141,7 +142,8 @@ namespace MutualBank.Controllers
                 User.UserPoint -= TransPoint;
                 TargetUser.UserPoint += TransPoint;
             }
-            else {
+            else
+            {
                 User.UserPoint += TransPoint;
                 TargetUser.UserPoint -= TransPoint;
             }
@@ -159,7 +161,7 @@ namespace MutualBank.Controllers
                 Msg.Msg = "Error";
                 throw;
             }
-            return this.StatusCode(Msg.code, Msg);
+            return StatusCode(Msg.code, Msg);
         }
     }
 }

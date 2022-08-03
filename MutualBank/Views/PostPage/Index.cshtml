@@ -6,11 +6,10 @@
 @section Styles
     {
     <link rel="stylesheet" href="~/css/postpage.css" asp-append-version="true" />
-
 }
 
-    <main id="postpage" class="container">
-        <div class="postpage container-fluid" id="postpage">
+    <main id="" class="container">
+        <div class="postpage container-fluid" id="">
             <div class="page-top">
                 <div class="page-title fs-2"> @Html.DisplayFor(Model=>Model.CaseTitle) </div>
                 <div calss="need">@Html.DisplayFor(Model=>Model.SkillName)</div>
@@ -53,8 +52,84 @@
                             <span style="padding-left:5px ">地點：<span>@Html.DisplayFor(Model=>Model.Areacity)@Html.DisplayFor(Model=>Model.AreaTownname)</span></span>
                         </div>
                     </div>
+                <!-- 選擇交易對象 -->
+                    <div id="confirmCase" v-if="isOwner">
+                        <div class="mt-4">
+                            @*TODO if(案件為未交易 且登入者為po文擁有者才顯示)*@
+                            <button v-if="isWaitForTrans" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#listModal">
+                                選擇交易對象
+                            </button>
+                            <button v-else type="button" class="btn btn-outline-primary" title="可至個人頁點選結案" disabled>
+                                案件執行中
+                            </button>
+                        </div>
+                        <!-- modal (target user list) -->
+                        <div class="modal fade" id="listModal"
+                         tabindex="-1" aria-labelledby="listModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" v-bind:class={"modal-dialog-scrollable":isModalNeedScroll}>
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">選擇交易對象</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body text-nowrap p-0">
+                                        <ul class="selectList p-0 m-0" v-if="isPostHasMsg">
+                                            <li class="d-flex justify-content-start userItem" name="userItem"
+                                            :data-userid="item.UserId" :data-username="item.UserName"
+                                            v-for="item in msgUserModel" v-on:click="selectUser">
+                                                <input type="radio" name="inpUser" class="m-3 pe-none"
+                                                   :value="item.UserName" style="width:20px;">
+                                                <div class="userPhotoBx pe-none">
+                                                    <img class="pe-none" src="https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg">
+                                                </div>
+                                                <label class="m-auto ms-2 pe-none">{{item.UserName}}</label>
+                                            </li>
+                                        </ul>
+                                        <span v-else class="m-3 ms-5 fw-300">還沒有人留言</span>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="me-0">
+                                            <label>點數：</label>
+                                            <input :disabled="!isPostHasMsg" class="me-2 inputPoint" type="text" maxlength="3"
+                                               v-model.number="finalPoint" title="請設定要交易的點數">
+                                            <button :disabled="!isPostHasMsg" v-on:click="resetPoint" type="button" class="btn btn-primary">重設</button>
+                                        </div>
+                                        @*<div class="">
+                                    <label class="fs-14">請輸入數字！</label>
+                                    <label class="fs-14">請勿超過持有點數</label>
+                                    </div>*@
+                                        <div>
+                                            <span v-show="isPostHasMsg" class="me-2">將與<strong>&nbsp;{{selectedUser}}&nbsp;</strong>交易<strong>&nbsp;{{finalPoint}}&nbsp;</strong>點</span>
+                                            <button :disabled="!isPostHasMsg" type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                            <button :disabled="!isPostHasMsg" v-on:click="modalBeBelow" type="button"
+                                                id="btnSelectTarget" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal">
+                                                確認
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- modal (final confirm) -->
+                        <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">確認交易</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body text-center fs-18">
+                                        確定要選擇<span class="btn selectedUser fs-18">&nbsp;{{selectedUser}}&nbsp;</span>，並交易<strong>&nbsp;{{finalPoint}}&nbsp;</strong>點嗎？
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                        <button type="button" class="btn btn-primary" :data-targetid="selectedUserId" v-on:click="savePointTransLog">確認</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
             </div>
 
             <!-- 介紹 -->
@@ -67,7 +142,7 @@
                 </div>
             </div>
             <!-- 留言板 -->
-            <div class="messageboard-frame" id="">
+            <div class="messageboard-frame" id="postpage">
                 <div class="messageboard-title"> 留言</div>
                 <!-- 輸入訊息 -->
                 <form asp-action="AddComment" asp-controller="PostPage">
@@ -161,7 +236,7 @@
                                             <div class='statics-text'><span>{{wordvaluecd}}</span>/200字</div>
                                         </div>
                                         <div class='col-auto-input'>
-                                            <input type='button' class='btn btn-primary respbtn' data-bs-toggle='button' id='commentbtmre' value='留言' v-on:click="addrecomment" disabled/>
+                                            <input type='button' class='btn btn-primary respbtn' data-bs-toggle='button' id='commentbtmre' value='留言' v-on:click="addrecomment" disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -175,8 +250,86 @@
 
     @section Scripts
     {
-
     <script>
+        var caseId = @Model.CaseId;
+        var isExecute = @Json.Serialize(Model.IsExecute);
+        var vmPoint = new Vue({
+            el: "#confirmCase",
+            data: {
+                msgUserModel: [],
+                isWaitForTrans: !isExecute,
+                selectedUser: "User",
+                selectedUserId: "",
+                orginPoint:0,
+                finalPoint: 0,
+                isOwner:false
+            },
+            methods: {
+                getMsgUserModel: function() {
+                    fetch("/PostPage/GetMsgUserModel/" + caseId)
+                        .then(res => { return res.json() })
+                        .then(data => {
+                            var obj = JSON.parse(data)
+                            console.log(obj);
+
+                            vmPoint.msgUserModel = obj.MsgList;
+                            vmPoint.finalPoint = vmPoint.orginPoint = obj.CasePoint;
+                        })
+                        .catch(err => console.log(err))
+                },
+                selectUser: function(e) {
+                    var userItem = document.getElementsByName("userItem");
+                    var inpUser = document.getElementsByName("inpUser");
+                    inpUser.forEach(x => x.removeAttribute("checked"));
+                    userItem.forEach(x => x.classList.remove("active"));
+                    e.target.classList.add("active");
+                    e.target.childNodes[0].checked = true;
+                    this.selectedUser = e.target.dataset.username;
+                    this.selectedUserId=e.target.dataset.userid;
+                },
+                modalBeBelow: function() {
+                    var modalBackdrop = document.querySelector(".modal-backdrop.fade.show");
+                    modalBackdrop.style.zIndex = 1049;
+                    var listModal = document.getElementById("listModal");
+                    listModal.style.zIndex = 1050;
+                },
+                savePointTransLog: function() {
+                    fetch("/PostPage/SavePointTransLog", {
+                        method: "POST",
+                        body: JSON.stringify({ CaseId: caseId, CasePoint: vmPoint.finalPoint, TargetUserId: 1 }),
+                        headers: { "Content-Type": "application/json" }
+                    })
+                        .then(res => {
+                            if (res.status == 200 & res.ok == true) {
+                                $("#listModal").modal("hide");
+                                $("#confirmModal").modal("hide");
+                                vmPoint.isWaitForTrans = false;
+                            }
+                        })
+                        .catch(res => console.log(res))
+                },
+                resetPoint: function() {
+                    this.finalPoint = this.orginPoint;
+                }
+            },
+            computed: {
+                isModalNeedScroll: function() {
+                    return this.msgUserModel.length > 4 ? true : false;
+                },
+                isPostHasMsg: function() {
+                    return this.msgUserModel.length > 0 ? true : false;
+                }
+            },
+            created: function() {
+                this.getMsgUserModel();
+            },
+            mounted: function() {
+                fetch("/PostPage/IsOwner?CaseId="+caseId)
+                .then(res=> res.text())
+                    .then(data => vmPoint.isOwner= data=="true"?true:false)
+            }
+        });
+
         var msgData = @Html.Raw(ViewBag.tmessages);
         let PP = new Vue({
             el: "#postpage",
@@ -184,8 +337,6 @@
                 msglist: msgData,
                 value: "",
                 valuecd: "",
-
-
             },
 
             filters: {
@@ -195,7 +346,6 @@
                     }
                 }
             },
-
             methods: {
                 addcoment: function() {
                     var id = document.getElementById("commentbtn").dataset.caseid;
@@ -245,7 +395,7 @@
                 recommentreboy: function(e) {
                     $("textarea").val("");
                     $(".comment-bother-frame-input-top").attr("hidden", "hidden")
-                    
+
                     var tousername = $(e.target).parents(".response-day-button").siblings(".responser-name-frame").children(".responser-name").text()
                     var touserid = $(e.target).parents(".response-day-button").siblings(".responser-name-frame").children(".responser-name-id-ch").text()
                     var commentid = $(e.target).parents(".response-day-button").siblings(".responser-name-frame").children(".comment-id-ch").text()

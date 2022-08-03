@@ -5,7 +5,7 @@
                 <div class="text-center m-2">
                     <i class="mb-3 fa-solid fa-inbox" style="font-size:50px;"></i>
                     <h4 class="fw-500 mb-0">待結案</h4>
-                    <span class="fw-300 fs-14">請於確認執行後點選「結案」，確認後將進行點數交易。</span>
+                    <span class="fw-300 fs-14">確認「結案」後將進行點數交易。</span>
                 </div>
             </li>
 
@@ -13,7 +13,7 @@
                 <div class="d-flex justify-content-between align-items-start mb-4">
                     <div class="ms-2 me-auto text-nowrap">
                         <h2 class="mb-0">未有貼文待結案</h2>
-                        <span class="fs-14 fw-300">查看我的技能與需求</span>
+                        <span class="fs-14 fw-300">請到「我的技能與需求」查看案件</span>
                     </div>
                     <div>
                         <span class="m-2 fw-300 fs-14">2022-07-20</span>
@@ -69,10 +69,9 @@
                         <span class="btn btn-outline-primary me-1 typeTag">{{tarIsNeed}}</span>
                         {{tarCaseTitle}}
                     </h4>
-                    <span class="fw-300">將執行與{團長}的點數交易。</span>
                     <div class="fw-300">
-                        <span v-if="tarIsNeed=='幫助'">轉出<strong>&nbsp;{{transPoint}}&nbsp;</strong>點。</span>
-                        <span v-else>得到<strong>&nbsp;{{transPoint}}&nbsp;</strong>點。</span>
+                        <span v-if="tarIsNeed=='幫助'">將轉出<strong class="fs-18 fw-700" style="color:darkred">&nbsp;{{transPoint}}&nbsp;</strong>點。</span>
+                        <span v-else>將得到<strong class="fs-18  fw-700" style="color:darkred">&nbsp;{{transPoint}}&nbsp;</strong>點。</span>
                     </div>
                 </div>
                 <div class="modal-footer">
