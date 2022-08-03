@@ -17,6 +17,11 @@
     --RoyalBlue: #3f448c;
 }
 
+/* 根據元素標籤的樣式 */
+textarea{
+    padding: 1ch;
+}
+
 /* Button 樣式 */
 .btn-simple {
     background-color: var(--white);
@@ -95,6 +100,11 @@
 .bg-royalblue{
     color: var(--white);
     background-color: var(--RoyalBlue);
+}
+
+/* border round 樣式 */
+.rounded-10{
+    border-radius: 1.5ch;    
 }
 
 .aspect-ratio-box {
