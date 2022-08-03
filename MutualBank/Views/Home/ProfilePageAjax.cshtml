@@ -50,6 +50,11 @@
                                                 </svg>我的技能與需求
                                             </span>
                                         </li>
+                                         <li id="myExecuteCase" name="menuOption" class="list-group-item d-flex justify-content-center align-items-center p-3 ">
+                                            <span>
+                                                <i class="fa-solid fa-check-to-slot"></i>&nbsp;待結案
+                                            </span>
+                                        </li>
                                         <li id="message" name="menuOption" class="list-group-item d-flex justify-content-center align-items-center p-3 ">
                                             <span>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="50" height="25" fill="currentColor" class="bi bi-chat-dots" viewBox="0 0 16 16">
@@ -136,6 +141,23 @@
             });
         });
 
+        var myExecuteCase = document.getElementById("myExecuteCase");
+        myExecuteCase.addEventListener("click", function() {
+            dynamicLoading.css("/css/Case/ExecuteCase.css");
+            $.ajax({
+                type: "POST",
+                url: "/Case/GetExecuteCase",
+                success: function(res) {
+                    $("#ajaxSection").html(res);
+                    $.getScript("/js/Case/ExecuteCase.js");
+                },
+                error: function(res) {
+                    console.log(res);
+                }
+            });
+        });
+
+
         var changePwd = document.getElementById("changePwd");
         changePwd.addEventListener("click", function() {
             $.ajax({
@@ -186,12 +208,22 @@
     <script>
         //一進入此頁，ajaxSection就切到個人資訊
         var myProfile = document.getElementById("myProfile");
-        myProfile.click();
+        //myProfile.click();
+        myExecuteCase.click();
         //點擊頁首連結進入貼文頁面
         var queryString = location.search.split("=")[1];
         var btnPostCase = document.getElementById("btnPostCase");
-        if (queryString == "postcase") {
-            btnPostCase.click();
+        var myExecuteCase = document.getElementById("myExecuteCase");
+
+        switch (queryString) {
+            case "postcase":
+                btnPostCase.click();
+                break;
+            case "myCase":
+                myExecuteCase.click();
+                break;
+                dafault:
+                break;
         }
     </script>
 }

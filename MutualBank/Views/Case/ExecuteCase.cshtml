@@ -1,0 +1,101 @@
+﻿<section id="executeList">
+    <div class="container-fuild mb-5">
+        <ul class="list-group">
+            <li class="list-group-item">
+                <div class="text-center m-2">
+                    <i class="mb-3 fa-solid fa-inbox" style="font-size:50px;"></i>
+                    <h4 class="fw-500 mb-0">待結案</h4>
+                    <span class="fw-300 fs-14">請於確認執行後點選「結案」，確認後將進行點數交易。</span>
+                </div>
+            </li>
+
+            <li v-if="exeCaseModel.length==0" class="list-group-item">
+                <div class="d-flex justify-content-between align-items-start mb-4">
+                    <div class="ms-2 me-auto text-nowrap">
+                        <h2 class="mb-0">未有貼文待結案</h2>
+                        <span class="fs-14 fw-300">查看我的技能與需求</span>
+                    </div>
+                    <div>
+                        <span class="m-2 fw-300 fs-14">2022-07-20</span>
+                    </div>
+                </div>
+                <div class="text-end m-2">
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal"
+                            href="/Home/ProfilePageAjax?page=myCase">
+                        查看我的技能與需求
+                    </button>
+                </div>
+            </li>
+
+            @*Vue*@
+            <li v-else class="list-group-item" v-for="item in exeCaseModel">
+                <div class="d-flex justify-content-between align-items-start mb-4">
+                    <div class="ms-2 me-auto text-nowrap">
+                        <div class="mt-2 mb-2">
+                            <span class="btn btn-outline-primary me-1 typeTag">{{item.IsNeed | isNeedFilter}}</span>
+                            <span class="fw-500">{{item.CaseSkillName}}</span>
+                        </div>
+                        <h4 class="mb-0">{{item.CaseTitle}}</h4>
+                        <span v-if="item.IsNeed" class="fs-14 fw-300">將支付給對方{{item.CasePoint}}點</span>
+                        <span v-else class="fs-14 fw-300">對方將支付{{item.CasePoint}}點給您</span>
+                    </div>
+                    <div>
+                        <span class="badge rounded-pill m-2 smallInfo">{{item.TransDate | showDate}}</span>
+                    </div>
+                </div>
+                <div class="text-end m-2">
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal"
+                            :data-targetuserid="item.TargetUserId" :data-point="item.CasePoint" :data-caseid="item.CaseId"
+                            :data-casetitle="item.CaseTitle" :data-isneed="item.IsNeed| isNeedFilter" v-on:click="getTargetData">
+                        結案
+                    </button>
+                </div>
+            </li>
+
+        </ul>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center">
+                <div class="modal-header d-block">
+                    <h5 class="modal-title" id="exampleModalLabel">結案確認</h5>
+                </div>
+                <div class="modal-body m-4">
+                    <h4 class=" fw-400">
+                        <span class="btn btn-outline-primary me-1 typeTag">{{tarIsNeed}}</span>
+                        {{tarCaseTitle}}
+                    </h4>
+                    <span class="fw-300">將執行與{團長}的點數交易。</span>
+                    <div class="fw-300">
+                        <span v-if="tarIsNeed=='幫助'">轉出<strong>&nbsp;{{transPoint}}&nbsp;</strong>點。</span>
+                        <span v-else>得到<strong>&nbsp;{{transPoint}}&nbsp;</strong>點。</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" v-on:click="caseDone">確認</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1000">
+        <div id="ToastTransResult" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <i class="fa-solid fa-bell"></i>
+                <strong class="me-auto">&nbsp;通知</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                交易成功！
+            </div>
+        </div>
+    </div>
+</section>
+
+
+

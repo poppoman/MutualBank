@@ -83,8 +83,8 @@ namespace MutualBank.Controllers
                 UserPhoto = userphoto == null ? "~/postpage/userhphotonull.svg" : userphoto,
                 Areacity = Areaname,
                 AreaTownname = AreaTownname,
-
-
+                IsExecute = Case.CaseIsExecute,
+                UserPoint = Case.CaseUser.UserPoint
             };
             return View(vm);
 
@@ -213,12 +213,12 @@ namespace MutualBank.Controllers
         [HttpPost]
         public OkResult SavePointTransLog([FromBody] PointTransLog para)
         {
-            var CaseTrans = _mutualBankContext.Cases.Find(para.CaseId);
-            CaseTrans.CasePoint = para.CasePoint;
-            CaseTrans.CaseIsExecute = true;
-            var IsCaseNeed = CaseTrans.CaseNeedHelp;
-            var PostId = CaseTrans.CaseUserId;
-            var MsgId = para.TransTargetUserId;
+            var TransCase = _mutualBankContext.Cases.Find(para.CaseId);
+            TransCase.CasePoint = para.CasePoint;
+            TransCase.CaseIsExecute = true;
+            var IsCaseNeed = TransCase.CaseNeedHelp;
+            var PostId = TransCase.CaseUserId;
+            var MsgId = para.TargetUserId;
 
             //圈存點數
             if (IsCaseNeed)
@@ -246,7 +246,7 @@ namespace MutualBank.Controllers
                 IsCaseNeed = !IsCaseNeed;
             }
 
-            _mutualBankContext.SaveChanges();
+            //_mutualBankContext.SaveChanges();
             return Ok();
         }
     }

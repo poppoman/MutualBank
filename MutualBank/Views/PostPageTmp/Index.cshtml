@@ -78,7 +78,7 @@
                                             <li class="d-flex justify-content-start userItem" name="userItem"
                                             :data-userid="item.UserId" :data-username="item.UserName"
                                             v-for="item in msgUserModel" v-on:click="selectUser">
-                                                <input type="radio" name="inpUser pe-none" class="m-3"
+                                                <input type="radio" name="inpUser" class="m-3 pe-none"
                                                    :value="item.UserName" style="width:20px;">
                                                 <div class="userPhotoBx pe-none">
                                                     <img class="pe-none" src="https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg">
@@ -92,11 +92,15 @@
                                         <div class="me-0">
                                             <label>點數：</label>
                                             <input :disabled="!isPostHasMsg" class="me-2 inputPoint" type="text" maxlength="3"
-                                               placeholder="原案件設定點數" v-model.number="finalPoint">
-                                            <button :disabled="!isPostHasMsg" type="button" class="btn btn-primary">重設</button>
+                                               v-model.number="finalPoint" title="請設定要交易的點數">
+                                            <button :disabled="!isPostHasMsg" v-on:click="resetPoint" type="button" class="btn btn-primary">重設</button>
                                         </div>
+                                        @*<div class="">
+                                            <label class="fs-14">請輸入數字！</label>
+                                            <label class="fs-14">請勿超過持有點數</label>
+                                        </div>*@
                                         <div>
-                                            <span v-show="isPostHasMsg" class="me-5">將與<strong>&nbsp;{{selectedUser}}&nbsp;</strong>交易<strong>&nbsp;{{finalPoint}}&nbsp;</strong>點</span>
+                                            <span v-show="isPostHasMsg" class="me-2">將與<strong>&nbsp;{{selectedUser}}&nbsp;</strong>交易<strong>&nbsp;{{finalPoint}}&nbsp;</strong>點</span>
                                             <button :disabled="!isPostHasMsg" type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
                                             <button :disabled="!isPostHasMsg" v-on:click="modalBeBelow" type="button"
                                                 id="btnSelectTarget" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal">
@@ -115,12 +119,12 @@
                                         <h5 class="modal-title" id="exampleModalLabel">確認交易</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                    <div class="modal-body">
-                                        確定要選擇<strong>&nbsp;{{selectedUser}}&nbsp;</strong>交易<strong>&nbsp;{{finalPoint}}&nbsp;</strong>點嗎？
+                                    <div class="modal-body text-center fs-18">
+                                        確定要選擇<span class="btn selectedUser fs-18">&nbsp;{{selectedUser}}&nbsp;</span>，並交易<strong>&nbsp;{{finalPoint}}&nbsp;</strong>點嗎？
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                                        <button type="button" class="btn btn-primary" :data-targetid="selectedUserId" v-on:click="SavePointTransLog">確認</button>
+                                        <button type="button" class="btn btn-primary" :data-targetid="selectedUserId" v-on:click="savePointTransLog">確認</button>
                                     </div>
                                 </div>
                             </div>
@@ -251,13 +255,15 @@
 
     <script>
         var caseId = @Model.CaseId;
+        var isExecute = @Json.Serialize(Model.IsExecute);
         var vmPoint = new Vue({
             el: "#confirmCase",
             data: {
                 msgUserModel: [],
-                isWaitForTrans: true,
-                selectedUser: "",
-                selectedUserId:"",
+                isWaitForTrans: !isExecute,
+                selectedUser: "User",
+                selectedUserId: "",
+                orginPoint:0,
                 finalPoint: 0
             },
             methods: {
@@ -267,8 +273,8 @@
                         .then(data => {
                             var obj = JSON.parse(data)
                             vmPoint.msgUserModel = obj;
-                            vmPoint.finalPoint = obj[0].CasePoint;
-                            vmPoint.selectedUser = obj[0].UsrName;
+                            vmPoint.finalPoint = vmPoint.orginPoint = obj[0].CasePoint;
+                            //vmPoint.selectedUser = obj[0].UserName;
                         })
                         .catch(err => console.log(err))
                 },
@@ -288,14 +294,13 @@
                     var listModal = document.getElementById("listModal");
                     listModal.style.zIndex = 1050;
                 },
-                SavePointTransLog: function() {
-                    fetch("/PostPageTmp/SavePointTransLog", {
+                savePointTransLog: function() {
+                    fetch("/PostPageTmp/savePointTransLog", {
                         method: 'POST',
-                        body: JSON.stringify({ CaseId: caseId, CasePoint: vmPoint.finalPoint, TransTargetUserId: 1 }),
+                        body: JSON.stringify({ CaseId: caseId, CasePoint: vmPoint.finalPoint, TargetUserId: 1 }),
                         headers: { 'Content-Type': 'application/json' }
                     })
                         .then(res => {
-                            console.log(res);
                             if (res.status == 200 & res.ok == true) {
                                 $("#listModal").modal("hide");
                                 $("#confirmModal").modal("hide");
@@ -303,24 +308,22 @@
                             }
                         })
                         .catch(res => console.log(res))
+                },
+                resetPoint: function() {
+                    this.finalPoint = this.orginPoint;
                 }
             },
             computed: {
                 isModalNeedScroll: function() {
-                    return this.msgUserModel.length > 5 ? true : false;
+                    return this.msgUserModel.length > 4 ? true : false;
                 },
                 isPostHasMsg: function() {
                     return this.msgUserModel.length > 0 ? true : false;
                 }
-            }
-            ,
+            },
             created: function() {
                 this.getMsgUserModel();
-            },
-            mounted: function() {
-
             }
-
         });
 
         var msgData = @Html.Raw(ViewBag.tmessages);

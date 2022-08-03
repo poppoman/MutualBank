@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MutualBank.Extensions;
 using MutualBank.Models;
+using MutualBank.Models.ReturnMsg;
 
 namespace MutualBank.Controllers
 {
@@ -25,6 +26,11 @@ namespace MutualBank.Controllers
         public IActionResult GetCaseList()
         {
             return PartialView("CaseList");
+        }
+        
+            public IActionResult GetExecuteCase()
+        {
+            return PartialView("ExecuteCase");
         }
         public List<Skill> GetSkillTags()
         {
@@ -58,7 +64,6 @@ namespace MutualBank.Controllers
                     MessageCount = x.Messages.Count
                 });
 
-
             var ModelJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model);
             return ModelJson;
         }
@@ -66,8 +71,6 @@ namespace MutualBank.Controllers
         [HttpPost]
         public void AddCase(Case NewCase)
         {
-
-            //整理資料
             NewCase.CaseUserId = this.User.GetId();
             NewCase.CaseTitle = NewCase.CaseTitle.Trim();
             NewCase.CaseIntroduction = NewCase.CaseIntroduction.Trim();
@@ -75,7 +78,6 @@ namespace MutualBank.Controllers
             NewCase.CaseExpireDate = NewCase.CaseReleaseDate.AddDays(14);
             NewCase.CaseClosedDate = DateTime.Now;
 
-            //取出表單圖片及圖片檔名
             IFormFile InputFile = null;
             if (HttpContext.Request.Form.Files.Count == 0)
             {
@@ -83,21 +85,81 @@ namespace MutualBank.Controllers
             }
             else
             {
-                //制定圖片檔名
                 InputFile = HttpContext.Request.Form.Files[0];
                 var UniqueId = Guid.NewGuid().ToString("D");
                 var PhotoFormat = InputFile.FileName.Split(".")[1];
                 NewCase.CasePhoto = $"{NewCase.CaseUserId}_{UniqueId}.{PhotoFormat}";
-                //存圖
                 var InputFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Img", "CasePhoto", NewCase.CasePhoto);
                 FileStream fs = new FileStream(InputFilePath, FileMode.Create);
                 InputFile.CopyToAsync(fs);
                 fs.Close();
             }
 
+            //_mutualBankContext.Cases.Add(NewCase);
+            //_mutualBankContext.SaveChanges();
+        }
 
-            _mutualBankContext.Cases.Add(NewCase);
-            _mutualBankContext.SaveChanges();
+        public JsonResult GetExecuteCaseModel() {
+            var id = this.User.GetId();
+            //var id = 10;
+            //var TargetUserIdx=_mutualBankContext
+
+            var CaseModel = _mutualBankContext.Cases.Include("CaseUser").Include("Points").Include("CaseSkil")
+                .Where(x => x.CaseUserId == id & x.CaseIsExecute == true & x.CaseClosedDate == null)
+                .Select(x => new {
+                    CaseId = x.CaseId,
+                    CaseTitle = x.CaseTitle,
+                    CaseUserId = x.CaseUserId,
+                    CaseSkillName=x.CaseSkil.SkillName,
+                    CasePoint = x.CasePoint,
+                    IsNeed = x.CaseNeedHelp,
+                    TargetUserId = x.Points.Where(y => y.PointNeedHelp != x.CaseNeedHelp)
+                    .Select(y => y.PointUserId).First(),
+                    TransDate = x.Points.Where(y => y.PointUserId == x.CaseUserId).Select(y => y.PointAddDate).First()
+                }).ToList();
+
+            return Json(Newtonsoft.Json.JsonConvert.SerializeObject(CaseModel));
+        }
+
+
+        public IActionResult CaseDone(int CaseId) 
+        {
+            //update case
+            var Case=_mutualBankContext.Cases.Where(x => x.CaseId == CaseId).First();
+            Case.CaseClosedDate = DateTime.Now;
+
+            var PointLog =_mutualBankContext.Points.Where(x => x.PointUserId == Case.CaseUserId & x.PointCaseId == CaseId).First();
+            var PointTragetLog = _mutualBankContext.Points.Where(x => x.PointUserId != Case.CaseUserId & x.PointCaseId == CaseId).First();
+            PointLog.PointIsDone = PointTragetLog.PointIsDone = true;
+            //trans & update point
+            var User = _mutualBankContext.Users.Where(x => x.UserId == PointLog.PointUserId).First();
+            var TargetUser = _mutualBankContext.Users.Where(x => x.UserId == PointTragetLog.PointUserId).First();
+
+            var TransPoint = Case.CasePoint;
+            if (Case.CaseNeedHelp)
+            {
+                User.UserPoint -= TransPoint;
+                TargetUser.UserPoint += TransPoint;
+            }
+            else {
+                User.UserPoint += TransPoint;
+                TargetUser.UserPoint -= TransPoint;
+            }
+
+            var Msg = new ReturnMsg();
+            try
+            {
+                _mutualBankContext.SaveChanges();
+                Msg.code = 200;
+                Msg.Msg = "Success";
+            }
+            catch (DbUpdateException ex)
+            {
+                Msg.code = 400;
+                Msg.Msg = "Error";
+                throw;
+            }
+            return this.StatusCode(Msg.code, Msg);
         }
     }
 }

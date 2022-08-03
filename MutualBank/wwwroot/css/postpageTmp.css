@@ -40,3 +40,12 @@ div#confirmModal {
     background: var(--bg);
     padding: 10px;
 }
+.selectedUser {
+    position: relative;
+    bottom: 2px;
+    background: var(--bg);
+    color: var(--black);
+    border: 0;
+    padding: 5px;
+    margin: 5px;
+}
