@@ -8,7 +8,11 @@
         
         public bool casehelp { get; set; }
 
-        public List<string> casemsg { get; set; }
+        public List<MsgandRead> casemsg { get; set; }
+
+        public int read { get; set; }
+
+        public string caseadddate { get; set; }
     }
 }
 
