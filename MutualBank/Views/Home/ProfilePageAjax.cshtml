@@ -100,7 +100,6 @@
             created: function() {
                 let self = this;
                 fetch("/api/UsersController/getusers").then(function(result) {
-                    console.log("result =", result)
                     return result.json();
                 })
                     .then(function(mydata) {
@@ -208,8 +207,7 @@
     <script>
         //一進入此頁，ajaxSection就切到個人資訊
         var myProfile = document.getElementById("myProfile");
-        //myProfile.click();
-        myExecuteCase.click();
+        myProfile.click();
         //點擊頁首連結進入貼文頁面
         var queryString = location.search.split("=")[1];
         var btnPostCase = document.getElementById("btnPostCase");
