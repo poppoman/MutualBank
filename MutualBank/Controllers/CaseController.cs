@@ -21,6 +21,7 @@ namespace MutualBank.Controllers
         }
         public IActionResult GetPostCase()
         {
+            ViewBag.UserPoint = _mutualBankContext.Users.First(x => x.UserId == User.GetId()).UserPoint;
             return PartialView("PostCase");
         }
         public IActionResult GetCaseList()
@@ -76,7 +77,8 @@ namespace MutualBank.Controllers
             NewCase.CaseIntroduction = NewCase.CaseIntroduction.Trim();
             NewCase.CaseAddDate = DateTime.Now;
             NewCase.CaseExpireDate = NewCase.CaseReleaseDate.AddDays(14);
-            NewCase.CaseClosedDate = DateTime.Now;
+            NewCase.CaseClosedDate = null;
+            NewCase.CaseIsExecute = false;
 
             IFormFile InputFile = null;
             if (HttpContext.Request.Form.Files.Count == 0)
@@ -95,8 +97,8 @@ namespace MutualBank.Controllers
                 fs.Close();
             }
 
-            //_mutualBankContext.Cases.Add(NewCase);
-            //_mutualBankContext.SaveChanges();
+            _mutualBankContext.Cases.Add(NewCase);
+            _mutualBankContext.SaveChanges();
         }
 
         public JsonResult GetExecuteCaseModel()
@@ -117,18 +119,14 @@ namespace MutualBank.Controllers
                     .Select(y => y.PointUserId).First(),
                     TransDate = x.Points.Where(y => y.PointUserId == x.CaseUserId).Select(y => y.PointAddDate).First()
                 }).ToList();
-
-
             return Json(Newtonsoft.Json.JsonConvert.SerializeObject(CaseModel));
         }
-
 
         public IActionResult CaseDone(int CaseId)
         {
             //update case
             var Case = _mutualBankContext.Cases.Where(x => x.CaseId == CaseId).First();
             Case.CaseClosedDate = DateTime.Now;
-
             var PointLog = _mutualBankContext.Points.Where(x => x.PointUserId == Case.CaseUserId & x.PointCaseId == CaseId).First();
             var PointTragetLog = _mutualBankContext.Points.Where(x => x.PointUserId != Case.CaseUserId & x.PointCaseId == CaseId).First();
             PointLog.PointIsDone = PointTragetLog.PointIsDone = true;

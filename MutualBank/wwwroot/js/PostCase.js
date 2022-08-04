@@ -6,12 +6,14 @@ vmPostCase = new Vue({
         areaTown: [],
         isAreaSelected: true,
         skillTags: [],
+        userPoint: userPoint,
         title: "",
         intro: "",
         serDate: "",
         CaseSerArea: "請先選擇縣市",
         CaseNeedHelp: -1,
-        CaseSkilId:-1
+        CaseSkilId: -1,
+        point:0
     },
     methods: {
         getAreaCity: function () {
@@ -54,7 +56,16 @@ vmPostCase = new Vue({
                 .fail(function (res) {
                     console.log(res);
                 });
-        }
+        },
+        isNumber: function (e) {
+            e = (e) ? e : window.event;
+            var charCode = (e.which) ? e.which : e.keyCode;
+            if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                e.preventDefault();;
+            } else {
+                return true;
+            }
+        }, 
     },
     computed: {
         titleValid: function () {
@@ -73,6 +84,9 @@ vmPostCase = new Vue({
                 return  false;
             }
             return true;
+        },
+        pointValid: function () {
+            return this.point > this.userPoint ? true : false;
         }
     },
     mounted: function () {
@@ -139,6 +153,5 @@ function previewPic(e) {
     }
     else {
         pic.src = URL.createObjectURL(e.files[0])
-
     }
 }
