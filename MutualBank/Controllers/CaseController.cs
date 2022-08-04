@@ -73,21 +73,24 @@ namespace MutualBank.Controllers
         public void AddCase(Case NewCase)
         {
             NewCase.CaseUserId = User.GetId();
+            //fix CaseReleaseDate error
+            if (NewCase.CaseReleaseDate.Year == 0001)
+            {
+                NewCase.CaseReleaseDate=DateTime.Now;
+            }
             NewCase.CaseTitle = NewCase.CaseTitle.Trim();
             NewCase.CaseIntroduction = NewCase.CaseIntroduction.Trim();
             NewCase.CaseAddDate = DateTime.Now;
             NewCase.CaseExpireDate = NewCase.CaseReleaseDate.AddDays(14);
-            NewCase.CaseClosedDate = null;
             NewCase.CaseIsExecute = false;
-
-            IFormFile InputFile = null;
+            
             if (HttpContext.Request.Form.Files.Count == 0)
             {
                 NewCase.CasePhoto = "0_Default.jpg";
             }
             else
             {
-                InputFile = HttpContext.Request.Form.Files[0];
+                IFormFile InputFile = HttpContext.Request.Form.Files[0];
                 var UniqueId = Guid.NewGuid().ToString("D");
                 var PhotoFormat = InputFile.FileName.Split(".")[1];
                 NewCase.CasePhoto = $"{NewCase.CaseUserId}_{UniqueId}.{PhotoFormat}";
@@ -96,7 +99,6 @@ namespace MutualBank.Controllers
                 InputFile.CopyToAsync(fs);
                 fs.Close();
             }
-
             _mutualBankContext.Cases.Add(NewCase);
             _mutualBankContext.SaveChanges();
         }

@@ -196,7 +196,6 @@
             })
                 .done(function(res) {
                     $("#ajaxSection").html(res);
-                    $.getScript("/js/PostCaseReady.js", function() { });
                     $.getScript("/js/PostCase.js", function() { });
                 })
                 .fail(function(res) {
@@ -206,19 +205,21 @@
     </script>
     <script>
         //一進入此頁，ajaxSection就切到個人資訊
-        var myProfile = document.getElementById("myProfile");
-        myProfile.click();
         //點擊頁首連結進入貼文頁面
         var queryString = location.search.split("=")[1];
         var btnPostCase = document.getElementById("btnPostCase");
-        var myExecuteCase = document.getElementById("myExecuteCase");
+        var myProfile = document.getElementById("myProfile");
+        var myCases = document.getElementById("myCases");
 
         switch (queryString) {
+            case "myProfile":
+                myProfile.click();
+                break;
             case "postcase":
                 btnPostCase.click();
                 break;
             case "myCase":
-                myExecuteCase.click();
+                myCases.click();
                 break;
                 dafault:
                 break;
