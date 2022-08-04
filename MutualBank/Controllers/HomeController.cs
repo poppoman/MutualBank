@@ -138,6 +138,9 @@ namespace MutualBank.Controllers
         {
             return View();
         }
-
+        public IActionResult ProfileUpdate1()
+        {
+            return View();
+        }
     }
 }

@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\Img\CasePhoto\" />
+    <Folder Include="wwwroot\Img\User\" />
   </ItemGroup>
 
   <ItemGroup>
