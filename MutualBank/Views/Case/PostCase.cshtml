@@ -38,7 +38,15 @@
                         此欄位不可為空
                     </div>
                 </div>
-
+                <div class="col-12 mb-3">
+                    <label for="CaseTitle" class="form-label">交易點數</label>
+                    <input type="text" class="form-control" v-bind:class="{'is-invalid':pointValid}"
+                           id="CaseTitle" name="CasePoint" v-model.number="point" v-on:keypress="isNumber"
+                           placeholder="請輸入數字" maxlength="5" required>
+                    <div class="invalid-feedback">
+                        已超過持有點數
+                    </div>
+                </div>
 
                 <div class="col-12 mb-3 mt-3">
                     <label for="CaseIntroduction" class="form-label">說明</label>
@@ -113,3 +121,6 @@
         </form>
     </div>
 </section>
+<script>
+var userPoint = @Html.Raw(ViewBag.UserPoint);
+</script>
