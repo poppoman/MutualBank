@@ -201,13 +201,14 @@ namespace MutualBank.Controllers
         [HttpGet]
         public JsonResult GetMsgUserModel(int id)
         {
+            //who leave message
             var Msgs = _mutualBankContext.Messages.Include("MsgUser")
                 .Where(x => x.MsgCaseId == id & x.MsgParentId == null)
                 .Select(x => new
                 {
                     UserId = x.MsgUserId,
                     UserName = x.MsgUser.UserNname,
-                    UserPhoto = x.MsgUser.UserHphoto
+                    UserPhoto = x.MsgUser.UserHphoto,
                 }).Distinct().ToList();
 
             var res = _mutualBankContext.Messages.Include("MsgUser").Include("MsgCase")
@@ -218,6 +219,7 @@ namespace MutualBank.Controllers
         UserName = x.MsgUser.UserNname,
         UserPhoto = x.MsgUser.UserHphoto,
         CasePoint = x.MsgCase.CasePoint,
+        UserPoint = x.MsgUser.UserPoint,
         MsgList = Msgs
     }).First();
 
@@ -234,7 +236,7 @@ namespace MutualBank.Controllers
             var PostId = TransCase.CaseUserId;
             var MsgId = para.TargetUserId;
 
-            //deposit point to log
+            //deposit userpoints to log
             if (IsCaseNeed)
             {
                 var PostOwner = _mutualBankContext.Users.Find(PostId);
@@ -258,7 +260,7 @@ namespace MutualBank.Controllers
                 });
                 IsCaseNeed = !IsCaseNeed;
             }
-            //_mutualBankContext.SaveChanges();
+            _mutualBankContext.SaveChanges();
             return Ok(200);
         }
         [HttpGet]

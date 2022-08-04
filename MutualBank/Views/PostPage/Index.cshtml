@@ -55,7 +55,6 @@
                 <!-- 選擇交易對象 -->
                     <div id="confirmCase" v-if="isOwner">
                         <div class="mt-4">
-                            @*TODO if(案件為未交易 且登入者為po文擁有者才顯示)*@
                             <button v-if="isWaitForTrans" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#listModal">
                                 選擇交易對象
                             </button>
@@ -72,8 +71,8 @@
                                         <h5 class="modal-title" id="exampleModalLabel">選擇交易對象</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                    <div class="modal-body text-nowrap p-0">
-                                        <ul class="selectList p-0 m-0" v-if="isPostHasMsg">
+                                    <div class="modal-body text-nowrap p-0" v-bind:class={'m-0':isPostHasMsg,'m-3':!isPostHasMsg}>
+                                        <ul class="selectList p-0 m-0"  v-if="isPostHasMsg">
                                             <li class="d-flex justify-content-start userItem" name="userItem"
                                             :data-userid="item.UserId" :data-username="item.UserName"
                                             v-for="item in msgUserModel" v-on:click="selectUser">
@@ -85,23 +84,25 @@
                                                 <label class="m-auto ms-2 pe-none">{{item.UserName}}</label>
                                             </li>
                                         </ul>
-                                        <span v-else class="m-3 ms-5 fw-300">還沒有人留言</span>
+                                        <span v-else class="fw-300 fs-16 m-5 ms-0">還沒有人留言</span>
                                     </div>
-                                    <div class="modal-footer">
+
+                                    <div class="modal-footer" v-if="isPostHasMsg">
                                         <div class="me-0">
                                             <label>點數：</label>
-                                            <input :disabled="!isPostHasMsg" class="me-2 inputPoint" type="text" maxlength="3"
-                                               v-model.number="finalPoint" title="請設定要交易的點數">
-                                            <button :disabled="!isPostHasMsg" v-on:click="resetPoint" type="button" class="btn btn-primary">重設</button>
+                                            <input id="inpPoint" class="me-2 inputPoint" type="text" maxlength="3" title="請輸入數字"
+                                               v-model.number="finalPoint" v-on:keypress="isNumber" v-bind:disabled="setPointLock" v-bind:style={"color:darkgray":setPointLock,"color:var(--black)":!setPointLock}>
+                                            <div class="d-inline-block" id="setPointEnable" v-on:click="setPointEnable">
+                                                <i class="fa-solid fa-pen-to-square pe-none"></i>
+                                            </div>
                                         </div>
-                                        @*<div class="">
-                                    <label class="fs-14">請輸入數字！</label>
-                                    <label class="fs-14">請勿超過持有點數</label>
-                                    </div>*@
+                                        <div class="fs-14 w-100 text-end">
+                                            <label v-show="isPointExcess">請勿超過持有點數</label>
+                                        </div>
                                         <div>
-                                            <span v-show="isPostHasMsg" class="me-2">將與<strong>&nbsp;{{selectedUser}}&nbsp;</strong>交易<strong>&nbsp;{{finalPoint}}&nbsp;</strong>點</span>
-                                            <button :disabled="!isPostHasMsg" type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                                            <button :disabled="!isPostHasMsg" v-on:click="modalBeBelow" type="button"
+                                            <span  class="me-2">將與<strong>&nbsp;{{selectedUser}}&nbsp;</strong>交易<strong>&nbsp;{{finalPoint}}&nbsp;</strong>點</span>
+                                            <button  type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                            <button  v-on:click="modalBeBelow" type="button" v-bind:disabled="isPointExcess"
                                                 id="btnSelectTarget" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal">
                                                 確認
                                             </button>
@@ -260,9 +261,11 @@
                 isWaitForTrans: !isExecute,
                 selectedUser: "User",
                 selectedUserId: "",
+                UserPoint:0,
                 orginPoint:0,
                 finalPoint: 0,
-                isOwner:false
+                isOwner:false,
+                setPointLock:true
             },
             methods: {
                 getMsgUserModel: function() {
@@ -270,10 +273,9 @@
                         .then(res => { return res.json() })
                         .then(data => {
                             var obj = JSON.parse(data)
-                            console.log(obj);
-
-                            vmPoint.msgUserModel = obj.MsgList;
+                            vmPoint.msgUserModel = obj.MsgList.filter(x => x.UserName != "@Html.Raw(Model.UserNName)");
                             vmPoint.finalPoint = vmPoint.orginPoint = obj.CasePoint;
+                            vmPoint.UserPoint = obj.UserPoint;
                         })
                         .catch(err => console.log(err))
                 },
@@ -308,8 +310,18 @@
                         })
                         .catch(res => console.log(res))
                 },
-                resetPoint: function() {
-                    this.finalPoint = this.orginPoint;
+                isNumber: function(e) {
+                    e = (e) ? e : window.event;
+                    var charCode = (e.which) ? e.which : e.keyCode;
+                    if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                        //disable keypress event
+                        e.preventDefault();;
+                    } else {
+                        return true;
+                    }
+                }, 
+                setPointEnable: function() {
+                    this.setPointLock = false;
                 }
             },
             computed: {
@@ -318,15 +330,24 @@
                 },
                 isPostHasMsg: function() {
                     return this.msgUserModel.length > 0 ? true : false;
+                },
+                isPointExcess: function() {
+                    return this.finalPoint>=this.UserPoint?true : false;
                 }
             },
             created: function() {
                 this.getMsgUserModel();
             },
             mounted: function() {
-                fetch("/PostPage/IsOwner?CaseId="+caseId)
-                .then(res=> res.text())
-                    .then(data => vmPoint.isOwner= data=="true"?true:false)
+                //if user is owner of the post,show transaction button
+                fetch("/PostPage/IsOwner?CaseId=" + caseId)
+                    .then(res => res.text())
+                    .then(data => vmPoint.isOwner = data == "true" ? true : false);
+                //set first msg user as default selection in list modal
+                setTimeout(function() {
+                    var userItem = document.getElementsByName("userItem")[0];
+                    userItem.click();
+                }, 500);
             }
         });
 
