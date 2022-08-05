@@ -24,7 +24,7 @@ namespace MutualBank.Areas.Admin.Controllers
 
         // GET: Admin/Users/Index
         [HttpGet]
-        [Route("Index")]        
+        [Route("Index")]
         public async Task<IActionResult> Index()
         {
             var query = _context.Users.Include(UserNav => UserNav.User1).Select(u => new UserLogin
@@ -51,101 +51,52 @@ namespace MutualBank.Areas.Admin.Controllers
                 UserFaculty = u.UserFaculty,
                 UserPoint = u.UserPoint,
             });
-
             return View(query);
-
         }
 
         // GET: Admin/Users/getaUser/5
         [HttpGet]
-        [Route("getaUser/{id}")]        
+        [Route("getaUser/{id}")]
         public async Task<IActionResult> getaUser([FromRoute(Name ="id")]int? id)
         {
-            if (id == null || _context.Users == null)
+            if (id == null || _context.Users == null || _context.Logins == null)
             {
                 return NotFound();
             }
             var user = await _context.Users.FindAsync(id);
-            if (user == null)
+            var login = await _context.Logins.FindAsync(id);
+            if (user == null || login == null)
             {
                 return NotFound();
-            }
-            var LoginQuery = _context.Logins.Where(l => l.LoginId == user.UserId);
-            var result = (_context.Users.Where(u => u.UserId == id).FirstOrDefault() as User);
-            ViewBag.aUser = CorrespondTheValue(result);
+            }            
             ViewBag.UserId = id;
-            return View(result);
-        }
-
-        [HttpPost]
-        [Route("getaUser/{id}")]
-        [ValidateAntiForgeryToken]
-        public IActionResult getaUser([FromRoute(Name = "id")]int userId)
-        {
             return View();
         }
 
-        // POST: Admin/Users/Edit/5
+        //Post: getaUser/{Id}
+        //json 物件進來，POST 方式，根據表單name欄位 serialize 成 json (string)
         [HttpPost]
-        [Route("Edit/{id}")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([FromRoute(Name ="id")]int id, [Bind("UserId,UserLname,UserFname,UserNname,UserSex,UserHphoto,UserEmail,UserBirthday,UserSkillId,UserAreaId,UserCv,UserResume,UserSchool,UserFaculty,UserPoint")] User user, [Bind("LoginId,LoginName,LoginPwd,LoginEmail,LoginLevel,LoginAddDate,LoginActive")] Login login)
+        [Route("getaUser/{id}")]
+        [Produces("application/json")]
+        public IActionResult getaUser(int userId, [FromForm]UserApiModel jsonUser)
         {
-            if (id != user.UserId || id != login.LoginId)
+            var userModel = _context.Users.Where(u => u.UserId == userId).FirstOrDefault();
+            if (!UserExists(userId) || userModel == null)
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _context.Update(user);
-                    _context.Update(login);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(user.UserId) || !LoginExists(login.LoginId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-               
-
+                _context.Users.Update(CorrespondTheValue(userModel, jsonUser));
+                _context.SaveChanges();
             }
-            var query = _context.Users.Include(UserNav => UserNav.User1).Select(u => new UserLogin
+            catch (DbUpdateException ex)
             {
-                LoginId = u.User1.LoginId,
-                LoginName = u.User1.LoginName,
-                LoginPwd = u.User1.LoginPwd,
-                LoginEmail = u.User1.LoginEmail,
-                LoginLevel = u.User1.LoginLevel,
-                LoginAddDate = u.User1.LoginAddDate,
-                LoginActive = u.User1.LoginActive,
-                UserId = u.UserId,
-                UserLname = u.UserLname,
-                UserFname = u.UserFname,
-                UserNname = u.UserNname,
-                UserEmail = u.UserEmail,
-                UserSex = u.UserSex,
-                UserHphoto = u.UserHphoto,
-                UserBirthday = u.UserBirthday,
-                UserSkillId = u.UserSkillId,
-                UserAreaId = u.UserAreaId,
-                UserCV = u.UserCv,
-                UserResume = u.UserResume,
-                UserSchool = u.UserSchool,
-                UserFaculty = u.UserFaculty,
-                UserPoint = u.UserPoint,
-            });
-            return View(query);
+                return NotFound(ex);
+            }
+            return RedirectToAction(nameof(Index));
         }
+
 
         private bool UserExists(int id)
         {
@@ -175,5 +126,51 @@ namespace MutualBank.Areas.Admin.Controllers
                 userSkillId = user.UserSkillId
             };
         }
+        private LoginApiModel CorrespondTheValue(Login login)
+        {
+            return new LoginApiModel
+            {
+                loginId = login.LoginId,
+                loginEmail = login.LoginEmail,
+                loginName = login.LoginName,
+                loginPwd = login.LoginPwd,
+            };
+        }
+
+        private User CorrespondTheValue(User user, UserApiModel apiModel)
+        {
+            user.UserAreaId = apiModel.userAreaId;
+            user.UserBirthday = apiModel.userBirthday;
+            user.UserEmail = apiModel.userEmail;
+            user.UserCv = apiModel.userCv;
+            user.UserFaculty = apiModel.userFaculty;
+            user.UserFname = apiModel.userFname;
+            user.UserLname = apiModel.userLname;
+            user.UserNname = apiModel.userNname;
+            user.UserPoint = apiModel.userPoint;
+            user.UserResume = apiModel.userResume;
+            user.UserSchool = apiModel.userSchool;
+            user.UserSex = apiModel.userSex;
+            user.UserSkillId = apiModel.userSkillId;
+            return user;
+        }
+        private User CorrespondTheValue(User user, ApiUserLoginModel apiModel)
+        {
+            user.UserAreaId = apiModel.userAreaId;
+            user.UserBirthday = apiModel.userBirthday;
+            user.UserEmail = apiModel.userEmail;
+            user.UserCv = apiModel.userCv;
+            user.UserFaculty = apiModel.userFaculty;
+            user.UserFname = apiModel.userFname;
+            user.UserLname = apiModel.userLname;
+            user.UserNname = apiModel.userNname;
+            user.UserPoint = apiModel.userPoint;
+            user.UserResume = apiModel.userResume;
+            user.UserSchool = apiModel.userSchool;
+            user.UserSex = apiModel.userSex;
+            user.UserSkillId = apiModel.userSkillId;
+            return user;
+        }
+
     }
 }

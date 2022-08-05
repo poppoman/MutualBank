@@ -1,140 +1,150 @@
 ﻿@{
-    UserApiModel data = ViewBag.aUser;
+    //從 ViewBag 取出物件模型
     var id = ViewBag.UserId;
-    var jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(data);
 }
 
-
+@* 標題列 & 按鈕 *@
 <div class="row justify-content-between align-items-center pt-3 mb-3">
-    <div class="col-4 col-sm-8 col-md-6 col-lg-4 border-bottom">
-        <h1>技能</h1>
+    <div class="col-12 col-sm-8 col-md-8 col-lg-6 border-bottom">
+        <h1>使用者詳細資料</h1>
     </div>
-    <div class="col-md-6 col-lg-8 fs-4">
+    <div class="col-4 col-md-4 col-lg-6 fs-4">
         <span id="editText" class="badge border-end-0 bg-royalblue">閱讀</span>
         <input type="button" id="editBtn" value="切換模式" class="btn btn-lightyellow"/>
     </div>
 </div>
 
-@*表單起始處*@
+@* 表單起始處 *@
 <div class="row">
-    <div id="vmEle" class="col-4 col-sm-8 col-md-6 col-lg-4">
-        <form id="Userpost" action="post" enctype="multipart/form-data">
+    <div id="vmEle" class="col-12 col-sm-8 col-md-8 col-lg-6">
+        <form id="userPost" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
             <div class="text-danger"></div>
             <input type="hidden" id="userId" name="userId" v-model="changedUserData.userId"/>
+            <div class="form-group">
+	            <label for="loginName" class="form-label">登入電子郵件</label>
+	            <input type="email" id="loginEmail" name="loginEmail" class="form-control rounded-pill ps-3" v-bind:value="changedLoginData.loginName" disabled/>
+            </div>
             @*啟用編輯的區域*@
             <div id="editSec">
                 <div class="form-group">
+	                <label for="loginEmail" class="form-label">登入名稱</label>
+	                <input type="text" id="loginName" name="loginName" maxlength="16" class="form-control rounded-pill ps-3" v-bind:value="changedLoginData.loginEmail" />
+	                <div class="invalid-feedback">
+	                  此欄位必填且最長不能超過16字
+	                </div>
+                </div>
+                <div class="form-group has-validation">
                     <label for="userLname" class="form-label">姓氏</label>
-                    <input type="text" id="userLname" name="userLname" v-model="changedUserData.userLname" class="form-control rounded-pill ps-3" />
-                    <div class="valid-feedback">
-                      OK
+                    <input type="text" id="userLname" name="userLname" v-bind:value="changedUserData.userLname" maxlength="20" class="form-control rounded-pill ps-3" />
+                    <div class="invalid-feedback">
+                      最長不能超過20字
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group has-validation">
                     <label for="userFname" class="form-label">名字</label>
-                    <input type="text" id="userFname" name="userFname" v-model="changedUserData.userFname" class="form-control rounded-pill ps-3" />
-                    <div class="valid-feedback">
-                      OK
+                    <input type="text" id="userFname" name="userFname" v-bind:value="changedUserData.userFname" maxlength="20" class="form-control rounded-pill ps-3" />
+                    <div class="invalid-feedback">
+                      最長不能超過20字
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group has-validation">
                     <label for="userNname" class="form-label">暱稱</label>
-                    <input type="text" id="userNname" name="userNname" v-model="changedUserData.userNname" class="form-control rounded-pill ps-3" />
-                    <div class="valid-feedback">
-                      OK
+                    <input type="text" id="userNname" name="userNname" v-bind:value="changedUserData.userNname" maxlength="50" class="form-control rounded-pill ps-3" />
+                    <div class="invalid-feedback">
+                      最長不能超過50字
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group has-validation">
                     <label for="userSex" class="form-label">性別</label>
-                    <select id="userSex" class="form-select" name="userSex" aria-label="Default select example" v-model="selectedSex">
+                    <select id="userSex" class="form-select" name="userSex" aria-label="Default select example" v-bind:value="changedUserData.userSex">
                         <option v-for="item in selectList" :value="item.bool">{{item.text}}</option>
                     </select>
-                    <div class="valid-feedback">
-                      OK
-                    </div>
                 </div>
-                <input type="hidden" id="validationHphoto" />
-                <div class="form-group">
-                    <label for="userEmail" class="form-label">電子郵件</label>
-                    <input type="email" id="userEmail" name="userEmail" v-model="changedUserData.userEmail" class="form-control rounded-pill ps-3" />
+                <div class="form-group has-validation">
+                    <label for="userEmail" class="form-label">聯絡電子郵件</label>
+                    <input type="email" id="userEmail" name="userEmail" v-bind:value="changedUserData.userEmail" maxlength="30" class="form-control rounded-pill ps-3" />
                     <div class="invalid-feedback">
                       不是可用的電子郵件格式
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group has-validation">
                     <label for="userBirthday" class="form-label">出生日期</label>
-                    <input type="datetime-local" id="userBirthday" name="userBirthday" v-model="changedUserData.userBirthday" class="form-control rounded-pill ps-3" />
-                    <div class="valid-feedback">
-                      OK
+                    <input type="datetime-local" id="userBirthday" name="userBirthday" v-bind:value="changedUserData.userBirthday" 
+                           v-bind:max="currentDate" class="form-control rounded-pill ps-3" />
+                    <div class="invalid-feedback">
+                      不是可用的日期範圍
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group has-validation">
                     <label for="userSkillId" class="form-label">技能</label>
-                    <input type="number" id="userSkillId" name="userSkillId" v-model="changedUserData.userSkillId" class="form-control rounded-pill ps-3" />
-                    <div class="valid-feedback">
+                    <input type="number" id="userSkillId" name="userSkillId" v-bind:value="changedUserData.userSkillId" class="form-control rounded-pill ps-3" />
+                    <div class="invalid-feedback">
                       OK
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group has-validation">
                     <label for="userAreaId" class="form-label">居住區域</label>
-                    <input type="number" id="userAreaId" name="userAreaId" v-model="changedUserData.userAreaId" class="form-control rounded-pill ps-3" />
-                    <div class="valid-feedback">
+                    <input type="number" id="userAreaId" name="userAreaId" v-bind:value="changedUserData.userAreaId" class="form-control rounded-pill ps-3" />
+                    <div class="invalid-feedback">
                       OK
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group has-validation">
                     <label for="userCv" class="form-label pe-3">簡歷</label>
-                    <textarea maxlength="200" id="userCv" name="userCv" form="Userpost" class="form-control rounded-10" v-model="changedUserData.userCv"></textarea>
+                    <textarea maxlength="200" id="userCv" name="userCv" form="userPost" class="form-control rounded-10" v-bind:value="changedUserData.userCv"></textarea>
                 </div>
-                <div class="form-group">
+                <div class="form-group has-validation">
                     <label for="userResume" class="form-label pe-3">履歷</label>
-                    <textarea maxlength="200" id="userResume" name="userResume" form="Userpost" class="form-control rounded-10" v-model="changedUserData.userResume"></textarea>
+                    <textarea maxlength="200" id="userResume" name="userResume" form="userPost" class="form-control rounded-10" v-bind:value="changedUserData.userResume"></textarea>
                 </div>
-                <div class="form-group">
+                <div class="form-group has-validation">
                     <label for="userSchool" class="form-label">學校</label>
-                    <input type="text" id="userSchool" name="userSchool" class="form-control rounded-pill ps-3" v-model="changedUserData.userSchool"/>
+                    <input type="text" id="userSchool" name="userSchool" class="form-control rounded-pill ps-3" v-bind:value="changedUserData.userSchool"/>
                     <div class="valid-feedback">
                       OK
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group has-validation">
                     <label for="userFaculty" class="form-label">科系</label>
-                    <input type="text" id="userFaculty" name="userFaculty"  class="form-control rounded-pill ps-3" v-model="changedUserData.userFaculty" />
+                    <input type="text" id="userFaculty" name="userFaculty"  class="form-control rounded-pill ps-3" v-bind:value="changedUserData.userFaculty" />
                     <div class="valid-feedback">
                       OK
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group has-validation">
                     <label for="userPoint" class="form-label">擁有點數</label>
-                    <input type="number" id="userPoint" name="userPoint" class="form-control rounded-pill ps-3" v-model="changedUserData.userPoint" />
+                    <input type="number" id="userPoint" name="userPoint" class="form-control rounded-pill ps-3" v-bind:value="changedUserData.userPoint" />
                     <div class="valid-feedback">
                       OK
                     </div>
                 </div>
+
             </div>
-            @*按鈕列*@
-            <div class="pt-3">
-                <button type="button" class="btn btn-backtolist">重設</button>
-                <input type="reset" value="reset"/>
-                <button type="submit" v-on:click="formSubmit">提交</button>
+            @* 按鈕列 *@
+            <div class="row justify-content-evenly pt-3">
+                    <button type="button" v-on:click="fetchOrigin" class="btn btn-backtolist col-3">重設</button>
+                    <button type="submit" id="prevent" class="btn btn-backtolist col-3">提交</button>
+                    <a href="~/Admin/Users/Index" class="btn btn-backtolist col-5">返回清單</a>
             </div>
         </form>
-        <a href="~/Admin/Users/Index" class="btn btn-backtolist">返回使用者清單</a>
     </div>
 </div>
 
 
+@*Vue 段落*@
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-
 <script>
-var user = @Html.Raw(jsonString);
-var userId = @id;
+//將 razor 物件帶入 JavaScript
+var Id = @id;
+//時間
+const current  = new Date().toISOString().substring(0,16);
+// new Vue 取名 vm 掛載在 #vmEle
 var vm = new Vue({
     el: "#vmEle",
     data: {
-        userData: user,
-        changedUserData: user,
-        selectedSex: user.userSex,
+        changedUserData: [],
+        changedLoginData: [],
+        currentDate: current,
         selectList: [
             { bool: null, text: "未設定" },
             { bool: false, text: "女" },
@@ -142,35 +152,25 @@ var vm = new Vue({
         ],
     },
     methods: {
-        formSubmit: function(e) {
-            e.preventDefault();
-            var postData = $('#Userpost').serializeObject()
-            $.ajax({
-                url: `/api/ApiUser/updateaUser2/${userId}`,
-                data: postData,
-                type: 'POST',
-                dataType: "json"
-            }).done(function(json) {
-                console.log("成功");
-                console.log(json);
-            }).fail(function(xhr, status) {
-                console.log('出現錯誤，無法完成!');
-                console.log('Status: ' + status);
-                console.dir(xhr);
-                console.log(postData);
-            }).always(function(xhr, status) {
-                console.log('要求已完成');
-            });
+        //按鈕事件處理
+        fetchOrigin: function() {
+            vm.$forceUpdate();
         },
     },
     mounted: function() {
         var self = this;
-        fetch(`/api/ApiUser/getaUser/${userId}`)
+        fetch(`/api/ApiUser/getaUser/${Id}`)
             .then(function(res) { return res.json() })
             .then(function(json) {
-                self.user = json;
-                console.log(json);
-            })
+                self.changedUserData = json;
+                console.log("UserRes = ", json);
+            });
+        fetch(`/api/ApiLogin/getaLogin/${Id}`)
+            .then(function(res) { return res.json() })
+            .then(function(json) {
+                self.changedLoginData = json;
+                console.log("LoginRes = ", json);
+            });
     }
 });
 </script>
@@ -181,55 +181,90 @@ var vm = new Vue({
     <script>
         //參數宣告
         var inp = $('#editSec input');
+        var sel = $('#editSec select');
+        var textArea = $('#editSec textarea');
         var sp = $('#editText');
+        var submitButton = $('#prevent');
         var bool = true;
-        var changedUser = vm.changedUserData;
+        const forms = document.querySelectorAll('.needs-validation');
 
-        //方法宣告
-        $.fn.serializeObject = function() {
-            var o = {};
-            var a = this.serializeArray();
-            $.each(a, function() {
-                if (o[this.name]) {
-                    if (!o[this.name].push) {
-                        o[this.name] = [o[this.name]];
-                    }
-                    o[this.name].push(this.value || '');
-                } else {
-                    o[this.name] = this.value || '';
-                }
-            });
-            return o;
+        //函式宣告
+        $.fn.serializeObject = function () {
+	        var o = {};
+	        var a = this.serializeArray();
+	        $.each(a, function () {
+		        if (o[this.name]) {
+			        if (!o[this.name].push) {
+				        o[this.name] = [o[this.name]];
+			        }
+			        o[this.name].push(this.value || '');
+		        } else {
+			        o[this.name] = this.value || '';
+		        }
+	        });
+	        return o;
         };
+        $.fn.eleReadonly = function () {
+            var ele = this;
+            ele.prop('readonly', 'true');
+            ele.removeClass('form-control');
+            ele.addClass('form-control-plaintext fs-6 bg-light');
+        }
+        $.fn.eleDisabled = function () {
+            var ele = this;
+            ele.prop('disabled', 'true');
+            ele.removeClass('form-control');
+            ele.addClass('form-control-plaintext fs-6 bg-light');
+        }
+        $.fn.eleEditable = function () {
+            var ele = this;
+            ele.removeAttr('readonly');
+            ele.removeAttr('disabled');
+            ele.removeClass('form-control-plaintext fs-6 bg-light');
+            ele.addClass('form-control');
+        }
+        function eleReadable() {
+            inp.eleReadonly();
+            sel.eleDisabled();
+            textArea.eleReadonly();
+        }
 
-        //input 初始化
-        inp.prop('readonly', 'true');
-        inp.removeClass('form-control');
-        inp.addClass('form-control-plaintext fs-6 bg-light');
+        //element 預設為閱讀狀態
+        eleReadable();
+
         //註冊事件
         $("#editBtn").on("click",modeSwitch);
 
         //按鈕事件處理
         function modeSwitch() {
             if (bool) {
-                inp.removeAttr('readonly')
-                inp.addClass('form-control');
-                inp.removeClass('form-control-plaintext bg-light');
+                inp.eleEditable();
+                sel.eleEditable();
+                textArea.eleEditable();
                 sp.text("編輯");
                 sp.removeClass('bg-royalblue');
-                sp.addClass('bg-lightyellow');                
+                sp.addClass('bg-lightyellow');
                 bool = false;
             }
             else {
-                inp.prop('readonly', 'true');
-                inp.removeClass('form-control');
-                inp.addClass('form-control-plaintext fs-6 bg-light');
+                eleReadable();
                 sp.text("閱讀");
                 sp.removeClass('bg-lightyellow');
                 sp.addClass('bg-royalblue');
                 bool = true;
             }
         }
+
+        // validation 處理
+        Array.from(forms).forEach(form => {
+          form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            form.classList.add('was-validated')
+          }, false)
+        });
 
     </script>
 }
