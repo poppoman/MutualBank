@@ -21,6 +21,9 @@ namespace MutualBank.Models
         public virtual DbSet<Login> Logins { get; set; } = null!;
         public virtual DbSet<Message> Messages { get; set; } = null!;
         public virtual DbSet<Point> Points { get; set; } = null!;
+        public virtual DbSet<RegcaseReport> RegcaseReports { get; set; } = null!;
+
+        public virtual DbSet<ReguserReport> ReguserReports { get; set; } = null!;
         public virtual DbSet<Skill> Skills { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
 
@@ -224,6 +227,33 @@ namespace MutualBank.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Points_Case");
             });
+            
+            modelBuilder.Entity<RegcaseReport>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("regcase_report");
+
+                entity.Property(e => e.Month).HasColumnName("month");
+
+                entity.Property(e => e.Year).HasColumnName("year");
+
+                entity.Property(e => e.CaseNum).HasColumnName("CaseNum");
+            });
+           
+            modelBuilder.Entity<ReguserReport>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("reguser_report");
+
+                entity.Property(e => e.Month).HasColumnName("month");
+
+                entity.Property(e => e.People).HasColumnName("people");
+
+                entity.Property(e => e.Year).HasColumnName("year");
+            });
+
 
             modelBuilder.Entity<Skill>(entity =>
             {

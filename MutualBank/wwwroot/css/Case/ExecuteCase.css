@@ -1,0 +1,21 @@
+﻿.noExecuteCase {
+    border-radius: 5px;
+    background: var(--white);
+    padding: 20px;
+    padding-top: 55px;
+    width: 100%;
+    height: 240px;
+}
+    .noExecuteCase i {
+        font-size:80px;
+    }
+
+    .typeTag {
+        padding: 2px 5px;
+    }
+
+.smallInfo {
+    display: block;
+    color: black;
+    font-weight: 400;
+}

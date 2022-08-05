@@ -1,0 +1,202 @@
+﻿<div class="container cn offset-3 col-6 " id="member">
+    <div class="col-12">
+        <h4 class="postTitle mb-2">會員資料</h4>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mt-3">
+            <img id="pic">
+        </div>
+        <div class="col-md-6 mt-5">
+            <label for="CasePhoto" class="form-label">更改頭像</label>
+            <input type="file" class="form-control" id="CasePhoto" name="CasePhoto" onchange="previewPic(this)"
+                   accept="image/*" required>
+            <div class="invalid-feedback">
+                此欄位不可為空
+            </div>
+        </div>
+    </div>
+    <form id="caseForm" action="" method="post" class="needs-validation mt-3">
+        <div class="row pt-3">
+            <div class="col-md-6 mt-3">
+                <label for="UserFname" class="form-label">姓</label>
+                <input type="text" class="form-control" id="UserFname" required v-model="UserModel.userFname">
+            </div>
+            <div class="col-md-6 mt-3">
+                <label for="UserLname" class="form-label">名</label>
+                <input type="text" class="form-control" id="UserLname" required v-model="UserModel.userLname">
+            </div>
+            <div class="col-4 mt-3">
+                <label for="UserNname" class="form-label">暱稱</label>
+                <input type="text" class="form-control" id="UserNname" required v-model="UserModel.userNname">
+            </div>
+            <div class="col-4 mt-3">
+                <label for="UserSex" class="form-label">性別</label>
+                <select class="form-select" id="UserSex" v-model="UserModel.userSex">
+                    <option value=true>男</option>
+                    <option value=false>女</option>
+                </select>
+            </div>
+            <div class="col-4 mt-3">
+                <label for="UserSkillId" class="form-label">技能</label>
+                <select class="form-select" id="UserSkillId" required v-model="UserModel.userSkillId">
+                    <option v-for="(item,index) in SkillModel" name="UserSkillOption" :value="item.skillId">{{item.skillName}}</option>
+                </select>
+            </div>
+            <div class="col-md-6 mt-3">
+                <label for="UserEmail" class="form-label">信箱</label>
+                <input type="text" class="form-control" id="UserEmail" readonly v-model="UserModel.userEmail">
+            </div>
+            <div class="col-md-6 mt-3">
+                <label for="UserBirthday" class="form-label">生日</label>
+                <input type="date" class="form-control" id="UserBirthday" v-model="UserModel.userBirthday">
+            </div>
+            <hr class="mt-5">
+
+            <div class="col-md-6 mb-2">
+                <label for="City" class="form-label">縣市</label>
+                <select class="form-select" id="City" required v-on:change="GetTown" v-model="UserModel.userAreaId.areaCity">
+                    <option v-for="item in City" :value="item">{{item}}</option>
+                </select>
+            </div>
+
+            <div class="col-md-6 mb-2">
+                <label for="Town" class="form-label">鄉鎮區</label>
+                <select class="form-select" id="Town" required v-model="UserModel.userAreaId.areaTown">
+                    <option v-if="show" v-for="item in TempTown" :value="item">{{item}}</option>
+                    <option v-if="show2" v-for="item in Town" :value="item">{{item}}</option>
+                </select>
+            </div>
+
+            <div class="col-12 mt-3">
+                <label for="UserSchool" class="form-label">學歷</label>
+                <input type="text" class="form-control" id="UserSchool" v-model="UserModel.userSchool">
+            </div>
+
+            <div class="col-12 mt-3">
+                <label for="UserResume" class="form-label">工作經歷</label>
+                <input type="text" class="form-control" id="UserResume" v-model="UserModel.userResume">
+            </div>
+
+
+            <div class="col-12 mb-3 mt-3">
+                <label for="UserCv" class="form-label">關於我</label>
+                <textarea class="form-control" id="UserCv" cols="30" rows="5" required v-model="UserModel.userCv"></textarea>
+            </div>
+        </div>
+        <div class="col-12 text-center">
+            <button class="postBtn w-25 mt-4" type="submit">更改</button>
+        </div>
+    </form>
+</div>
+<style>
+    .cn {
+        position: relative;
+        border-radius: 5px;
+        padding: 10px 40px 30px;
+        background: var(--white);
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.03);
+    }
+
+    .postTitle {
+        font-weight: 700;
+    }
+
+    .postBtn {
+        border: 0px;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 18px;
+        background: var(--help);
+        font-weight: 700;
+    }
+
+        .postBtn:hover {
+            background: var(--help1);
+        }
+
+    h6 {
+        font-weight: 700;
+    }
+
+    h4::before {
+        content: '';
+        padding-right: 10px;
+        border-left: 5px solid var(--skill);
+    }
+</style>
+<script>
+    var vm = new Vue({
+        el: "#member",
+        data:
+        {
+            UserModel: [],
+            SkillModel: [],
+            City: [],
+            Town: [],
+            show: true,
+            show2: false,
+            TempTown: []
+        },
+        methods:
+        {
+            GetTown: function(e) {
+                var self = this;
+                var SelectedCity = e.target.value;
+                fetch(`/Nav/_LayoutApi/GetAreaTown?AreaCity=${SelectedCity}`)
+                    .then(function(res) { return res.json(); })
+                    .then(function(result) {
+                        self.Town = result;
+                        self.show = false;
+                        self.show2 = true;
+                    });
+            },
+        },
+        mounted: function() {
+            var self = this;
+            fetch(`/api/Users1Controller/getUserInfo`)
+                .then(function(res) {
+                    return res.json();
+                }).then(function(result) {
+                    
+                    self.UserModel = result;
+                });
+            fetch(`/api/Users1Controller/getSkillInfo`)
+                .then(function(res) {
+                    return res.json();
+                }).then(function(result) {
+                    self.SkillModel = result;
+                });
+            fetch(`/Nav/_LayoutApi/GetAreaCity`)
+                .then(function(res) {
+                    return res.json();
+                }).then(function(result) {
+                    self.City = result;
+                });
+            fetch("/api/Users1Controller/getTempTown")
+                .then(function(res) {
+                    return res.json();
+                }).then(function(result) {
+                    self.TempTown = result;
+                });
+        },
+    });
+    var compressRatio = 0.8, // 圖片壓縮比例
+    imgNewWidth = 400, // 圖片新寬度
+    img = new Image(),
+    canvas = document.createElement("canvas"),
+    context = canvas.getContext("2d"),
+    file, fileReader, dataUrl;
+
+    function previewPic(e) {
+    maxSize_2MB = 1 * 1024 * 1024;
+    if (e.files[0].size > maxSize_2MB) {
+        alert('圖片大小超過2MB！無法上傳');
+        e.value = "";
+    }
+    else {
+
+        pic.src = URL.createObjectURL(e.files[0])
+        
+    }
+}
+</script>

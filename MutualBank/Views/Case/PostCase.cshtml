@@ -1,5 +1,5 @@
 ﻿<section id="postCase">
-    <div class="container mb-5">
+    <div class="container mb-5" id="msgSuccessSubmit">
         <form id="caseForm" action="@Url.Action("AddCase","Case")" method="post" class="needs-validation"
               novalidate enctype="multipart/form-data">
             <div class="row pt-3">
@@ -38,7 +38,15 @@
                         此欄位不可為空
                     </div>
                 </div>
-
+                <div class="col-12 mb-3">
+                    <label for="CaseTitle" class="form-label">交易點數</label>
+                    <input type="text" class="form-control" v-bind:class="{'is-invalid':pointValid}"
+                           id="CaseTitle" name="CasePoint" v-model.number="point" v-on:keypress="isNumber"
+                           placeholder="請輸入數字" maxlength="5" required>
+                    <div class="invalid-feedback">
+                        已超過持有點數
+                    </div>
+                </div>
 
                 <div class="col-12 mb-3 mt-3">
                     <label for="CaseIntroduction" class="form-label">說明</label>
@@ -51,7 +59,7 @@
                 </div>
                 <div class="col-12">
                     <label for="CasePhoto" class="form-label">圖片(大小請勿超過2MB)</label>
-                    <input type="file" class="form-control" id="CasePhoto" name="CasePhoto" onchange="previewPic(this)"
+                    <input type="file" class="form-control" id="CasePhoto" name="CasePhoto" :change="previewPic"
                            accept="image/*" required>
                     <img id="pic">
                     <div class="invalid-feedback">
@@ -77,7 +85,7 @@
                     <label for="CaseSerArea" class="form-label">鄉鎮區</label>
                     <select class="form-select" id="CaseSerArea" name="CaseSerArea" v-model="CaseSerArea" required>
                         <option v-show="isAreaSelected" selected="selected" disabled>請先選擇縣市</option>
-                        <option v-for="item in areaTown">{{item}}</option>
+                        <option v-for="item in areaTown" :value="item.AreaId">{{item.AreaTown}}</option>
                     </select>
                     <div class="invalid-feedback">
                         此欄位不可為空
@@ -96,20 +104,36 @@
 
                 <h6>發佈時間</h6>
                 <div class="col-12">
-                    <input type="radio" name="postTime" id="timeNow" onchange="disableDate()" checked>
+                    <input type="radio" name="postTime" id="timeNow" v-on:change="disableDate" checked>
                     <label for="timeNow">立即發佈</label>
                     <br>
-                    <input type="radio" name="postTime" id="timeAppointment" onchange="ableDate()">
+                    <input type="radio" name="postTime" id="timeAppointment" v-on:change="ableDate">
                     <label for="timeAppointment">預約發佈</label>
                     <br>
-                    <input type="date" id="dateApp" name="CaseReleaseDate" onmouseout="updateDateRemind()">
+                    <input type="date" id="dateApp" name="CaseReleaseDate" v-on:change="updateDateRemind">
                 </div>
 
                 <p id="dateP">貼文自動下架時間為 <span id="dateRemind"></span></p>
 
                 <div class="col-12 text-center">
-                    <button class="postBtn w-25 mt-4" type="submit" :disabled="isSubmitAble">送出</button>
+                    <button class="postBtn w-25 mt-4" type="submit" v-bind:disabled="isSubmitAble">送出</button>
                 </div>
         </form>
     </div>
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1000">
+        <div id="ToastTransResult" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <i class="fa-solid fa-bell"></i>
+                <strong class="me-auto">&nbsp;通知</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                {{toastSubmitResult}}
+            </div>
+        </div>
+    </div>
+
 </section>
+<script>
+var userPoint = @Html.Raw(ViewBag.UserPoint);
+</script>

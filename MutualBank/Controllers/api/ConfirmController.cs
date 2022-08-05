@@ -30,38 +30,81 @@ namespace MutualBank.Controllers.api
         }
 
 		[HttpGet]
-		public List<CaseTitle> AllCase(string id) 
-		{
-			var userid = _mutualBankContext.Logins.Where(x => x.LoginName == id).Select(x => x.LoginId).FirstOrDefault();
-			var caseidd  = _mutualBankContext.Cases.Where(x => x.CaseUserId == userid).Select(x=>x.CaseId).ToList();
-			var casetitlee = _mutualBankContext.Cases.Where(x => x.CaseUserId == userid).Select(x => x.CaseTitle).ToList();
-			var casehelp = _mutualBankContext.Cases.Where(x => x.CaseUserId == userid).Select(x => x.CaseNeedHelp).ToList();
+        public List<CaseTitle> AllCase(string id)
+        {
+            var userid = _mutualBankContext.Logins.Where(x => x.LoginName == id).Select(x => x.LoginId).FirstOrDefault();
+            var caseidd = _mutualBankContext.Cases.Where(x => x.CaseUserId == userid).OrderByDescending(x => x.CaseAddDate).Select(x => x.CaseId).ToList();
+            var casetitlee = _mutualBankContext.Cases.Where(x => x.CaseUserId == userid).OrderByDescending(x=>x.CaseAddDate).Select(x => x.CaseTitle).ToList();
+			var CaseIsExecute = _mutualBankContext.Cases.Where(x => x.CaseUserId == userid).OrderByDescending(x => x.CaseAddDate).Select(x => x.CaseIsExecute).ToList();
+			var casehelp = _mutualBankContext.Cases.Where(x => x.CaseUserId == userid).OrderByDescending(x => x.CaseAddDate).Select(x => x.CaseNeedHelp).ToList();
+			var caseadddate = _mutualBankContext.Cases.Where(x => x.CaseUserId == userid).OrderByDescending(x => x.CaseAddDate).Select(x => x.CaseAddDate).ToList();
+			List<string> IsExecute = new List<string>();
+			List<string> addDate = new List<string>();
+			for (int i = 0; i < CaseIsExecute.Count; i++) 
+			{
+				if (CaseIsExecute[i] == false) IsExecute.Add("");
+				else IsExecute.Add("(交易中)");
+				addDate.Add($"建立時間{Convert.ToDateTime(caseadddate[i]).ToString("yyyyMMdd")}");
+			}
 			
 			List<CaseTitle> c = new List<CaseTitle>();
-			for (int i = 0; i < caseidd.Count; i++)
-			{
-				var msg = _mutualBankContext.Messages.Where(x => x.MsgCaseId == caseidd[i]).Select(x => x.MsgContent).ToList();
-				CaseTitle Case = new CaseTitle { caseid = caseidd[i] , casetitle = casetitlee[i], casehelp = casehelp[i],casemsg=msg };
-				c.Add(Case);
-			}
-			return c;
-		}
+            for (int i = 0; i < caseidd.Count; i++)
+            {
+				var read = _mutualBankContext.Messages.Where(x => x.MsgCaseId == caseidd[i] && x.MsgIsRead==false).ToList().Count();
+				//找單篇文章的留言
+				var msg = _mutualBankContext.Messages.Where(x => x.MsgCaseId == caseidd[i]).OrderByDescending(x=>x.MsgAddDate).Select(x => x.MsgContent).ToList();
+                var msguser = _mutualBankContext.Messages.Where(x => x.MsgCaseId == caseidd[i]).OrderByDescending(x => x.MsgAddDate).Select(x => x.MsgUserId).ToList();
+				var msgisread = _mutualBankContext.Messages.Where(x => x.MsgCaseId == caseidd[i]).OrderByDescending(x => x.MsgAddDate).Select(x => x.MsgIsRead).ToList();
+
+				List<MsgandRead> a = new List<MsgandRead>();
+                for (int j = 0; j < msguser.Count; j++)
+                {
+                    var username = _mutualBankContext.Users.Where(x => x.UserId == msguser[j]).Select(x => x.UserNname).FirstOrDefault();
+					var uu = $"{username}";
+                    var mm = $" 說: {msg[j]} ";
+					MsgandRead msgandread =new MsgandRead {msguser=uu, msg = mm, isread = msgisread[j] };
+                    a.Add(msgandread);
+                }
+                CaseTitle Case = new CaseTitle { caseid = caseidd[i], casetitle = $"{casetitlee[i]}{IsExecute[i]}", casehelp = casehelp[i], casemsg = a ,read=read, caseadddate = addDate[i] };
+                c.Add(Case);
+            }
+            return c;
+        }
 
 		[HttpGet]
-		public List<string> message(int id)
+		public ActionResult<Error> ReadOneMsg(int id)
 		{
-			List<string> f = new List<string>();
-			var msg = _mutualBankContext.Messages.Where(x=>x.MsgCaseId == id).Select(x => x.MsgContent).ToArray();
-			var msguser = (_mutualBankContext.Messages.Where(x => x.MsgCaseId == id).Select(x => x.MsgUserId)).ToArray();
-			for (int i = 0; i < msg.Length; i++) 
+			
+			Error err = new Error();
+				var casemsg = _mutualBankContext.Messages.Where(x => x.MsgCaseId == id).ToList();
+				for (int j = 0; j < casemsg.Count; j++)
+				{
+					casemsg[j].MsgIsRead = true;
+				}
+			_mutualBankContext.SaveChanges();
+			err.Message = $"已讀caseid{id}";
+			return err;
+		}
+		[HttpGet]
+		public ActionResult<Error> ReadAll(string id) 
+		{
+			Error err = new Error();
+			var userid = _mutualBankContext.Logins.Where(x => x.LoginName == id).Select(x => x.LoginId).FirstOrDefault();
+			var caseid = _mutualBankContext.Cases.Where(x => x.CaseUserId == userid).Select(x => x.CaseId).ToList();
+			for (int i = 0; i < caseid.Count; i++) 
 			{
-				var username = (_mutualBankContext.Users.Where(x => x.UserId == msguser[i]).Select(x => x.UserNname)).FirstOrDefault();
-                f.Add($"{username}說: {msg[i]}");
+				var casemsg = _mutualBankContext.Messages.Where(x => x.MsgCaseId == caseid[i]).ToList();
+				for (int j = 0; j < casemsg.Count; j++) 
+				{
+                    casemsg[j].MsgIsRead=true;
+				}				
 			}
-			return f;
+			_mutualBankContext.SaveChanges();
+			err.Message = "已全部已讀";
+			return err;
 		}
 
-		[HttpPost]
+        [HttpPost]
 		public ActionResult<Error> ConfirmRegister(UserRegister userregister)
 		{
 			Error err = new Error();

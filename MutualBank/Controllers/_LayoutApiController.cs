@@ -26,6 +26,18 @@ namespace MutualBank.Controllers
             var AreaTown = _mutualBankContext.Areas.Where(x => x.AreaCity == AreaCity).Select(x=>x.AreaTown).ToList();
             return AreaTown;
         }
+
+        [HttpGet]
+        public String GetAreaTownWithId(string AreaCity)
+        {
+            var AreaTown= _mutualBankContext.Areas.Where(x => x.AreaCity == AreaCity)
+                .Select(x =>new {
+                    AreaId=x.AreaId,
+                    AreaTown=x.AreaTown
+                })
+                .ToList();
+            return Newtonsoft.Json.JsonConvert.SerializeObject(AreaTown);
+        }
         public string GetUserPoint()
         {
             var points = "null";

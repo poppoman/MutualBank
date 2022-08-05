@@ -26,7 +26,7 @@
                                 <h5 class="mb-1">{{user.userLname}}{{user.userFname}}  </h5>
                                 <label for="UserNname" class="form-label text-muted mb-1">{{user.userNname}}</label>
                                 <hr>
-                                <a href="/Home/ProfileUpdate" class="btn"><i class="fa-solid fa-pen-to-square"></i>&nbsp;編輯</a>
+                                <a href="/Home/ProfileUpdate1" class="btn"><i class="fa-solid fa-pen-to-square"></i>&nbsp;編輯</a>
                             </div>
                         </div>
                         <!-- 左方 選單 -->
@@ -48,6 +48,11 @@
                                                     <path d="M8 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm4 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM5.5 7a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
                                                     <path d="M16 8c0 3.15-1.866 2.585-3.567 2.07C11.42 9.763 10.465 9.473 10 10c-.603.683-.475 1.819-.351 2.92C9.826 14.495 9.996 16 8 16a8 8 0 1 1 8-8zm-8 7c.611 0 .654-.171.655-.176.078-.146.124-.464.07-1.119-.014-.168-.037-.37-.061-.591-.052-.464-.112-1.005-.118-1.462-.01-.707.083-1.61.704-2.314.369-.417.845-.578 1.272-.618.404-.038.812.026 1.16.104.343.077.702.186 1.025.284l.028.008c.346.105.658.199.953.266.653.148.904.083.991.024C14.717 9.38 15 9.161 15 8a7 7 0 1 0-7 7z" />
                                                 </svg>我的技能與需求
+                                            </span>
+                                        </li>
+                                         <li id="myExecuteCase" name="menuOption" class="list-group-item d-flex justify-content-center align-items-center p-3 ">
+                                            <span>
+                                                <i class="fa-solid fa-check-to-slot"></i>&nbsp;待結案
                                             </span>
                                         </li>
                                         <li id="message" name="menuOption" class="list-group-item d-flex justify-content-center align-items-center p-3 ">
@@ -95,7 +100,6 @@
             created: function() {
                 let self = this;
                 fetch("/api/UsersController/getusers").then(function(result) {
-                    console.log("result =", result)
                     return result.json();
                 })
                     .then(function(mydata) {
@@ -136,6 +140,23 @@
             });
         });
 
+        var myExecuteCase = document.getElementById("myExecuteCase");
+        myExecuteCase.addEventListener("click", function() {
+            dynamicLoading.css("/css/Case/ExecuteCase.css");
+            $.ajax({
+                type: "POST",
+                url: "/Case/GetExecuteCase",
+                success: function(res) {
+                    $("#ajaxSection").html(res);
+                    $.getScript("/js/Case/ExecuteCase.js");
+                },
+                error: function(res) {
+                    console.log(res);
+                }
+            });
+        });
+
+
         var changePwd = document.getElementById("changePwd");
         changePwd.addEventListener("click", function() {
             $.ajax({
@@ -175,7 +196,6 @@
             })
                 .done(function(res) {
                     $("#ajaxSection").html(res);
-                    $.getScript("/js/PostCaseReady.js", function() { });
                     $.getScript("/js/PostCase.js", function() { });
                 })
                 .fail(function(res) {
@@ -185,13 +205,24 @@
     </script>
     <script>
         //一進入此頁，ajaxSection就切到個人資訊
-        var myProfile = document.getElementById("myProfile");
-        myProfile.click();
         //點擊頁首連結進入貼文頁面
         var queryString = location.search.split("=")[1];
         var btnPostCase = document.getElementById("btnPostCase");
-        if (queryString == "postcase") {
-            btnPostCase.click();
+        var myProfile = document.getElementById("myProfile");
+        var myCases = document.getElementById("myCases");
+
+        switch (queryString) {
+            case "myProfile":
+                myProfile.click();
+                break;
+            case "postcase":
+                btnPostCase.click();
+                break;
+            case "myCase":
+                myCases.click();
+                break;
+                dafault:
+                break;
         }
     </script>
 }

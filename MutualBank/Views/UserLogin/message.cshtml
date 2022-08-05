@@ -1,52 +1,4 @@
-﻿@*<section id="message" class="bg-white">
-    <div id="mes" class="container">
-        <div class="row">
-            <ul class="nav nav-tabs bg-white" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link active" id="All-tab" data-bs-toggle="tab" data-bs-target="#All-tab-pane" type="button" role="tab" aria-controls="All-tab-pane" aria-selected="true">全部貼文</a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link " id="skill-tab" data-bs-toggle="tab" data-bs-target="#skill-tab-pane" type="button" role="tab" aria-controls="skill-tab-pane" aria-selected="true" v-on:click="getHelpyou">提供技能</a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="need-tab" data-bs-toggle="tab" data-bs-target="#need-tab-pane" type="button" role="tab" aria-controls="need-tab-pane" aria-selected="true" v-on:click="getHelpme">需要幫忙</a>
-                </li>
-            </ul>
-
-            <div v-if="showwho" class="accordion accordion-flush" id="caseList" >
-                <div class="accordion-item" v-for="(item,index) in helpme":key="index">
-                    <h2 class="accordion-header" :id="'h'+index">
-                        <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#d' + index" aria-expanded="true" :aria-controls="index" v-on:click="retrunmeid(index)">
-                            {{item}}{{index}}
-                        </a>
-                    </h2>
-                    <div :id="'d'+index" class="accordion-collapse collapse" :aria-labelledby="'h'+index" data-bs-parent="#caseList" v-for="mes in helpmessage"  >
-                        <div class="accordion-body" >
-                            {{mes}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div v-if="showwho2" class="accordion accordion-flush" id="caseList2" >
-                <div class="accordion-item" v-for="(item,index) in helpyou">
-                    <h2 class="accordion-header" :id="'h'+index">
-                        <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#d' + index" aria-expanded="true" :aria-controls="index" v-on:click="retrunyouid(index)">
-                            {{item}}
-                        </a>
-                    </h2>
-                    <div :id="'d'+index" class="accordion-collapse collapse" :aria-labelledby="'h'+index" data-bs-parent="#caseList2" v-for="mes in helpmessage">
-                        <div class="accordion-body">
-                            {{mes}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>*@
-<style>
+﻿<style>
         .cn {
         position: relative;
         border-radius: 5px;
@@ -60,6 +12,7 @@
     <div class="container mb-3 fs-18">
         <div class="row justify-content-evenly align-items-center text-nowrap">
             <div class="col-md-8 col-sm-12">
+                <a type="button" class="mainBtn" v-on:click="readAll"><strong>全部已讀</strong></a>
             </div>
 
             <div class="col-md-4">
@@ -72,21 +25,27 @@
         </div>
         <div class="cn row">
             <div class="accordion accordion-flush" id="caseList">
-                <div v-for="item in Case" :key="item.caseid">
+                <div v-for="(item,index) in Case" :key="item.caseid">
                     <div class="accordion-item">
-                    <h2 class="accordion-header" :id="'h'+item.caseid">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#d' + item.caseid" aria-expanded="true" :aria-controls="'d'+item.caseid">
-                            {{item.casetitle}}
-                        </button>
-                    </h2>
-                    <div :id="'d'+item.caseid" class="accordion-collapse collapse" :aria-labelledby="'h'+item.caseid" data-bs-parent="#caseList">
-                        <div class="accordion-body">
-                            <div v-for="msg in item.casemsg" >{{msg}}</div>
+                        <h2 class="accordion-header" :id="'h'+item.caseid">
+                            <button v-on:click="readOneMsg" :value="item.caseid" class=" accordion-button collapsed d-flex" type="button" data-bs-toggle="collapse" :data-bs-target="'#d' + item.caseid" aria-expanded="true" :aria-controls="'d'+item.caseid" :data-bit="index">
+                                <div class="col-8">{{item.casetitle}}</div>
+                                <div class="">{{item.caseadddate}}</div>
+                                <span v-if="item.read>0" class="position-absolute top-50 end-100 translate-middle badge rounded-pill bg-danger">
+                                    {{item.read}}
+                                    <span class="visually-hidden">unread messages</span>
+                                    
+                                </span>
+                            </button>
+                        </h2>
+                        <div :id="'d'+item.caseid" class="accordion-collapse collapse" :aria-labelledby="'h'+item.caseid" data-bs-parent="#caseList">
+                            <div class="accordion-body">
+                                <div v-for="msgg in item.casemsg" style="font-size:15px;"><span style="color:var(--skill);">{{msgg.msguser}}</span>{{msgg.msg}}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                </div>
-                
+
             </div>
         </div>
     </div>
@@ -105,16 +64,16 @@
         {
             GetAllCase: function(e) {
                 this.addClickClass(e);
-                this.Case = this.Case2;
+                this.Case = this.Case2.sort(function(a, b) { return b.read - a.read; });;
             },
             needOrSkillModel: function(e) {
                 this.addClickClass(e);
                 var bit = event.target.dataset.bit;
                 if (bit == "true") {
-                    this.Case = this.Case2.filter(x => x.casehelp == true);
+                    this.Case = this.Case2.filter(x => x.casehelp == true).sort(function(a, b) { return b.read - a.read; });
                 }
                 else {
-                    this.Case = this.Case2.filter(x => x.casehelp == false);
+                    this.Case = this.Case2.filter(x => x.casehelp == false).sort(function(a, b) { return b.read - a.read; });
                 }
             },
             addClickClass: function(e) {
@@ -122,6 +81,39 @@
                 btnSortCase.forEach(x => x.classList.remove("active"));
                 e.target.classList.add("active");
             },
+            readOneMsg: function(e) 
+            {
+                var self = this;
+                var caseid = e.target.value;
+                var index = event.target.dataset.bit;
+                fetch(`/api/Confirm/ReadOneMsg?id=${caseid}`)
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(res) {
+                        console.log("res = ", res.message);
+                        self.Case[index].read = 0;
+                        
+                    });             
+            },
+            readAll: function() 
+            {
+                var self = this;
+                if (confirm("確定要全部已讀嗎?")) {
+                    fetch(`/api/Confirm/ReadAll?id=${@User.Identity.Name}`)
+                        .then(function(response) {
+                            return response.json();
+                        })
+                        .then(function(res) {
+                            for (var i = 0; i < self.Case.length; i++) 
+                            {
+                                self.Case[i].read = 0;
+                            }
+                            console.log("res = ", res.message);
+                        });
+                }
+                else { console.log("不確定"); }
+            }
 
         },
         mounted: function() {
@@ -132,8 +124,10 @@
                 })
                 .then(function(res) {
                     console.log("GetAllCase = ", res);
-                    self.Case = self.Case2 = res;
+                    self.Case = self.Case2 = res.sort(function(a, b) { return b.read - a.read; });
+                    
                 });
+
         }
 
     });

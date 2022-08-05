@@ -27,6 +27,7 @@ namespace MutualBank.Models
         public string? LoginHPhoto { get; set; }
 
         public string? AreaTownname { get; set; }
-
+        public bool? IsExecute { get; set; }
+        public int UserPoint { get; internal set; }
     }
 }

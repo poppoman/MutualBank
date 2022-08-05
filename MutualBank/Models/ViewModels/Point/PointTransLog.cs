@@ -4,6 +4,6 @@
     {
         public int CaseId { get; set; }
         public int CasePoint { get; set; }
-        public int TransTargetUserId { get; set; }
+        public int TargetUserId { get; set; }
     }
 }
