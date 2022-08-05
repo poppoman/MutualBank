@@ -245,6 +245,18 @@
                         </div>
                     </div>
                 </div>
+                <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1000">
+                    <div id="ToastTransResult" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <i class="fa-solid fa-bell"></i>
+                            <strong class="me-auto">&nbsp;通知</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            {{toastSubmitResult}}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -358,6 +370,7 @@
                 msglist: msgData,
                 value: "",
                 valuecd: "",
+                toastSubmitResult:""
             },
 
             filters: {
@@ -382,16 +395,15 @@
                         contentType: false,
                         processData: false,
                         success: function(res) {
-                            alert("新增成功");
+                            PP.toastShow(true);
                             PP.msglist.push(res)
                             $("textarea:eq(0)").val("");
                             $("#commentbtn").attr("disabled", "true");
                             var targetTop = $(".respone-mes-frame").last().offset().top;
                             $(window).scrollTop(targetTop);
-
                         },
                         error: function(res) {
-                            alert("新增失敗")
+                            vmPP.toastShow(false);
                         }
                     });
                 },
@@ -407,11 +419,9 @@
                     $("#comment-touser-id").text(touserid)
                     $("#comment-id-resp").text(commentid)
 
-
                     if (z + 1 == y) {
                         $(e.target).parents(".response-day-button").siblings("#comment-bother-frame-input-top").removeAttr("hidden")
                     };
-
                 },
                 recommentreboy: function(e) {
                     $("textarea").val("");
@@ -431,7 +441,6 @@
                     if (z + 1 == y) {
                         $(e.target).parents(".comment-bother-frame").siblings("#comment-bother-frame-input-top").removeAttr("hidden")
                     }
-
                 },
                 addrecomment: function(e) {
                     var id = $("#commentbtn").data("caseid");
@@ -451,20 +460,24 @@
                         contentType: false,
                         processData: false,
                         success: function(res) {
-                            alert("新增成功");
+                            PP.toastShow(true);
                             var msglistindex = PP.msglist.findIndex(x => x.msgId == y)
                             PP.msglist[msglistindex].mychildinhouse.push(res)
                             $(".comment-bother-frame-input-top").attr("hidden", "hidden")
                             $("textarea").val("");
                         },
                         error: function(res) {
-                            alert("新增失敗");
+                            PP.toastShow(false);
                         },
                     });
                 },
-
+                toastShow: function(isSuccess) {
+                    PP.toastSubmitResult = isSuccess==true?"已新增留言":"Oops...留言失敗";
+                    var toastTransResult = document.getElementById("ToastTransResult")
+                    var toast = new bootstrap.Toast(toastTransResult);
+                    toast.show();
+                }
             },
-
             computed: {
                 wordvalue: function() {
                     return this.value.length;
@@ -472,9 +485,7 @@
                 wordvaluecd: function() {
                     return this.valuecd.length;
                 },
-
             },
-
         })
     </script>
     <script src="~/js/PostPage.js"></script>

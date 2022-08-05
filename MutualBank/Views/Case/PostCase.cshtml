@@ -1,53 +1,49 @@
 ﻿<section id="postCase">
     <div class="container mb-5" id="msgSuccessSubmit">
-        <form id="caseForm" action="@Url.Action("AddCase","Case")" method="post" class="needs-validation"
-              novalidate enctype="multipart/form-data">
+        <form id="caseForm"  class="needs-validation" enctype="multipart/form-data">
             <div class="row pt-3">
                 <div class="col-12">
                     <h4 class="postTitle mb-2">新增貼文</h4>
                     <h6>說明</h6>
-
                 </div>
                 <div class="col-12 mb-3">
                     <label for="CaseTitle" class="form-label">標題</label>
                     <input type="text" class="form-control" v-bind:class="{'is-invalid':titleValid}"
                            id="CaseTitle" name="CaseTitle" v-model="title" placeholder="請輸入標題" required>
                     <div class="invalid-feedback">
-                        此欄位不可為空
+                        請輸入標題
                     </div>
                 </div>
-
                 <div class="col-md-5 mb-2">
                     <label for="CaseNeedHelp" class="form-label">貼文分類</label>
-                    <select class="form-select" id="CaseNeedHelp" v-model="CaseNeedHelp" required>
-                        <option selected="selected" value=-1 disabled>請選擇</option>
+                    <select class="form-select" id="CaseNeedHelp" v-model="CaseNeedHelp" v-bind:class="{'is-invalid':isneedValid}" required>
+                        <option selected="selected" value="default" disabled>請選擇</option>
                         <option value=true>需要幫助</option>
                         <option value=false>提供技能</option>
                     </select>
                     <div class="invalid-feedback">
-                        此欄位不可為空
+                        請選擇「技能」或「需求」
                     </div>
                 </div>
                 <div class="col-md-7">
                     <label for="CaseSkilId" class="form-label">內容</label>
-                    <select class="form-select" id="CaseSkilId" name="CaseSkilId" v-model="CaseSkilId" required>
-                        <option selected="selected" value="-1" disabled>請選擇</option>
+                    <select class="form-select" id="CaseSkilId" name="CaseSkilId" v-model="CaseSkilId" v-bind:class="{'is-invalid':skillIdValid}"  required>
+                        <option selected="selected" value="default" disabled>請選擇</option>
                         <option v-for="item in skillTags" v-bind:value="item.skillId">{{item.skillName}}</option>
                     </select>
                     <div class="invalid-feedback">
-                        此欄位不可為空
+                        請選擇內容分類
                     </div>
                 </div>
                 <div class="col-12 mb-3">
-                    <label for="CaseTitle" class="form-label">交易點數</label>
+                    <label for="CaseTitle" class="form-label">交易點數(請輸入數字)</label>
                     <input type="text" class="form-control" v-bind:class="{'is-invalid':pointValid}"
-                           id="CaseTitle" name="CasePoint" v-model.number="point" v-on:keypress="isNumber"
-                           placeholder="請輸入數字" maxlength="5" required>
+                           id="CasePoint" name="CasePoint" v-model.number="point" v-on:keypress="isNumber"
+                           maxlength="5" required>
                     <div class="invalid-feedback">
-                        已超過持有點數
+                        超過持有點數
                     </div>
                 </div>
-
                 <div class="col-12 mb-3 mt-3">
                     <label for="CaseIntroduction" class="form-label">說明</label>
                     <textarea class="form-control" v-model="intro" v-bind:class="{'is-invalid':introValid}"
@@ -62,13 +58,8 @@
                     <input type="file" class="form-control" id="CasePhoto" name="CasePhoto" :change="previewPic"
                            accept="image/*" required>
                     <img id="pic">
-                    <div class="invalid-feedback">
-                        此欄位不可為空
-                    </div>
-
                 </div>
                 <hr class="my-4">
-
                 <h6>地區</h6>
                 <div class="col-md-7 mb-2">
                     <label for="AreaCity" class="form-label">縣市</label>
@@ -76,24 +67,21 @@
                         <option  selected="selected" disabled>請選擇</option>
                         <option v-for="item in areaCity" v-bind:value="item">{{item}}</option>
                     </select>
-                    <div class="invalid-feedback">
-                        此欄位不可為空
-                    </div>
                 </div>
-
                 <div class="col-md-5 mb-2">
                     <label for="CaseSerArea" class="form-label">鄉鎮區</label>
-                    <select class="form-select" id="CaseSerArea" name="CaseSerArea" v-model="CaseSerArea" required>
-                        <option v-show="isAreaSelected" selected="selected" disabled>請先選擇縣市</option>
+                    <select class="form-select" id="CaseSerArea" name="CaseSerArea" v-model="CaseSerArea"
+                    v-bind:class="{'is-invalid':serAreaValid}" required>
+                        <option v-show="isAreaSelected" value="default" selected="selected" disabled>請先選擇縣市</option>
                         <option v-for="item in areaTown" :value="item.AreaId">{{item.AreaTown}}</option>
                     </select>
                     <div class="invalid-feedback">
-                        此欄位不可為空
+                        請選擇地區
                     </div>
                 </div>
                 <div class="col-12">
                     <label for="CaseSerDate" class="form-label">可接受服務或提供技能的時間</label>
-                    <textarea class="form-control" v-model="serDate" v-bind:class="{'is-invalid':serDateValid}"
+                    <textarea class="form-control" v-model="CaseSerDate" v-bind:class="{'is-invalid':serDateValid}"
                            id="CaseSerDate" name="CaseSerDate" placeholder="請輸入日期或時段"
                            cols="30" rows="2" required></textarea>
                     <div class="invalid-feedback">
@@ -101,7 +89,6 @@
                     </div>
                 </div>
                 <hr class="my-4">
-
                 <h6>發佈時間</h6>
                 <div class="col-12">
                     <input type="radio" name="postTime" id="timeNow" v-on:change="disableDate" checked>
@@ -110,13 +97,13 @@
                     <input type="radio" name="postTime" id="timeAppointment" v-on:change="ableDate">
                     <label for="timeAppointment">預約發佈</label>
                     <br>
-                    <input type="date" id="dateApp" name="CaseReleaseDate" v-on:change="updateDateRemind">
+                    <input type="date" id="CaseReleaseDate" name="CaseReleaseDate" v-on:change="updateDateRemind">
                 </div>
 
                 <p id="dateP">貼文自動下架時間為 <span id="dateRemind"></span></p>
 
                 <div class="col-12 text-center">
-                    <button class="postBtn w-25 mt-4" type="submit" v-bind:disabled="isSubmitAble">送出</button>
+                    <button class="postBtn w-25 mt-4" type="button" v-on:click="sumbitCase">送出</button>
                 </div>
         </form>
     </div>
@@ -128,11 +115,10 @@
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body">
-                {{toastSubmitResult}}
+                Oops...新增失敗
             </div>
         </div>
     </div>
-
 </section>
 <script>
 var userPoint = @Html.Raw(ViewBag.UserPoint);

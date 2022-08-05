@@ -73,11 +73,6 @@ namespace MutualBank.Controllers
         public void AddCase(Case NewCase)
         {
             NewCase.CaseUserId = User.GetId();
-            //fix CaseReleaseDate error
-            if (NewCase.CaseReleaseDate.Year == 0001)
-            {
-                NewCase.CaseReleaseDate=DateTime.Now;
-            }
             NewCase.CaseTitle = NewCase.CaseTitle.Trim();
             NewCase.CaseIntroduction = NewCase.CaseIntroduction.Trim();
             NewCase.CaseAddDate = DateTime.Now;
@@ -106,7 +101,6 @@ namespace MutualBank.Controllers
         public JsonResult GetExecuteCaseModel()
         {
             var id = User.GetId();
-
             var CaseModel = _mutualBankContext.Cases.Include("CaseUser").Include("Points").Include("CaseSkil")
                 .Where(x => x.CaseUserId == id & x.CaseIsExecute == true & x.CaseClosedDate == null)
                 .Select(x => new 

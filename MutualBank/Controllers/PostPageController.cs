@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using MutualBank.Extensions;
 using MutualBank.Models;
 using MutualBank.Models.ViewModels;
+using MutualBank.Models.ViewModels.Message;
 using MutualBank.Models.ViewModels.Point;
 
 namespace MutualBank.Controllers
@@ -204,25 +205,23 @@ namespace MutualBank.Controllers
             //who leave message
             var Msgs = _mutualBankContext.Messages.Include("MsgUser")
                 .Where(x => x.MsgCaseId == id & x.MsgParentId == null)
-                .Select(x => new
+                .Select(x => new MsgUserInPost
                 {
                     UserId = x.MsgUserId,
                     UserName = x.MsgUser.UserNname,
                     UserPhoto = x.MsgUser.UserHphoto,
                 }).Distinct().ToList();
 
-            var res = _mutualBankContext.Messages.Include("MsgUser").Include("MsgCase")
-    .Where(x => x.MsgCaseId == id & x.MsgParentId == null)
-    .Select(x => new
-    {
-        UserId = x.MsgUserId,
-        UserName = x.MsgUser.UserNname,
-        UserPhoto = x.MsgUser.UserHphoto,
-        CasePoint = x.MsgCase.CasePoint,
-        UserPoint = x.MsgUser.UserPoint,
-        MsgList = Msgs
-    }).First();
-
+            var res = _mutualBankContext.Messages.Include("MsgUser").Include("MsgCase").Where(x => x.MsgCaseId == id & x.MsgParentId == null)
+                    .Select(x => new MsgInfo
+                    {
+                        UserId = x.MsgUserId,
+                        UserName = x.MsgUser.UserNname,
+                        UserPhoto = x.MsgUser.UserHphoto,
+                        CasePoint = x.MsgCase.CasePoint,
+                        UserPoint = x.MsgUser.UserPoint,
+                        MsgList = Msgs
+                    }).FirstOrDefault();
             return Json(Newtonsoft.Json.JsonConvert.SerializeObject(res));
         }
 

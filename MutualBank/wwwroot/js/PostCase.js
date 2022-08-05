@@ -2,7 +2,6 @@
 vmPostCase = new Vue({
     el: "#postCase",
     data: {
-        toastSubmitResult:"新增成功！",
         areaCity: [],
         areaTown: [],
         isAreaSelected: true,
@@ -10,11 +9,18 @@ vmPostCase = new Vue({
         userPoint: userPoint,
         title: "",
         intro: "",
-        serDate: "",
-        CaseSerArea: "請先選擇縣市",
-        CaseNeedHelp: -1,
-        CaseSkilId: -1,
-        point:0
+        CaseSerDate: "",
+        CaseSerArea: "default",
+        CaseNeedHelp: "default",
+        CaseSkilId: "default",
+        point: 0,
+        titleValid: false,
+        isneedValid: false,
+        skillIdValid: false,
+        pointValid: false,
+        introValid: false,
+        serAreaValid: false,
+        serDateValid: false
     },
     methods: {
         getAreaCity: function () {
@@ -73,23 +79,20 @@ vmPostCase = new Vue({
         },
         updateDateRemind: function () {
             var dateRemind = document.getElementById("dateRemind");
-            dateRemind.innerText = this.finalDate(dateApp.value, 14);
+            dateRemind.innerText = this.finalDate(CaseReleaseDate.value, 14);
         },
         disableDate: function () {
-            var dateApp = document.getElementById("dateApp");
-
-            dateApp.setAttribute('disabled', 'disabled');
-            dateApp.value = getDateString(new Date());//時間恢復為當天
+            var CaseReleaseDate = document.getElementById("CaseReleaseDate");
+            CaseReleaseDate.setAttribute('disabled', 'disabled');
+            CaseReleaseDate.value = getDateString(new Date());//時間恢復為當天
             dateRemind.innerText = this.FinalDate(new Date(), 14);//預告下架日期
         },
         ableDate: function () {
-            var dateApp = document.getElementById("dateApp");
-
-            dateApp.removeAttribute('disabled');
+            var CaseReleaseDate = document.getElementById("CaseReleaseDate");
+            CaseReleaseDate.removeAttribute('disabled');
         },
         previewPic: function (e) {
-            maxSize_2MB = 1 * 1024 * 1024;
-
+            maxSize_2MB = 2 * 1024 * 1024;
             if (e.files[0].size > maxSize_2MB) {
                 alert('圖片大小超過2MB！無法上傳');
                 e.value = "";
@@ -110,76 +113,120 @@ vmPostCase = new Vue({
             let resultTimeStamp = selectedTimeStamp + intCounts * 1000 * 60 * 60 * 24;
             let finalDay = new Date(resultTimeStamp);
             return vmPostCase.getDateString(finalDay);
+        },
+        scrollToElement: function (strElementId) {
+            var elePos = $(`#${strElementId}`).offset().top;
+            $(window).scrollTop(elePos - 200);
+        },
+        sumbitCase: function (e) {
+            //valid
+            if (this.title.length == 0) {
+                this.titleValid = true;
+                this.scrollToElement("CaseTitle");
+                return;
+            }
+            else if (this.CaseNeedHelp == "default") {
+                this.isneedValid = true;
+                this.scrollToElement("CaseNeedHelp");
+                return;
+            }
+            else if (this.CaseSkilId == "default") {
+                this.skillIdValid = true;
+                this.scrollToElement("CaseSkilId");
+                return;
+            }
+            else if (this.point > this.userPoint) {
+                this.pointValid = true;
+                this.scrollToElement("CasePoint");
+                return;
+            }
+            else if (this.intro.length == 0) {
+                this.introValid = true;
+                this.scrollToElement("CaseIntroduction");
+                return;
+            }
+            else if (this.CaseSerArea == "default") {
+                this.serAreaValid = true;
+                this.scrollToElement("CaseSerArea");
+                return;
+            }
+            else if (this.CaseSerDate.length == 0) {
+                this.serDateValid = true;
+                this.scrollToElement("CaseSerArea");
+                return;
+            }
+            //submit
+            e.preventDefault();
+            var caseForm = $("form")[0];
+            var formData = new FormData(caseForm);
+            formData.append("CaseTitle", $("#CaseTitle").val());
+            formData.append("CaseNeedHelp", $("#CaseNeedHelp").val());
+            formData.append("CaseSkilId", $("#CaseSkilId").val());
+            formData.append("CaseTitle", $("#CaseTitle").val());
+            formData.append("CasePoint", $("#CasePoint").val());
+            formData.append("CaseIntroduction", $("#CaseIntroduction").val());
+            formData.append("CasePhoto", $("#CasePhoto").prop("files")[0]);
+            formData.append("CaseSerArea", $("#CaseSerArea").val());
+            formData.append("CaseSerDate", $("#CaseSerDate").val());
+            formData.append("CaseReleaseDate", $("#CaseReleaseDate").val());
+            $.ajax({
+                url: "/Case/AddCase",
+                type: "POST",
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                enctype: 'multipart/form-data',
+                processData: false,
+            }).done(function (res) {
+                $("#msgSuccessSubmit").html("<div id='successAdd'><div class='text-center m-2'><i class='mb-3 fa-solid fa-paper-plane' style='font-size: 50px;'></i> <h4 class='fw-500 mb-0'>新增成功</h4> <p class='fw-300 fs-14'>可至「我的技能與需求」查看</p><a class='btn btn-primary m-1 text-white' href='/Home/ProfilePageAjax?page=myCase'>查看</a></div></div>");
+                window.scrollTo(0, 0);
+            })
+                .fail(function (res) {
+                    var toastTransResult = document.getElementById("ToastTransResult")
+                    var toast = new bootstrap.Toast(toastTransResult);
+                    toast.show();
+                });
+            return false;
         }
     },
-    computed: {
-        titleValid: function () {
-            return this.title.length > 0 ? false : true;
+    watch: {
+        title: function (e) {
+            if (e.length > 0) this.titleValid = false;
         },
-        introValid: function () {
-            return this.intro.length > 0 ? false : true;
+        CaseNeedHelp: function (e) {
+            if (e != "dafault") this.isneedValid = false;
         },
-        serDateValid: function () {
-            return this.serDate.length > 0 ? false : true;
+        CaseSkilId: function (e) {
+            if (e != "dafault") this.skillIdValid = false;
         },
-        isSubmitAble: function () {
-            if (this.title.length > 0 && this.intro.length > 0 && this.serDate.length > 0
-                 && this.CaseNeedHelp != -1 &&this.CaseSkilId!=-1)
-            {
-                return  false;
-            }
-            return true;
+        point: function (e) {
+            this.pointValid = e > this.userPoint ? true : false;
         },
-        pointValid: function () {
-            return this.point > this.userPoint ? true : false;
+        intro: function (e) {
+            if (e.length > 0) this.introValid = false;
+        },
+        CaseSerArea: function (e) {
+            if (e != "dafault") this.serAreaValid = false;
+        },
+        CaseSerDate: function (e) {
+            if (e.length > 0) this.serDateValid = false;
         }
     },
     mounted: function () {
         this.getAreaCity();
         this.getSkillTags();
-
         //init:get default date
         this.$nextTick(() => {
             var currentDate = new Date();
-            var dateApp = document.getElementById("dateApp");
+            var CaseReleaseDate = document.getElementById("CaseReleaseDate");
             var dateRemind = document.getElementById("dateRemind");
-            dateApp.min = dateApp.value =  this.getDateString(currentDate);
-            dateApp.max = this.finalDate(currentDate, 14); 
-            dateRemind.innerText = dateApp.max;
-            dateApp.setAttribute('disabled', 'disabled');
+            CaseReleaseDate.min = CaseReleaseDate.value = this.getDateString(currentDate);
+            CaseReleaseDate.max = this.finalDate(currentDate, 14);
+            dateRemind.innerText = CaseReleaseDate.max;
+            CaseReleaseDate.setAttribute('disabled', 'disabled');
         });
     }
 });
-
-//傳送Case表單
-$("#caseForm").submit(function (e) {
-    e.preventDefault();
-    var formData = new FormData(this);
-    $.ajax({
-        url: "/Case/AddCase",
-        type: "POST",
-        data: formData,
-        async: false,
-        cache: false,
-        contentType: false,
-        enctype: 'multipart/form-data',
-        processData: false,
-    }).done(function (res) {
-        $("#msgSuccessSubmit").html("<div id='successAdd'><div class='text-center m-2'><i class='mb-3 fa-solid fa-paper-plane' style='font-size: 50px;'></i> <h4 class='fw-500 mb-0'>新增成功</h4> <p class='fw-300 fs-14'>可至「我的技能與需求」查看</p><a class='btn btn-primary m-1 text-white' href='/Home/ProfilePageAjax?page=myCase'>查看</a></div></div>");
-        window.scrollTo(0, 0);
-    })
-        .fail(function (res) {
-            console.log(res);
-            vmPostCase.toastSubmitResult = "Oops...新增失敗";
-            var toastTransResult = document.getElementById('ToastTransResult')
-            var toast = new bootstrap.Toast(toastTransResult);
-            toast.show();
-        });
-    return false;
-});
-
-
-
-
 
 
