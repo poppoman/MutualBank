@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
+using MutualBank.Extensions;
 using MutualBank.Models;
 using MutualBank.Models.ViewModels;
 using System.Security.Claims;
@@ -15,11 +16,13 @@ namespace MutualBank.Controllers
     {
         private MutualBankContext _mutualBankContext;
         private IConfiguration _configuration;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public UserLoginController(MutualBankContext mutualBankContext, IConfiguration configuration)
+        public UserLoginController(MutualBankContext mutualBankContext, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             _mutualBankContext = mutualBankContext;
             _configuration = configuration;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         #region 註冊帳戶
@@ -225,6 +228,54 @@ namespace MutualBank.Controllers
             return RedirectToAction("Index", "Home");
         }
         #endregion
+
+        public string UpdateMember(MemberUpdate memberUpdate)
+        {
+            var userid = this.User.GetId();
+            var user = _mutualBankContext.Users.Where(x => x.UserId == userid).FirstOrDefault();
+            user.UserLname = memberUpdate.UserLname;
+            user.UserFname = memberUpdate.UserFname;
+            user.UserNname = memberUpdate.UserNname;
+            user.UserSex = memberUpdate.UserSex;
+            user.UserSkillId = memberUpdate.UserSkillId;
+            user.UserBirthday = Convert.ToDateTime(memberUpdate.UserBirthday);
+            user.UserCv = memberUpdate.UserCv;
+            user.UserSchool = memberUpdate.UserSchool;
+            user.UserResume = memberUpdate.UserResume;
+            user.UserAreaId = _mutualBankContext.Areas.Where(x => x.AreaCity == memberUpdate.City && x.AreaTown == memberUpdate.Town).Select(x => x.AreaId).FirstOrDefault();
+            if (HttpContext.Request.Form.Files.Count == 0)
+            {
+                var userHphoto = _mutualBankContext.Users.Where(_x => _x.UserId == userid).Select(x => x.UserHphoto).FirstOrDefault();
+                if (userHphoto == null)
+                {
+                    if (memberUpdate.UserSex == true)
+                {
+                    memberUpdate.UserPhoto = "Male.PNG";
+                }
+                else
+                {
+                    memberUpdate.UserPhoto = "Female.PNG";
+                }
+                }
+                else memberUpdate.UserPhoto = userHphoto;
+                
+            }
+            else
+            {
+                IFormFile InputFile = HttpContext.Request.Form.Files[0];
+                IFormFile InputFile2 = HttpContext.Request.Form.Files[2];
+                var UniqueId = Guid.NewGuid().ToString("D");
+                var PhotoFormat = InputFile.FileName.Split(".")[1];
+                memberUpdate.UserPhoto = $"{userid}_{UniqueId}.{PhotoFormat}";
+                var InputFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Img", "User", memberUpdate.UserPhoto);
+                FileStream fs = new FileStream(InputFilePath, FileMode.Create);
+                InputFile2.CopyToAsync(fs);
+                fs.Close();
+            }
+            user.UserHphoto = memberUpdate.UserPhoto;
+            _mutualBankContext.SaveChanges();
+            return "OK";
+        }
 
     }
 }

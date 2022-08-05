@@ -44,7 +44,7 @@ namespace MutualBank.Controllers.api
 			{
 				if (CaseIsExecute[i] == false) IsExecute.Add("");
 				else IsExecute.Add("(交易中)");
-				addDate.Add($"建立時間{Convert.ToDateTime(caseadddate[i]).ToString("yyyyMMdd")}");
+				addDate.Add($"建立時間{Convert.ToDateTime(caseadddate[i]).ToString("yyyy/MM/dd")}");
 			}
 			
 			List<CaseTitle> c = new List<CaseTitle>();

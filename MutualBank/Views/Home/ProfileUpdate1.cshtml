@@ -2,20 +2,18 @@
     <div class="col-12">
         <h4 class="postTitle mb-2">會員資料</h4>
     </div>
+    <form id="updateForm" class=" mt-3" onsubmit="return false" enctype="multipart/form-data">
     <div class="row">
         <div class="col-md-6 mt-3">
-            <img id="pic">
+            <img id="pic" v-bind:src = "imgSrc">
         </div>
         <div class="col-md-6 mt-5">
-            <label for="CasePhoto" class="form-label">更改頭像</label>
-            <input type="file" class="form-control" id="CasePhoto" name="CasePhoto" onchange="previewPic(this)"
-                   accept="image/*" required>
-            <div class="invalid-feedback">
-                此欄位不可為空
-            </div>
+            <label for="UserPhoto" class="form-label">更改頭像</label>
+            <input type="file" class="form-control" id="UserPhoto" name="UserPhoto" onchange="previewPic(this)"
+                   accept="image/*">
         </div>
+        @*<a href='https://www.freepik.com/vectors/user-avatar'>User avatar vector created by pikisuperstar - www.freepik.com</a>*@
     </div>
-    <form id="caseForm" action="" method="post" class="needs-validation mt-3">
         <div class="row pt-3">
             <div class="col-md-6 mt-3">
                 <label for="UserFname" class="form-label">姓</label>
@@ -32,8 +30,7 @@
             <div class="col-4 mt-3">
                 <label for="UserSex" class="form-label">性別</label>
                 <select class="form-select" id="UserSex" v-model="UserModel.userSex">
-                    <option value=true>男</option>
-                    <option value=false>女</option>
+                    <option v-for="item in Sex" :value="item.sexId">{{item.sexName}}</option>
                 </select>
             </div>
             <div class="col-4 mt-3">
@@ -84,7 +81,7 @@
             </div>
         </div>
         <div class="col-12 text-center">
-            <button class="postBtn w-25 mt-4" type="submit">更改</button>
+            <button class="postBtn w-25 mt-4" v-on:click="UpdateMemberInfo">更改</button>
         </div>
     </form>
 </div>
@@ -124,6 +121,7 @@
         border-left: 5px solid var(--skill);
     }
 </style>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
     var vm = new Vue({
         el: "#member",
@@ -135,7 +133,9 @@
             Town: [],
             show: true,
             show2: false,
-            TempTown: []
+            TempTown: [],
+            Sex:[],
+            imgSrc:"",
         },
         methods:
         {
@@ -150,6 +150,42 @@
                         self.show2 = true;
                     });
             },
+            UpdateMemberInfo: function() {              
+                var updateForm = $("form")[1];
+                var formData = new FormData(updateForm);
+                formData.append("UserFname", this.UserModel.userFname);
+                formData.append("UserLname", this.UserModel.userLname);
+                formData.append("UserNname", this.UserModel.userNname);
+                formData.append("UserSex", this.UserModel.userSex);
+                formData.append("UserSkillId", this.UserModel.userSkillId);
+                formData.append("UserBirthday", this.UserModel.userBirthday);
+                formData.append("City", this.UserModel.userAreaId.areaCity);
+                formData.append("Town", this.UserModel.userAreaId.areaTown);
+                formData.append("UserSchool", this.UserModel.userSchool);
+                formData.append("UserResume", this.UserModel.userResume);
+                formData.append("UserCv", this.UserModel.userCv);
+                formData.append("UserPhoto", document.getElementById("UserPhoto").files[0]);
+                formData.append("blob", this.blob);
+                $.ajax({
+                    url: "/UserLogin/UpdateMember",
+                    type: "POST",
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    enctype: 'multipart/form-data',
+                    processData: false,
+                }).done(function(res) {
+                    swal("修改成功!","", "success", {button:false, timer: 2000})
+                    .then((value) => {
+                        location.href="/Home/ProfilePageAjax?page=myProfile"
+                    });
+                })
+                    .fail(function(res) {
+                        console.log("err = ",res);
+                    });
+
+            }
         },
         mounted: function() {
             var self = this;
@@ -157,8 +193,8 @@
                 .then(function(res) {
                     return res.json();
                 }).then(function(result) {
-                    
                     self.UserModel = result;
+                    self.imgSrc = result.userHphoto;
                 });
             fetch(`/api/Users1Controller/getSkillInfo`)
                 .then(function(res) {
@@ -178,25 +214,60 @@
                 }).then(function(result) {
                     self.TempTown = result;
                 });
+            fetch("/api/Users1Controller/getSex")
+                .then(function(res) {
+                    return res.json();
+                }).then(function(result) {
+                    self.Sex = result;
+                });
         },
     });
-    var compressRatio = 0.8, // 圖片壓縮比例
-    imgNewWidth = 400, // 圖片新寬度
-    img = new Image(),
-    canvas = document.createElement("canvas"),
-    context = canvas.getContext("2d"),
-    file, fileReader, dataUrl;
+var compressRatio = 0.8, // 圖片壓縮比例
+        imgNewWidth = 300, // 圖片新寬度
+        img = new Image(),
+        canvas = document.createElement("canvas"),
+        context = canvas.getContext("2d"),
+        file, fileReader, dataUrl,newImg;
 
     function previewPic(e) {
-    maxSize_2MB = 1 * 1024 * 1024;
-    if (e.files[0].size > maxSize_2MB) {
-        alert('圖片大小超過2MB！無法上傳');
-        e.value = "";
+        maxSize_2MB = 2 * 1024 * 1024;
+        if (e.files[0].size > maxSize_2MB) {
+            alert('圖片大小超過2MB！無法上傳');
+            e.value = "";
+        }
+        else {
+            file = e.files[0];
+            // 圖片才處理
+            fileReader = new FileReader();
+            fileReader.onload = getFileInfo;
+            fileReader.readAsDataURL(file);
+        }
     }
-    else {
 
-        pic.src = URL.createObjectURL(e.files[0])
-        
+    function getFileInfo(evt) {
+        dataUrl = evt.target.result,
+
+            // 取得圖片
+            img.src = dataUrl;
+        console.log(dataUrl);
     }
-}
+
+    // 圖片載入後
+    img.onload = function() {
+        var width = this.width, // 圖片原始寬度
+            height = this.height, // 圖片原始高度
+            imgNewHeight = imgNewWidth * height / width; // 圖片新高度
+            
+        canvas.width = imgNewWidth;
+        canvas.height = imgNewHeight;
+        context.clearRect(0, 0, imgNewWidth, imgNewHeight);
+        context.drawImage(img, 0, 0, imgNewWidth, imgNewHeight);
+        newImg = canvas.toDataURL("image/jpeg", compressRatio);
+        pic.src = newImg;
+        canvas.toBlob(function(blob) {             
+            console.log("blob",blob);
+            vm.blob = blob;
+}, "image/jpeg", compressRatio);
+
+    };
 </script>
