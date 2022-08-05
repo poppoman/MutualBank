@@ -29,16 +29,14 @@
                     <div class="search">
                         <div class="area m-1 me-0">
                             <select class="selectList" id="AreaCity" name="AreaCity" v-model="selectedCity" v-on:change="getAreaTown">
-                                <option class="selectOption" v-show="isDefaultShowing" disabled>縣市</option>
+                                <option class="selectOption" value="default" >全部縣市</option>
                                 <option class="selectOption" v-for="item in areaCity" :value="item">{{item}}</option>
                             </select>
-
                         </div>
                         <div class="city m-1">
                             <select class="selectList" id="AreaTown" name="AreaTown" v-model="selectedTown">
-                                <option class="selectOption" v-show="isDefaultShowing" disabled>區域</option>
-                                <option class="selectOption" v-show="isCitySelected" disabled>請先選擇縣市</option>
-                                <option class="selectOption" v-for="item in areaTown" v-bind:data-areaid="item.areaId" :value="item">{{item}}</option>
+                                <option class="selectOption" value="default" >{{area}}</option>
+                                <option class="selectOption" v-for="item in areaTown" :value="item">{{item}}</option>
                             </select>
                         </div>
                         <input type="text" id="KeyWord" name="KeyWord" placeholder="輸入關鍵字">
@@ -90,19 +88,19 @@
         var logArea = "@Html.Raw(ViewBag.LogArea)";
         var logTown = "@Html.Raw(ViewBag.LogTown)";
 
-        if (logArea != "") {
+        if (logArea != "default") {
             vmNav.getAreaTown(logArea);
             vmNav.selectedCity = logArea;
         }
         else {
-            vmNav.selectedCity = "縣市";
+            vmNav.selectedCity = "default";
         }
-        if (logArea != "") {
+        if (logArea != "default") {
             vmNav.selectedTown = logTown;
-
+            vmNav.area = "全部";
         }
         else {
-            vmNav.selectedTown = "區域";
+            vmNav.selectedTown = "default";
         }
         var logKeyWord = "@Html.Raw(ViewBag.LogKeyWord)";
         var KeyWord = document.getElementById("KeyWord");

@@ -120,39 +120,37 @@ vmPostCase = new Vue({
         },
         sumbitCase: function (e) {
             //valid
-            if (this.title.length == 0) {
+            var validFail = [];
+            if (this.title == "") {
                 this.titleValid = true;
-                this.scrollToElement("CaseTitle");
-                return;
+                validFail.push("CaseTitle");
             }
-            else if (this.CaseNeedHelp == "default") {
+            if (this.CaseNeedHelp == "default") {
                 this.isneedValid = true;
-                this.scrollToElement("CaseNeedHelp");
-                return;
+                validFail.push("CaseNeedHelp");
             }
-            else if (this.CaseSkilId == "default") {
+            if (this.CaseSkilId == "default") {
                 this.skillIdValid = true;
-                this.scrollToElement("CaseSkilId");
-                return;
+                validFail.push("CaseSkilId");
             }
-            else if (this.point > this.userPoint) {
+            if (this.point > this.userPoint) {
                 this.pointValid = true;
-                this.scrollToElement("CasePoint");
-                return;
+                validFail.push("CasePoint");
             }
-            else if (this.intro.length == 0) {
+            if (this.intro=="" ) {
                 this.introValid = true;
-                this.scrollToElement("CaseIntroduction");
-                return;
+                validFail.push("CaseIntroduction");
             }
-            else if (this.CaseSerArea == "default") {
+            if (this.CaseSerArea == "default") {
                 this.serAreaValid = true;
-                this.scrollToElement("CaseSerArea");
-                return;
+                validFail.push("CaseSerArea");
             }
-            else if (this.CaseSerDate.length == 0) {
+            if (this.CaseSerDate=="" ) {
                 this.serDateValid = true;
-                this.scrollToElement("CaseSerArea");
+                validFail.push("CaseSerDate");
+            }
+            if (validFail.length != 0) {
+                this.scrollToElement(validFail[0]);
                 return;
             }
             //submit
