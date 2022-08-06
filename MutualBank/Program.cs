@@ -39,7 +39,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                         {
                             LoginName = Name,
                             LoginPwd = Name,
-                            LoginEmail = Email
+                            LoginEmail = Email,
+                            LoginActive = true
                         };
                         db.Logins.Add(newuser);
                         db.SaveChanges();
@@ -80,33 +81,34 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                 var Lname = ctx.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Surname)?.Value;
                 var UID = ctx.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
                 var user = db.Logins.FirstOrDefault(u => u.LoginName == Name && u.LoginEmail == Email);
-                //if (user == null)
-                //{
-                //    var newuser = new Login
-                //    {
-                //        LoginName = Name,
-                //        LoginPwd = Name,
-                //        LoginEmail = Email
-                //    };
-                //    db.Logins.Add(newuser);
-                //    db.SaveChanges();
-                //    var user2 = db.Logins.Where(u => u.LoginName == Name).FirstOrDefault();
-                //    var newuser2 = new MutualBank.Models.User
-                //    {
-                //        UserEmail = Email,
-                //        UserNname = Name,
-                //        UserId = user2.LoginId,
-                //        UserFname = Fname,
-                //        UserLname = Lname
-                //    };
-                //    db.Users.Add(newuser2);
-                //    db.SaveChanges();
-                //    user = user2;
-                //}
+                if (user == null)
+                {
+                    var newuser = new Login
+                    {
+                        LoginName = Name,
+                        LoginPwd = Name,
+                        LoginEmail = Email,
+                        LoginActive = true
+                    };
+                    db.Logins.Add(newuser);
+                    db.SaveChanges();
+                    var user2 = db.Logins.Where(u => u.LoginName == Name).FirstOrDefault();
+                    var newuser2 = new MutualBank.Models.User
+                    {
+                        UserEmail = Email,
+                        UserNname = Name,
+                        UserId = user2.LoginId,
+                        UserFname = Fname,
+                        UserLname = Lname
+                    };
+                    db.Users.Add(newuser2);
+                    db.SaveChanges();
+                    user = user2;
+                }
                 var claims = new List<Claim>
                     {
                     new Claim(ClaimTypes.Name, Name),
-                    //new Claim("UserId", user.LoginId.ToString())
+                    new Claim("UserId", user.LoginId.ToString())
                     };
                 ctx.Principal.Identities.First().AddClaims(claims);
                 return Task.CompletedTask;
