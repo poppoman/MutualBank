@@ -1,12 +1,15 @@
 ﻿@{
     //從 ViewBag 取出物件模型
     var id = ViewBag.UserId;
+    string name = ViewBag.aUser;
+    //頁籤標題
+    ViewData["Title"] = $"使用者\"{id}\"的詳細資料";
 }
 
 @* 標題列 & 按鈕 *@
 <div class="row justify-content-between align-items-center pt-3 mb-3">
     <div class="col-12 col-sm-8 col-md-8 col-lg-6 border-bottom">
-        <h1>使用者詳細資料</h1>
+        <h2 id="title">使用者: {{name}} 的詳細資料</h2>
     </div>
     <div class="col-4 col-md-4 col-lg-6 fs-4">
         <span id="editText" class="badge border-end-0 bg-royalblue">閱讀</span>
@@ -21,14 +24,15 @@
             <div class="text-danger"></div>
             <input type="hidden" id="userId" name="userId" v-model="changedUserData.userId"/>
             <div class="form-group">
-	            <label for="loginName" class="form-label">登入電子郵件</label>
-	            <input type="email" id="loginEmail" name="loginEmail" class="form-control rounded-pill ps-3" v-bind:value="changedLoginData.loginName" disabled/>
+	            <label for="loginEmail" class="form-label">登入電子郵件</label>
+	            <p class="fs-5 rounded-pill ps-3">{{changedLoginData.loginEmail}}</p>
             </div>
             @*啟用編輯的區域*@
             <div id="editSec">
-                <div class="form-group">
-	                <label for="loginEmail" class="form-label">登入名稱</label>
-	                <input type="text" id="loginName" name="loginName" maxlength="16" class="form-control rounded-pill ps-3" v-bind:value="changedLoginData.loginEmail" />
+                <div class="form-group has-validation">
+	                <label for="loginName" class="form-label">登入名稱</label>
+	                <input type="text" id="loginName" name="loginName" maxlength="16" required class="form-control rounded-pill ps-3" 
+                        v-bind:value="changedLoginData.loginName" />
 	                <div class="invalid-feedback">
 	                  此欄位必填且最長不能超過16字
 	                </div>
@@ -77,45 +81,51 @@
                 </div>
                 <div class="form-group has-validation">
                     <label for="userSkillId" class="form-label">技能</label>
-                    <input type="number" id="userSkillId" name="userSkillId" v-bind:value="changedUserData.userSkillId" class="form-control rounded-pill ps-3" />
+                    <input type="number" id="userSkillId" name="userSkillId" min="1" max="12" placeholder="請填入1~12" v-bind:value="changedUserData.userSkillId" class="form-control rounded-pill ps-3" />
                     <div class="invalid-feedback">
-                      OK
+                      請填入1~12
                     </div>
                 </div>
                 <div class="form-group has-validation">
                     <label for="userAreaId" class="form-label">居住區域</label>
-                    <input type="number" id="userAreaId" name="userAreaId" v-bind:value="changedUserData.userAreaId" class="form-control rounded-pill ps-3" />
+                    <input type="number" id="userAreaId" name="userAreaId" min="1" max="374" placeholder="請填入1~374" v-bind:value="changedUserData.userAreaId" class="form-control rounded-pill ps-3" />
                     <div class="invalid-feedback">
-                      OK
+                      請填入1~374
                     </div>
                 </div>
                 <div class="form-group has-validation">
                     <label for="userCv" class="form-label pe-3">簡歷</label>
-                    <textarea maxlength="200" id="userCv" name="userCv" form="userPost" class="form-control rounded-10" v-bind:value="changedUserData.userCv"></textarea>
+                    <textarea id="userCv" name="userCv" form="userPost" maxlength="200" class="form-control rounded-10" v-bind:value="changedUserData.userCv"></textarea>
+                    <div class="invalid-feedback">
+                      最長不能超過200字
+                    </div>
                 </div>
                 <div class="form-group has-validation">
                     <label for="userResume" class="form-label pe-3">履歷</label>
-                    <textarea maxlength="200" id="userResume" name="userResume" form="userPost" class="form-control rounded-10" v-bind:value="changedUserData.userResume"></textarea>
+                    <textarea id="userResume" name="userResume" form="userPost" maxlength="200" class="form-control rounded-10" v-bind:value="changedUserData.userResume"></textarea>
+                    <div class="invalid-feedback">
+                      最長不能超過200字
+                    </div>
                 </div>
                 <div class="form-group has-validation">
                     <label for="userSchool" class="form-label">學校</label>
-                    <input type="text" id="userSchool" name="userSchool" class="form-control rounded-pill ps-3" v-bind:value="changedUserData.userSchool"/>
-                    <div class="valid-feedback">
-                      OK
+                    <input type="text" id="userSchool" name="userSchool" maxlength="20" class="form-control rounded-pill ps-3" v-bind:value="changedUserData.userSchool"/>
+                    <div class="invalid-feedback">
+                      最長不能超過20字
                     </div>
                 </div>
                 <div class="form-group has-validation">
                     <label for="userFaculty" class="form-label">科系</label>
-                    <input type="text" id="userFaculty" name="userFaculty"  class="form-control rounded-pill ps-3" v-bind:value="changedUserData.userFaculty" />
-                    <div class="valid-feedback">
-                      OK
+                    <input type="text" id="userFaculty" name="userFaculty" maxlength="20" class="form-control rounded-pill ps-3" v-bind:value="changedUserData.userFaculty" />
+                    <div class="invalid-feedback">
+                      最長不能超過20字
                     </div>
                 </div>
                 <div class="form-group has-validation">
                     <label for="userPoint" class="form-label">擁有點數</label>
-                    <input type="number" id="userPoint" name="userPoint" class="form-control rounded-pill ps-3" v-bind:value="changedUserData.userPoint" />
-                    <div class="valid-feedback">
-                      OK
+                    <input type="number" id="userPoint" name="userPoint" min="0" class="form-control rounded-pill ps-3" v-bind:value="changedUserData.userPoint" />
+                    <div class="invalid-feedback">
+                      點數不能為負
                     </div>
                 </div>
 
@@ -132,10 +142,10 @@
 
 
 @*Vue 段落*@
-<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script>
 //將 razor 物件帶入 JavaScript
 var Id = @id;
+var Name = "@id"+" "+"@name";
 //時間
 const current  = new Date().toISOString().substring(0,16);
 // new Vue 取名 vm 掛載在 #vmEle
@@ -173,6 +183,12 @@ var vm = new Vue({
             });
     }
 });
+var t = new Vue({
+    el: '#title',
+    data: {
+        name: Name,
+    }
+})
 </script>
 
 

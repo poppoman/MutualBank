@@ -25,17 +25,14 @@ namespace MutualBank.Areas.Admin.Controllers
         // GET: Admin/Users/Index
         [HttpGet]
         [Route("Index")]
+        [Produces("application/json")]
         public async Task<IActionResult> Index()
         {
             var query = _context.Users.Include(UserNav => UserNav.User1).Select(u => new UserLogin
             {
-                LoginId = u.User1.LoginId,
                 LoginName = u.User1.LoginName,
-                LoginPwd = u.User1.LoginPwd,
                 LoginEmail = u.User1.LoginEmail,
-                LoginLevel = u.User1.LoginLevel,
                 LoginAddDate = u.User1.LoginAddDate,
-                LoginActive = u.User1.LoginActive,
                 UserId = u.UserId,
                 UserFullname = u.UserFname +" "+ u.UserLname,
                 UserNname = u.UserNname,
@@ -51,6 +48,7 @@ namespace MutualBank.Areas.Admin.Controllers
                 UserFaculty = u.UserFaculty,
                 UserPoint = u.UserPoint,
             });
+            ViewBag.UserLogin = query;
             return View(query);
         }
 
@@ -70,6 +68,7 @@ namespace MutualBank.Areas.Admin.Controllers
                 return NotFound();
             }            
             ViewBag.UserId = id;
+            ViewBag.aUser = user.UserFname + " " + user.UserLname ?? "null";
             return View();
         }
 
@@ -78,16 +77,18 @@ namespace MutualBank.Areas.Admin.Controllers
         [HttpPost]
         [Route("getaUser/{id}")]
         [Produces("application/json")]
-        public IActionResult getaUser(int userId, [FromForm]UserApiModel jsonUser)
+        public IActionResult getaUser(int id, [FromForm]ApiUserLoginModel json)
         {
-            var userModel = _context.Users.Where(u => u.UserId == userId).FirstOrDefault();
-            if (!UserExists(userId) || userModel == null)
+            var userModel = _context.Users.Where(u => u.UserId == id).FirstOrDefault();
+            var loginModel = _context.Logins.Where(l => l.LoginId == id).FirstOrDefault();
+            if (!UserExists(id) || !LoginExists(id) || userModel == null || loginModel == null)
             {
                 return NotFound();
             }
             try
             {
-                _context.Users.Update(CorrespondTheValue(userModel, jsonUser));
+                _context.Users.Update(CorrespondTheValue(userModel, json));
+                _context.Logins.Update(CorrespondTheValue(loginModel, json));
                 _context.SaveChanges();
             }
             catch (DbUpdateException ex)
@@ -171,6 +172,10 @@ namespace MutualBank.Areas.Admin.Controllers
             user.UserSkillId = apiModel.userSkillId;
             return user;
         }
-
+        private Login CorrespondTheValue(Login login, ApiUserLoginModel apiModel)
+        {
+            login.LoginName = apiModel.loginName;
+            return login;
+        }
     }
 }

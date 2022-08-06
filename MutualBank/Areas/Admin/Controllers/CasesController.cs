@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MutualBank.Areas.Admin.Models.ViewModel;
 using MutualBank.Models;
 
 namespace MutualBank.Areas.Admin.Controllers
@@ -23,8 +24,24 @@ namespace MutualBank.Areas.Admin.Controllers
         // GET: Admin/Cases
         public async Task<IActionResult> Index()
         {
-            var mutualBankContext = _context.Cases.Include(AreaNav => AreaNav.CaseSerAreaNavigation).Include(skil => skil.CaseSkil).Include(user => user.CaseUser);
-            return View(mutualBankContext);
+            var query = _context.Cases.Include(AreaNav => AreaNav.CaseSerAreaNavigation).Include(skil => skil.CaseSkil).Include(user => user.CaseUser).Select(c => new CaseIndex
+            {
+                CaseClosedIn = c.CaseClosedDate ?? new DateTime(2022,08,06),
+                CaseExpireDate = c.CaseExpireDate,
+                CaseId = c.CaseId,
+                CaseIsExecute = c.CaseIsExecute,
+                CaseNeedHelp = c.CaseNeedHelp,
+                CasePoint = c.CasePoint,
+                CaseReleaseDate = c.CaseReleaseDate.Date,
+                CaseTitle = c.CaseTitle,
+                SerArea = c.CaseSerAreaNavigation.AreaCity + c.CaseSerAreaNavigation.AreaTown,
+                CaseSerDate = c.CaseSerDate,
+                CaseSkil = c.CaseSkil.SkillName,
+                CaseUserId = c.CaseUserId,
+                UserName = (c.CaseUser.UserFname + " " + c.CaseUser.UserLname != " ") ? 
+                            (c.CaseUser.UserFname + " " + c.CaseUser.UserLname):"無名氏",
+            });
+            return View(query);
         }
 
         // GET: Admin/Cases/Details/5

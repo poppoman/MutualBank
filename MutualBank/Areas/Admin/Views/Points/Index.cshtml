@@ -1,24 +1,29 @@
-﻿@model IEnumerable<MutualBank.Models.Point>
+﻿@model IEnumerable<MutualBank.Areas.Admin.Models.ViewModel.PointsIndex>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "首頁 | 點數管理";
 }
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1>點數管理 - 首頁</h1>
 </div>
 
-<div class="table-responsive">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>@Html.DisplayNameFor(model => model.PointId)</th>                
-                <th>@Html.DisplayNameFor(model => model.PointCaseId)</th>
-                <th>@Html.DisplayNameFor(model => model.PointUserId)</th>
-                <th>@Html.DisplayNameFor(model => model.PointAddDate)</th>
-                <th>@Html.DisplayNameFor(model => model.PointNeedHelp)</th>
-                <th>@Html.DisplayNameFor(model => model.PointQuantity)</th>
-                <th></th>
+<div class="container-cus">
+    <table class="table table-striped table-Royal-hover table-Royal-font align-middle">
+        <thead class="header table-Royal">
+            <tr>       
+                <th class="header">@Html.DisplayNameFor(model => model.PoCaseTitle)</th>
+                <th class="header table-minWidth-4">
+                    @Html.DisplayNameFor(model => model.PointUserName)
+                </th>
+                <th class="header">@Html.DisplayNameFor(model => model.PointAddDate)</th>
+                <th class="header table-minWidth-2">
+                    @Html.DisplayNameFor(model => model.PointNeedDisplay)
+                </th>
+                <th class="header table-minWidth-2">
+                    @Html.DisplayNameFor(model => model.PointQuantity)
+                </th>
+                <th class="header">編輯</th>
             </tr>
         </thead>
         <tbody>
@@ -26,22 +31,31 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.PointId)
+                        @Html.DisplayFor(modelItem => item.PoCaseTitle)
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PointCaseId)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PointUserId)
+                    <td class="table-minWidth-4">
+                        @Html.DisplayFor(modelItem => item.PointUserName)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.PointAddDate)
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PointNeedHelp)
+                    <td class="table-minWidth-2">
+                        @Html.DisplayFor(modelItem => item.PointNeedDisplay)
+                    </td>
+                    <td class="table-minWidth-2">
+                        @Html.DisplayFor(modelItem => item.PointQuantity)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.PointQuantity)
+                        <a class="btn btn-image align-baseline" asp-action="Edit" asp-route-id="@item.PointId">
+                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="24" width="24"
+                                 class="feather feather-home align-middle" viewBox="0 0 194.436 194.436" 
+                                 style="enable-background:new 0 0 194.436 194.436;" xml:space="preserve">
+                                <g>
+	                                <path d="M192.238,34.545L159.894,2.197C158.487,0.79,156.579,0,154.59,0c-1.989,0-3.897,0.79-5.303,2.196l-32.35,32.35 c-0.004,0.004-0.008,0.01-0.013,0.014L54.876,96.608c-1.351,1.352-2.135,3.166-2.193,5.076l-1.015,33.361 c-0.063,2.067,0.731,4.068,2.193,5.531c1.409,1.408,3.317,2.196,5.303,2.196c0.076,0,0.153-0.001,0.229-0.004l33.36-1.018 c1.909-0.058,3.724-0.842,5.075-2.192l94.41-94.408C195.167,42.223,195.167,37.474,192.238,34.545z M154.587,61.587L132.847,39.85 l21.743-21.743l21.738,21.741L154.587,61.587z M89.324,126.85l-22.421,0.685l0.682-22.422l54.655-54.656l21.741,21.738 L89.324,126.85z"/>
+	                                <path d="M132.189,117.092c-4.142,0-7.5,3.357-7.5,7.5v54.844H15.001V69.748h54.844c4.142,0,7.5-3.357,7.5-7.5s-3.358-7.5-7.5-7.5 H7.501c-4.142,0-7.5,3.357-7.5,7.5v124.687c0,4.143,3.358,7.5,7.5,7.5h124.687c4.142,0,7.5-3.357,7.5-7.5v-62.344 C139.689,120.449,136.331,117.092,132.189,117.092z"/>
+                                </g>
+                            </svg>
+                        </a>
                     </td>
                 </tr>
             }
