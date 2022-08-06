@@ -242,7 +242,12 @@ namespace MutualBank.Controllers
             user.UserCv = memberUpdate.UserCv;
             user.UserSchool = memberUpdate.UserSchool;
             user.UserResume = memberUpdate.UserResume;
-            user.UserAreaId = _mutualBankContext.Areas.Where(x => x.AreaCity == memberUpdate.City && x.AreaTown == memberUpdate.Town).Select(x => x.AreaId).FirstOrDefault();
+            var areaid = _mutualBankContext.Areas.FirstOrDefault(x => x.AreaCity == memberUpdate.City && x.AreaTown == memberUpdate.Town);
+            if (areaid == null)
+            {
+                return "地區有誤";
+            }
+            else user.UserAreaId = areaid.AreaId;
             if (HttpContext.Request.Form.Files.Count == 0)
             {
                 var userHphoto = _mutualBankContext.Users.Where(_x => _x.UserId == userid).Select(x => x.UserHphoto).FirstOrDefault();

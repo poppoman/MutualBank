@@ -129,8 +129,7 @@
                             if (res.emailMessage != null) { document.getElementById("LoginEmail").setAttribute("class", "form-control is-invalid"); $('#Emailerrormsg').text(res.emailMessage); }
                             else { document.getElementById("LoginEmail").setAttribute("class", "form-control is-valid") }
                             if (res.message == null) {
-                                $("#form").attr("onsubmit", "retrun true");
-                                $("#form").submit();
+                                
                                 //$("#success").modal('show');
                                 //self.countDown();
                                 self.success();
@@ -154,7 +153,8 @@
                 success: function() {
                     swal("註冊成功!", "點擊確認或3秒後導向登入畫面", "success", { button: "確認", timer: 3000 })
                         .then((value) => {
-                            location.href = "/UserLogin/Login";
+                            $("#form").attr("onsubmit", "retrun true");
+                                $("#form").submit();
                         });
                 }
             },

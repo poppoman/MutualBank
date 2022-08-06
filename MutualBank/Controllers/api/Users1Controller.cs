@@ -25,6 +25,15 @@ namespace MutualBank.Controllers
             var userid = this.User.GetId();
             var userInfo = _mutualBankContext.Users.FirstOrDefault(x => x.UserId == userid);
             var area = _mutualBankContext.Areas.FirstOrDefault(x => userInfo.UserAreaId == x.AreaId);
+            Area a = new Area { AreaCity = "臺北市", AreaId = 1, AreaTown = "中正區" };
+            if (userInfo.UserFname == null) userInfo.UserFname = "";
+            if (userInfo.UserLname == null) userInfo.UserLname = "";
+            if (userInfo.UserCv == null) userInfo.UserCv = "";
+            if (userInfo.UserResume == null) userInfo.UserResume = "";
+            if (userInfo.UserSchool == null) userInfo.UserSchool = "";
+            if (userInfo.UserBirthday == null) userInfo.UserBirthday = Convert.ToDateTime("1970-01-01");
+            if (userInfo.UserHphoto == null) userInfo.UserHphoto = Path.Combine(PhotoFileFolder, "Male.PNG");
+            if (area == null) area = a;
             MemberInfo memberInfo = new MemberInfo
             {
                 UserFname = userInfo.UserFname,
@@ -68,9 +77,18 @@ namespace MutualBank.Controllers
         {
             var userid = this.User.GetId();
             var areaid = _mutualBankContext.Users.Where(x => x.UserId == userid).Select(x => x.UserAreaId).FirstOrDefault();
-            var areacity = _mutualBankContext.Areas.Where(x => x.AreaId == areaid).Select(x => x.AreaCity).Distinct().FirstOrDefault();
-            var temptown = _mutualBankContext.Areas.Where(x => x.AreaCity == areacity).Select(x => x.AreaTown).ToList();
-            return temptown;
+            if (areaid != null)
+            {
+                var areacity = _mutualBankContext.Areas.Where(x => x.AreaId == areaid).Select(x => x.AreaCity).Distinct().FirstOrDefault();
+                var temptown = _mutualBankContext.Areas.Where(x => x.AreaCity == areacity).Select(x => x.AreaTown).ToList();
+                return temptown;
+            }
+            else 
+            {
+                var areacity = _mutualBankContext.Areas.Where(x => x.AreaId == 1).Select(x => x.AreaCity).Distinct().FirstOrDefault();
+                var temptown = _mutualBankContext.Areas.Where(x => x.AreaCity == areacity).Select(x => x.AreaTown).ToList();
+                return temptown;
+            } 
         }
         [HttpGet]
         public List<Sex> getSex()
