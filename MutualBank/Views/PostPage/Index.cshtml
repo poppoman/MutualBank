@@ -26,7 +26,10 @@
                 <div class="author col-md-5 col-sm-10 col-xl-6">
                     <span class="author-pic-name">
                         <span class="authorpicture-frame">
-                            <img src="@Html.DisplayFor(model=>model.UserPhoto)" alt="" onerror="this.src = 'https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="author-picture">
+                            <a href="/Profile/Index/@Model.UserId">
+                                <img src="@Html.DisplayFor(model=>model.UserPhoto)" alt="" onerror="this.src = 'https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="author-picture">
+                            </a>
+
                         </span>
                         <span class="author-name">
                             <h2 href="" style="padding-left:20px; font-size:16px" class="authorname">@Html.DisplayFor(Model=>Model.UserNName)</h2>
@@ -43,7 +46,7 @@
                             <span>
                                 <i class="fa-regular fa-clock"></i>
                             </span>
-                            <span style="padding-left:3px ">需求時間：<span>@Html.DisplayFor(Model=>Model.CaseSerDate)</span></span>
+                            <span style="padding-left:3px;">需求時間：<span style="overflow-wrap:anywhere;">@Html.DisplayFor(Model=>Model.CaseSerDate)</span></span>
                         </div>
                         <div calss="need-location">
                             <span>
@@ -79,7 +82,7 @@
                                                 <input type="radio" name="inpUser" class="m-3 pe-none"
                                                    :value="item.UserName" style="width:20px;">
                                                 <div class="userPhotoBx pe-none">
-                                                    <img class="pe-none" src="https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg">
+                                                    <img class="pe-none" v-bind:src="item.UserPhoto">
                                                 </div>
                                                 <label class="m-auto ms-2 pe-none">{{item.UserName}}</label>
                                             </li>
@@ -150,7 +153,7 @@
                     <div class="comment-frame">
                         <div>
                             <div class="user-pic">
-                                <img src="@Html.DisplayFor(model=>model.LoginHPhoto)" alt="" onerror="this.src = 'https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="author-picture">
+                                <img src="@Html.Raw(ViewBag.LoginPhoto)" alt="" onerror="this.src = 'https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="author-picture">
                             </div>
                         </div>
 
@@ -172,7 +175,7 @@
                         <div class="responer-pic">
                             <a href="">
                                 <div class="pad-avatar">
-                                    <img src="item.magUserPhoto" alt="" onerror="this.src='https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="respons-picture">
+                                    <img v-bind:src="item.magUserPhoto" alt="" onerror="this.src='https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="respons-picture">
                                 </div>
                             </a>
                         </div>
@@ -199,7 +202,7 @@
                                 <div class="comment-bother">
                                     <a href="" class="comment-pic-frame">
                                         <div style="width: 24px; height: 24px;" class="avatar-frame">
-                                            <img src="x.childtoUserHphoto" alt="" onerror="this.src='https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="comment-bother-pic">
+                                            <img v-bind:src="x.childtoUserHphoto" alt="" onerror="this.src='https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="comment-bother-pic">
                                         </div>
                                     </a>
                                     <div class="comment-brother-re">
@@ -211,7 +214,7 @@
                                                 <span>回覆給：<span>{{x.childtoUsername}}</span></span>
                                                 <div class="comment-bother">
                                                     <a href="">
-                                                        <img src="x.childHphoto" alt="" onerror="this.src='https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="comment-bother-pic">
+                                                        <img v-bind:src="x.childHphoto" alt="" onerror="this.src='https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="comment-bother-pic">
                                                     </a>
                                                 </div>
                                             </div>
@@ -284,10 +287,12 @@
                     fetch("/PostPage/GetMsgUserModel/" + caseId)
                         .then(res => { return res.json() })
                         .then(data => {
-                            var obj = JSON.parse(data)
-                            vmPoint.msgUserModel = obj.MsgList.filter(x => x.UserName != "@Html.Raw(Model.UserNName)");
-                            vmPoint.finalPoint = vmPoint.orginPoint = obj.CasePoint;
-                            vmPoint.UserPoint = obj.UserPoint;
+                            if (data != "null") {
+                                var obj = JSON.parse(data);
+                                vmPoint.msgUserModel = obj.MsgList.filter(x => x.UserName != "@Html.Raw(Model.UserNName)");
+                                vmPoint.finalPoint = vmPoint.orginPoint = obj.CasePoint;
+                                vmPoint.UserPoint = obj.UserPoint;
+                            }
                         })
                         .catch(err => console.log(err))
                 },
@@ -358,7 +363,7 @@
                 //set first msg user as default selection in list modal
                 setTimeout(function() {
                     var userItem = document.getElementsByName("userItem")[0];
-                    userItem.click();
+                    if (userItem!=undefined)userItem.click();
                 }, 500);
             }
         });

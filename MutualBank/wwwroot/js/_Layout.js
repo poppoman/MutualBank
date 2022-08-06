@@ -6,7 +6,7 @@
         selectedCity: "default",
         selectedTown: "default",
         userPoint: 0,
-        area:"區域"
+        areaText:"區域"
     },
     methods: {
         getAreaCity: function () {
@@ -43,7 +43,7 @@
                         //default town
                         if (typeof (e) == "object") {
                             vmNav.selectedTown = "default";
-                            vmNav.area = "全部";
+                            vmNav.areaText = "全部";
                         }
                     })
                     .fail(function (res) {
@@ -52,7 +52,7 @@
             }
             else {
                 vmNav.areaTown = [];
-                vmNav.area = "區域";
+                vmNav.areaText = "區域";
                 this.selectedTown = "default";
             }
         },
@@ -71,10 +71,6 @@
     created: function () {
         this.getAreaCity();
         this.getUserpoint();
-        console.log("created", this.selectedCity);
-    },
-    mounted: function () {
-        console.log("mounted", this.selectedCity);
     }
 });
 

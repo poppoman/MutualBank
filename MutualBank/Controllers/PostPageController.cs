@@ -17,6 +17,7 @@ namespace MutualBank.Controllers
     public class PostPageController : Controller
     {
         private readonly MutualBankContext _mutualBankContext;
+        private static string _userPhotoFilePath = Path.Combine("/Img", "User");
 
         public PostPageController(MutualBankContext MutualBankContext)
         {
@@ -38,14 +39,17 @@ namespace MutualBank.Controllers
                         msgUserId = x.MsgUserId,
                         msgtoUserName = x.MsgToUser.UserNname, /*被留言者*/
                         msgUserName = x.MsgUser.UserNname,/*留言者*//*$"{x.MsgUser.UserFname}{x.MsgUser.UserLname}"*/
-                        magUserPhoto = x.MsgUser.UserHphoto, /*留言者照片*/
+                        /*留言者照片*/
+                        magUserPhoto = x.MsgUser.UserHphoto == null ? x.MsgUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, x.MsgUser.UserHphoto),
                         msgParentId = x.MsgParentId,
                         mychildinhouse = _mutualBankContext.Messages.Include("MsgUser").Where(q => q.MsgParentId == x.MsgId & q.MsgParentId != null).Select(y => new
                         {
                             childname = y.MsgUser.UserNname,
                             childtoUsername = y.MsgToUser.UserNname,
-                            childHphoto = y.MsgUser.UserHphoto,
-                            childtoUserHphoto = y.MsgToUser.UserHphoto,
+                            childHphoto = y.MsgToUser.UserHphoto == null ? y.MsgToUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, y.MsgToUser.UserHphoto),
+                            
+                            childtoUserHphoto = y.MsgUser.UserHphoto == null ? y.MsgUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, y.MsgUser.UserHphoto),
+
                             childcontent = y.MsgContent,
                             childaddDate = y.MsgAddDate,
                             childparentid = y.MsgParentId,
@@ -72,7 +76,7 @@ namespace MutualBank.Controllers
             var Areaname = Case.CaseSerAreaNavigation == null ? "無" : Case.CaseSerAreaNavigation.AreaCity;
             var AreaTownname = Case.CaseSerAreaNavigation == null ? "無" : Case.CaseSerAreaNavigation.AreaTown;
             var usernname = Case.CaseUser.UserNname;
-            var userphoto = Case.CaseUser.UserHphoto;
+            var userphoto = Case.CaseUser.UserHphoto == null ? Case.CaseUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, Case.CaseUser.UserHphoto);
             var PhotoFileFolder = Path.Combine("/Img", "CasePhoto");
 
 
@@ -90,8 +94,15 @@ namespace MutualBank.Controllers
                 Areacity = Areaname,
                 AreaTownname = AreaTownname,
                 IsExecute = Case.CaseIsExecute,
-                UserPoint = Case.CaseUser.UserPoint
+                UserPoint = Case.CaseUser.UserPoint,
+                UserId=Case.CaseUserId
             };
+
+            if (User.Identity.IsAuthenticated)
+            {
+                var LoginUser = _mutualBankContext.Users.Where(x => x.UserId == User.GetId()).FirstOrDefault();
+                ViewBag.LoginPhoto = LoginUser.UserHphoto == null ? LoginUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, LoginUser.UserHphoto);
+            }
             return View(vm);
         }
 
@@ -142,10 +153,9 @@ namespace MutualBank.Controllers
 
             _mutualBankContext.Add(comment);
             _mutualBankContext.SaveChangesAsync();
-
             msgnewVM vm = new msgnewVM()
             {
-                MagUserPhoto = User.UserHphoto,
+                MagUserPhoto = User.UserHphoto == null ? User.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, User.UserHphoto),
                 MsgAddDate = comment.MsgAddDate,
                 MsgCaseId = comment.MsgCaseId,
                 MsgContent = comment.MsgContent,
@@ -188,7 +198,7 @@ namespace MutualBank.Controllers
             {
                 childname = User.UserNname,
                 childtoUsername = toUser.UserNname,
-                childHphoto = User.UserHphoto,
+                childHphoto = toUser.UserHphoto == null ? toUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, toUser.UserHphoto),
                 childtoUserHphoto = toUser.UserHphoto,
                 childcontent = recomment.MsgContent,
                 childaddDate = recomment.MsgAddDate,
@@ -202,14 +212,14 @@ namespace MutualBank.Controllers
         [HttpGet]
         public JsonResult GetMsgUserModel(int id)
         {
-            //who leave message
             var Msgs = _mutualBankContext.Messages.Include("MsgUser")
                 .Where(x => x.MsgCaseId == id & x.MsgParentId == null)
                 .Select(x => new MsgUserInPost
                 {
                     UserId = x.MsgUserId,
                     UserName = x.MsgUser.UserNname,
-                    UserPhoto = x.MsgUser.UserHphoto,
+                    UserPhoto =
+                    x.MsgUser.UserHphoto == null ? x.MsgUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, x.MsgUser.UserHphoto)
                 }).Distinct().ToList();
 
             var res = _mutualBankContext.Messages.Include("MsgUser").Include("MsgCase").Where(x => x.MsgCaseId == id & x.MsgParentId == null)
@@ -217,7 +227,7 @@ namespace MutualBank.Controllers
                     {
                         UserId = x.MsgUserId,
                         UserName = x.MsgUser.UserNname,
-                        UserPhoto = x.MsgUser.UserHphoto,
+                        UserPhoto = x.MsgUser.UserHphoto == null ? x.MsgUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, x.MsgUser.UserHphoto),
                         CasePoint = x.MsgCase.CasePoint,
                         UserPoint = x.MsgUser.UserPoint,
                         MsgList = Msgs

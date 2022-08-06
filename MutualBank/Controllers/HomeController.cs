@@ -9,7 +9,8 @@ namespace MutualBank.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly MutualBankContext _mutualBankContext;
-        private static string _filePath= Path.Combine("/Img", "CasePhoto");
+        private static string _casePhotoFilePath= Path.Combine("/Img", "CasePhoto");
+        private static string _userPhotoFilePath = Path.Combine("/Img", "User");
         //過期日的篩選天數(為撈到更多卡片，暫時設定為120天)
         private int ExpireDays = 120;
         public HomeController(ILogger<HomeController> logger, MutualBankContext mutualBankContext)
@@ -20,11 +21,9 @@ namespace MutualBank.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.LogArea = ViewBag.LogTown = "default";
-
             ViewBag.Tags = _mutualBankContext.Skills.OrderBy(x => x.SkillId).ToList();
             Console.WriteLine(DateTime.Now.AddDays(ExpireDays));
-            var Model = _mutualBankContext.Cases.Include("CaseSkil")
+            var Model = _mutualBankContext.Cases.Include("CaseSkil").Include("CaseUser")
                 .Where(x => x.CaseReleaseDate <= DateTime.Now && x.CaseExpireDate <= DateTime.Now.AddDays(ExpireDays) && x.CaseIsExecute == false)
                 .Select(x => new CaseViewModel
                 {
@@ -34,7 +33,7 @@ namespace MutualBank.Controllers
                     CaseExpireDate = x.CaseExpireDate,
                     CaseTitle = x.CaseTitle,
                     CaseIntroduction = x.CaseIntroduction,
-                    CasePhoto = Path.Combine(_filePath, x.CasePhoto),
+                    CasePhoto = Path.Combine(_casePhotoFilePath, x.CasePhoto),
                     CaseSerDate = x.CaseSerDate,
                     CaseSerArea = x.CaseSerArea,
                     CaseSerAreaName = $"{x.CaseSerAreaNavigation.AreaCity}{x.CaseSerAreaNavigation.AreaTown}",
@@ -42,7 +41,8 @@ namespace MutualBank.Controllers
                     CaseSkillName = x.CaseSkil.SkillName,
                     CaseUserId = x.CaseUser.UserId,
                     CaseUserName = x.CaseUser.UserNname,
-                    MessageCount = x.Messages.Count
+                    MessageCount = x.Messages.Count,
+                    UserPhoto = x.CaseUser.UserHphoto == null ? x.CaseUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, x.CaseUser.UserHphoto)
                 });
             return View(Model);
         }
@@ -67,7 +67,7 @@ namespace MutualBank.Controllers
                         CaseExpireDate = x.CaseExpireDate,
                         CaseTitle = x.CaseTitle,
                         CaseIntroduction = x.CaseIntroduction,
-                        CasePhoto = Path.Combine(_filePath, x.CasePhoto),
+                        CasePhoto = Path.Combine(_casePhotoFilePath, x.CasePhoto),
                         CaseSerDate = x.CaseSerDate,
                         CaseSerArea = x.CaseSerArea,
                         CaseSerAreaName = $"{x.CaseSerAreaNavigation.AreaCity}{x.CaseSerAreaNavigation.AreaTown}",
@@ -75,7 +75,8 @@ namespace MutualBank.Controllers
                         CaseSkillName = x.CaseSkil.SkillName,
                         CaseUserId = x.CaseUser.UserId,
                         CaseUserName = x.CaseUser.UserNname,
-                        MessageCount = x.Messages.Count
+                        MessageCount = x.Messages.Count,
+                        UserPhoto = x.CaseUser.UserHphoto == null ? x.CaseUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, x.CaseUser.UserHphoto)
                     }).ToList();
             }
             //縣市 全部
@@ -91,7 +92,7 @@ namespace MutualBank.Controllers
                         CaseExpireDate = x.CaseExpireDate,
                         CaseTitle = x.CaseTitle,
                         CaseIntroduction = x.CaseIntroduction,
-                        CasePhoto = Path.Combine(_filePath, x.CasePhoto),
+                        CasePhoto = Path.Combine(_casePhotoFilePath, x.CasePhoto),
                         CaseSerDate = x.CaseSerDate,
                         CaseSerArea = x.CaseSerArea,
                         CaseSerAreaName = $"{x.CaseSerAreaNavigation.AreaCity}{x.CaseSerAreaNavigation.AreaTown}",
@@ -99,7 +100,8 @@ namespace MutualBank.Controllers
                         CaseSkillName = x.CaseSkil.SkillName,
                         CaseUserId = x.CaseUser.UserId,
                         CaseUserName = x.CaseUser.UserNname,
-                        MessageCount = x.Messages.Count
+                        MessageCount = x.Messages.Count,
+                        UserPhoto = x.CaseUser.UserHphoto == null ? x.CaseUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, x.CaseUser.UserHphoto)
                     }).ToList();
             }
             //區域
@@ -117,7 +119,7 @@ namespace MutualBank.Controllers
                         CaseExpireDate = x.CaseExpireDate,
                         CaseTitle = x.CaseTitle,
                         CaseIntroduction = x.CaseIntroduction,
-                        CasePhoto = Path.Combine(_filePath, x.CasePhoto),
+                        CasePhoto = Path.Combine(_casePhotoFilePath, x.CasePhoto),
                         CaseSerDate = x.CaseSerDate,
                         CaseSerArea = x.CaseSerArea,
                         CaseSerAreaName = $"{x.CaseSerAreaNavigation.AreaCity}{x.CaseSerAreaNavigation.AreaTown}",
@@ -125,7 +127,8 @@ namespace MutualBank.Controllers
                         CaseSkillName = x.CaseSkil.SkillName,
                         CaseUserId = x.CaseUser.UserId,
                         CaseUserName = x.CaseUser.UserNname,
-                        MessageCount = x.Messages.Count
+                        MessageCount = x.Messages.Count,
+                        UserPhoto = x.CaseUser.UserHphoto == null ? x.CaseUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, x.CaseUser.UserHphoto)
                     }).ToList();
             }
 

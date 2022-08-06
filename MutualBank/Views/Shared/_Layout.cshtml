@@ -35,7 +35,7 @@
                         </div>
                         <div class="city m-1">
                             <select class="selectList" id="AreaTown" name="AreaTown" v-model="selectedTown">
-                                <option class="selectOption" value="default" >{{area}}</option>
+                                <option class="selectOption" value="default" >{{areaText}}</option>
                                 <option class="selectOption" v-for="item in areaTown" :value="item">{{item}}</option>
                             </select>
                         </div>
@@ -88,19 +88,19 @@
         var logArea = "@Html.Raw(ViewBag.LogArea)";
         var logTown = "@Html.Raw(ViewBag.LogTown)";
 
-        if (logArea != "default") {
+        if (logArea == "default" | logArea == "") {
+            vmNav.selectedCity = "default";
+        }
+        else {
             vmNav.getAreaTown(logArea);
             vmNav.selectedCity = logArea;
         }
-        else {
-            vmNav.selectedCity = "default";
-        }
-        if (logArea != "default") {
-            vmNav.selectedTown = logTown;
-            vmNav.area = "全部";
-        }
-        else {
+        if (logTown == "default" | logTown == "") {
             vmNav.selectedTown = "default";
+        }
+        else {
+            vmNav.selectedTown = logTown;
+            vmNav.areaText = "全部";
         }
         var logKeyWord = "@Html.Raw(ViewBag.LogKeyWord)";
         var KeyWord = document.getElementById("KeyWord");
