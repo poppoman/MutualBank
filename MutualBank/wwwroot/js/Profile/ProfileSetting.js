@@ -4,8 +4,7 @@
     },
     created: function () {
         let self = this;
-        fetch("/api/UsersController/getusers").then(function (result) {
-            console.log("result =", result)
+        fetch("/api/UsersController/GetUsers").then(function (result) {
             return result.json();
         })
             .then(function (mydata) {

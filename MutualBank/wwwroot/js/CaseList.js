@@ -64,7 +64,6 @@
         }
     },
     created() {
-        //初始化頁面
         $.ajax({
             url: "/Case/GetUserCaseModel",
             type: "GET"
@@ -75,6 +74,5 @@
             .fail(function (res) {
                 console.log(res);
             });
-
     }
 });

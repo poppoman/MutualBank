@@ -18,7 +18,6 @@
                 }).catch(err => console.log(err))
         },
         getTargetData: function (e) {
-            console.log(e.target);
             this.tarCaseId = e.target.dataset.caseid;
             this.tarCaseTitle = e.target.dataset.casetitle ;
             this.tarUserId = e.target.dataset.targetuserid ;
@@ -34,8 +33,18 @@
                 }
             })
                 .done(function (res) {
-                    console.log(res);
-                    console.log("交易成功");
+                    //refresh points
+                    var userPoint = document.getElementById("userPoint");
+                    userPoint.innerHTML = "";
+                    var iconPoint = document.createElement("i");
+                    iconPoint.classList.add("fa-solid", "fa-diamond");
+                    iconPoint.style.fontSize = "12px";
+                    iconPoint.style.color = "var(--help)";
+                    var point = document.createElement("span");
+                    point.innerHTML = `&nbsp;${res.msg}`;
+                    userPoint.append(iconPoint);
+                    userPoint.append(point);
+                    //show toast
                     $("#confirmModal").modal("hide");
                     var toastTransResult = document.getElementById('ToastTransResult')
                     var toast = new bootstrap.Toast(toastTransResult);

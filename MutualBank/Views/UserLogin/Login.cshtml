@@ -1,11 +1,10 @@
-﻿
-<div class="container">
-    <div class="offset-3 col-6">
+﻿<div class="container mt-5">
+    <div class="m-auto col-md-6 col-sm-10 col-10">
         <div id="homeContent" class="cn mb-5">
             <form id="form" action="/UserLogin/Login" method="post" onsubmit="return false" class="">
                 <div class="row pt-3">
                     <div class="col-12">
-                        <h4 class="postTitle mb-2">登入帳戶</h4>
+                        <h4 class="postTitle mb-3">登入帳戶</h4>
                     </div>
 
                     <div class="col-12 mb-3">
@@ -24,36 +23,35 @@
                         <div class="invalid-feedback">
                             <div id="Pwderrormsg"></div>
                         </div>
+                        <a id="forgetPwd" class="fs-14 fw-300 d-block mt-1 text-end" asp-controller="UserLogin" asp-action="forgetPassword">忘記密碼</a>
                     </div>
 
-
                     <div class="col-12 text-center">
-                        <a asp-controller="UserLogin" asp-action="forgetPassword">忘記密碼</a>
                         <button class="postBtn w-25 mt-4" type="submit" v-on:click="sub">登入</button>
                     </div>
 
-                                        <div class="col-12 mt-3 text-center">
+                    <div class="col-12 mt-3 text-center">
                         <p class="continue"><span>OR</span></p>
                         <div class="social-login">
-                        <a href="/UserLogin/FacebookLogin">
-                            <div class="facebook">
-                                <span class="fab fa-facebook-f" aria-hidden="true"></span>
+                            <a href="/UserLogin/FacebookLogin">
+                                <div class="facebook">
+                                    <span class="fab fa-facebook-f" aria-hidden="true"></span>
 
-                            </div>
-                        </a>
-@*                        <a href="#twitter">
+                                </div>
+                            </a>
+                            @*                        <a href="#twitter">
                             <div class="twitter">
-                                <span class="fab fa-twitter" aria-hidden="true"></span>
+                            <span class="fab fa-twitter" aria-hidden="true"></span>
                             </div>
-                        </a>*@
-                        <a href="/UserLogin/GoogleLogin">
-                            <div class="google">
-                                <span class="fab fa-google" aria-hidden="true"></span>
-                            </div>
-                        </a>
+                            </a>*@
+                            <a href="/UserLogin/GoogleLogin">
+                                <div class="google">
+                                    <span class="fab fa-google" aria-hidden="true"></span>
+                                </div>
+                            </a>
+                        </div>
                     </div>
-                    </div>
-                    
+
                 </div>
             </form>
         </div>
@@ -240,6 +238,9 @@ span.fab{
 }
 .facebook:hover,.twitter:hover,.google:hover  {
     opacity: .8;
+}
+a#forgetPwd:hover{
+    font-weight:500;
 }
     </style>
 }

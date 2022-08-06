@@ -19,6 +19,7 @@ namespace MutualBank.Models
         public string? UserBirthday { get; set; }
         public int? UserSkillId { get; set; }
         public int? UserAreaId { get; set; }
+        public string? UserArea { get; set; }
         public string? UserCv { get; set; }
         public string? UserResume { get; set; }
         public string? UserSchool { get; set; }

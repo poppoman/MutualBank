@@ -65,7 +65,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <img v-bind:src="item.CasePhoto" class="card-img-top p-2" alt="image not found">
+                                <a v-bind:href="'/PostPage/Index/'+item.CaseId">
+                                    <img v-bind:src="item.CasePhoto" class="card-img-top p-2" alt="image not found">
+                                </a>
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title fw-400" title="item.CaseTitle">{{item.CaseTitle}}</h5>
@@ -77,8 +79,10 @@
 
                                             <div class="row">
                                                 <div class="userPhoto">
-                                                    <div class="PhotoBx" v-bind:data-userid="item.CaseUserId" v-on:click="redirectToUserPage">
-                                                        <img src="https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg">
+                                                    <div class="PhotoBx">
+                                                        <a v-bind:href="'/Profile/Index/'+item.CaseUserId">
+                                                            <img class="pe-none" v-bind:src="item.UserPhoto">
+                                                        </a>
                                                     </div>
                                                 </div>
                                                 <div class="col-6 text-start align-items-center userInfo">
@@ -242,10 +246,6 @@
                             return a.MessageCount - b.MessageCount
                         });
                     }
-                },
-                //跳轉到User主頁
-                redirectToUserPage: function(e) {
-                    location.href = "/Profile/Index/" + e.target.dataset.userid;
                 },
             },
             computed: {

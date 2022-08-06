@@ -23,7 +23,7 @@
         <div id="sec1">
             <div class="d-flex">
                 <div class="userPhotoBx">
-                    <img src="https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg">
+                    <img v-bind:src="pfModel.UserHphoto">
                 </div>
                 <div class="userTitle">
                     <div class="row">
@@ -132,7 +132,9 @@
                                             <div class="row">
                                                 <div class="userPhoto">
                                                     <div class="PhotoBx">
-                                                        <img src="https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg">
+                                                        <a href="#">
+                                                            <img v-bind:src="item.UserPhoto">
+                                                        </a>
                                                     </div>
                                                 </div>
                                                 <div class="col-6 text-start align-items-center userInfo">

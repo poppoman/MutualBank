@@ -29,5 +29,6 @@ namespace MutualBank.Models
         public string? AreaTownname { get; set; }
         public bool? IsExecute { get; set; }
         public int UserPoint { get; internal set; }
+        public int UserId { get;  set; }
     }
 }

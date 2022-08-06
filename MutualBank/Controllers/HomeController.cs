@@ -9,7 +9,10 @@ namespace MutualBank.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly MutualBankContext _mutualBankContext;
-        private static string _filePath= Path.Combine("/Img", "CasePhoto");
+        private static string _casePhotoFilePath= Path.Combine("/Img", "CasePhoto");
+        private static string _userPhotoFilePath = Path.Combine("/Img", "User");
+        //過期日的篩選天數(為撈到更多卡片，暫時設定為120天)
+        private int ExpireDays = 120;
         public HomeController(ILogger<HomeController> logger, MutualBankContext mutualBankContext)
         {
             _logger = logger;
@@ -19,8 +22,9 @@ namespace MutualBank.Controllers
         public IActionResult Index()
         {
             ViewBag.Tags = _mutualBankContext.Skills.OrderBy(x => x.SkillId).ToList();
-
-            var Model = _mutualBankContext.Cases.Include("CaseSkil").Where(x=>x.CaseClosedDate>= DateTime.Now)
+            Console.WriteLine(DateTime.Now.AddDays(ExpireDays));
+            var Model = _mutualBankContext.Cases.Include("CaseSkil").Include("CaseUser")
+                .Where(x => x.CaseReleaseDate <= DateTime.Now && x.CaseExpireDate <= DateTime.Now.AddDays(ExpireDays) && x.CaseIsExecute == false)
                 .Select(x => new CaseViewModel
                 {
                     CaseId = x.CaseId,
@@ -29,7 +33,7 @@ namespace MutualBank.Controllers
                     CaseExpireDate = x.CaseExpireDate,
                     CaseTitle = x.CaseTitle,
                     CaseIntroduction = x.CaseIntroduction,
-                    CasePhoto = Path.Combine(_filePath, x.CasePhoto),
+                    CasePhoto = Path.Combine(_casePhotoFilePath, x.CasePhoto),
                     CaseSerDate = x.CaseSerDate,
                     CaseSerArea = x.CaseSerArea,
                     CaseSerAreaName = $"{x.CaseSerAreaNavigation.AreaCity}{x.CaseSerAreaNavigation.AreaTown}",
@@ -37,8 +41,8 @@ namespace MutualBank.Controllers
                     CaseSkillName = x.CaseSkil.SkillName,
                     CaseUserId = x.CaseUser.UserId,
                     CaseUserName = x.CaseUser.UserNname,
-                    MessageCount = x.Messages.Count
-
+                    MessageCount = x.Messages.Count,
+                    UserPhoto = x.CaseUser.UserHphoto == null ? x.CaseUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, x.CaseUser.UserHphoto)
                 });
             return View(Model);
         }
@@ -50,50 +54,82 @@ namespace MutualBank.Controllers
             ViewBag.LogKeyword = Search.Keyword;
 
             var AreaModel =new List<CaseViewModel> { };
-            if (Search.AreaCity == null)
+            //全部縣市 全部區域
+            if (Search.AreaCity == "default")
             {
-                //if user did not select city
-                AreaModel = _mutualBankContext.Cases.Include("CaseSkil").Where(x => x.CaseClosedDate >= DateTime.Now).Select(x => new CaseViewModel
-                {
-                    CaseId = x.CaseId,
-                    CaseNeedHelp = x.CaseNeedHelp,
-                    CaseReleaseDate = x.CaseReleaseDate,
-                    CaseExpireDate = x.CaseExpireDate,
-                    CaseTitle = x.CaseTitle,
-                    CaseIntroduction = x.CaseIntroduction,
-                    CasePhoto = Path.Combine(_filePath, x.CasePhoto),
-                    CaseSerDate = x.CaseSerDate,
-                    CaseSerArea = x.CaseSerArea,
-                    CaseSerAreaName = $"{x.CaseSerAreaNavigation.AreaCity}{x.CaseSerAreaNavigation.AreaTown}",
-                    CaseSkillId = x.CaseSkil.SkillId,
-                    CaseSkillName = x.CaseSkil.SkillName,
-                    CaseUserId = x.CaseUser.UserId,
-                    CaseUserName = x.CaseUser.UserNname,
-                    MessageCount = x.Messages.Count
-                }).ToList();
+                AreaModel = _mutualBankContext.Cases.Include("CaseSkil")
+                    .Where(x => x.CaseReleaseDate <= DateTime.Now && x.CaseExpireDate <= DateTime.Now.AddDays(ExpireDays) && x.CaseIsExecute == false)
+                    .Select(x => new CaseViewModel
+                    {
+                        CaseId = x.CaseId,
+                        CaseNeedHelp = x.CaseNeedHelp,
+                        CaseReleaseDate = x.CaseReleaseDate,
+                        CaseExpireDate = x.CaseExpireDate,
+                        CaseTitle = x.CaseTitle,
+                        CaseIntroduction = x.CaseIntroduction,
+                        CasePhoto = Path.Combine(_casePhotoFilePath, x.CasePhoto),
+                        CaseSerDate = x.CaseSerDate,
+                        CaseSerArea = x.CaseSerArea,
+                        CaseSerAreaName = $"{x.CaseSerAreaNavigation.AreaCity}{x.CaseSerAreaNavigation.AreaTown}",
+                        CaseSkillId = x.CaseSkil.SkillId,
+                        CaseSkillName = x.CaseSkil.SkillName,
+                        CaseUserId = x.CaseUser.UserId,
+                        CaseUserName = x.CaseUser.UserNname,
+                        MessageCount = x.Messages.Count,
+                        UserPhoto = x.CaseUser.UserHphoto == null ? x.CaseUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, x.CaseUser.UserHphoto)
+                    }).ToList();
             }
+            //縣市 全部
+            else if (Search.AreaTown=="default") {
+                AreaModel = _mutualBankContext.Cases.Include("CaseSkil").Include("CaseSerAreaNavigation")
+                    .Where(x => x.CaseSerAreaNavigation.AreaCity==Search.AreaCity
+                    && x.CaseReleaseDate <= DateTime.Now && x.CaseExpireDate <= DateTime.Now.AddDays(ExpireDays) && x.CaseIsExecute == false)
+                    .Select(x => new CaseViewModel
+                    {
+                        CaseId = x.CaseId,
+                        CaseNeedHelp = x.CaseNeedHelp,
+                        CaseReleaseDate = x.CaseReleaseDate,
+                        CaseExpireDate = x.CaseExpireDate,
+                        CaseTitle = x.CaseTitle,
+                        CaseIntroduction = x.CaseIntroduction,
+                        CasePhoto = Path.Combine(_casePhotoFilePath, x.CasePhoto),
+                        CaseSerDate = x.CaseSerDate,
+                        CaseSerArea = x.CaseSerArea,
+                        CaseSerAreaName = $"{x.CaseSerAreaNavigation.AreaCity}{x.CaseSerAreaNavigation.AreaTown}",
+                        CaseSkillId = x.CaseSkil.SkillId,
+                        CaseSkillName = x.CaseSkil.SkillName,
+                        CaseUserId = x.CaseUser.UserId,
+                        CaseUserName = x.CaseUser.UserNname,
+                        MessageCount = x.Messages.Count,
+                        UserPhoto = x.CaseUser.UserHphoto == null ? x.CaseUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, x.CaseUser.UserHphoto)
+                    }).ToList();
+            }
+            //區域
             else
             {
-                var AreaId = _mutualBankContext.Areas.Where(x => x.AreaTown == Search.AreaTown).Select(x => x.AreaId).FirstOrDefault();
+                var SearchAreaId = _mutualBankContext.Areas.Where(x => x.AreaCity == Search.AreaCity && x.AreaTown == Search.AreaTown).FirstOrDefault().AreaId;
                 AreaModel = _mutualBankContext.Cases.Include("CaseSkil")
-                    .Where(x => x.CaseSerArea == AreaId & x.CaseClosedDate >= DateTime.Now).Select(x => new CaseViewModel
-                {
-                    CaseId = x.CaseId,
-                    CaseNeedHelp = x.CaseNeedHelp,
-                    CaseReleaseDate = x.CaseReleaseDate,
-                    CaseExpireDate = x.CaseExpireDate,
-                    CaseTitle = x.CaseTitle,
-                    CaseIntroduction = x.CaseIntroduction,
-                    CasePhoto = Path.Combine(_filePath, x.CasePhoto),
-                    CaseSerDate = x.CaseSerDate,
-                    CaseSerArea = x.CaseSerArea,
-                    CaseSerAreaName = $"{x.CaseSerAreaNavigation.AreaCity}{x.CaseSerAreaNavigation.AreaTown}",
-                    CaseSkillId = x.CaseSkil.SkillId,
-                    CaseSkillName = x.CaseSkil.SkillName,
-                    CaseUserId = x.CaseUser.UserId,
-                    CaseUserName = x.CaseUser.UserNname,
-                    MessageCount = x.Messages.Count
-                }).ToList();
+                    .Where(x => x.CaseSerArea== SearchAreaId
+                    && x.CaseReleaseDate <= DateTime.Now && x.CaseExpireDate <= DateTime.Now.AddDays(ExpireDays) && x.CaseIsExecute == false)
+                    .Select(x => new CaseViewModel
+                    {
+                        CaseId = x.CaseId,
+                        CaseNeedHelp = x.CaseNeedHelp,
+                        CaseReleaseDate = x.CaseReleaseDate,
+                        CaseExpireDate = x.CaseExpireDate,
+                        CaseTitle = x.CaseTitle,
+                        CaseIntroduction = x.CaseIntroduction,
+                        CasePhoto = Path.Combine(_casePhotoFilePath, x.CasePhoto),
+                        CaseSerDate = x.CaseSerDate,
+                        CaseSerArea = x.CaseSerArea,
+                        CaseSerAreaName = $"{x.CaseSerAreaNavigation.AreaCity}{x.CaseSerAreaNavigation.AreaTown}",
+                        CaseSkillId = x.CaseSkil.SkillId,
+                        CaseSkillName = x.CaseSkil.SkillName,
+                        CaseUserId = x.CaseUser.UserId,
+                        CaseUserName = x.CaseUser.UserNname,
+                        MessageCount = x.Messages.Count,
+                        UserPhoto = x.CaseUser.UserHphoto == null ? x.CaseUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, x.CaseUser.UserHphoto)
+                    }).ToList();
             }
 
             var Model = new List<CaseViewModel> { };

@@ -44,7 +44,7 @@ namespace MutualBank.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var UserId = this.User.GetId();
-                points = Convert.ToString(_mutualBankContext.Users.Where(x => x.UserId == UserId).Select(x => x.UserPoint).First());
+                points = Convert.ToString(_mutualBankContext.Users.Where(x => x.UserId == UserId).Select(x => x.UserPoint).FirstOrDefault());
             }
             return points;
         }

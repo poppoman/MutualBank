@@ -3,11 +3,10 @@
     data: {
         areaCity: [],
         areaTown: [],
-        isDefaultShowing: true,
-        isCitySelected: true,
-        selectedCity: '',
-        selectedTown: '',
-        userPoint: 0
+        selectedCity: "default",
+        selectedTown: "default",
+        userPoint: 0,
+        areaText:"區域"
     },
     methods: {
         getAreaCity: function () {
@@ -24,31 +23,38 @@
         },
         getAreaTown: function (e) {
             var SelectedCity = "";
+            //如果是"保留上次搜尋區域文字"的流程在使用此方法，會直接傳入字串當作e
             if (typeof (e) == "object") {
                 SelectedCity = e.target.value;
             }
             else {
                 SelectedCity = e;
             }
-            $.ajax({
-                url: "/Nav/_LayoutApi/GetAreaTown",
-                type: "GET",
-                data: {
-                    AreaCity: SelectedCity
-                }
-            }).
-                done(function (res) {
-                    vmNav.isDefaultShowing = false;
-                    vmNav.areaTown = res;
-                    //區域資料預設為顯示第一筆
-                    if (typeof (e) == "object") {
-                        vmNav.selectedTown = res[0];
-                        vmNav.isCitySelected = false;
+            if (SelectedCity != "default") {
+                $.ajax({
+                    url: "/Nav/_LayoutApi/GetAreaTown",
+                    type: "GET",
+                    data: {
+                        AreaCity: SelectedCity
                     }
-                })
-                .fail(function (res) {
-                    console.log(res);
-                });
+                }).
+                    done(function (res) {
+                        vmNav.areaTown = res;
+                        //default town
+                        if (typeof (e) == "object") {
+                            vmNav.selectedTown = "default";
+                            vmNav.areaText = "全部";
+                        }
+                    })
+                    .fail(function (res) {
+                        console.log(res);
+                    });
+            }
+            else {
+                vmNav.areaTown = [];
+                vmNav.areaText = "區域";
+                this.selectedTown = "default";
+            }
         },
         getUserpoint: function () {
             fetch("/Nav/_LayoutApi/GetUserPoint")

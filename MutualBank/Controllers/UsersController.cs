@@ -5,16 +5,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MutualBank.Extensions;
 using MutualBank.Models;
 using MutualBank.Models.ViewModels;
 
 namespace MutualBank.Controllers
 {
-    [Route("api/UsersController/{action}")]    //
+    [Route("api/UsersController/{action}")]
     [ApiController]
     public class UsersController : ControllerBase
     {
         private readonly MutualBankContext _context;
+        private static string _filePath = Path.Combine("/Img", "User");
 
         public UsersController(MutualBankContext context)
         {
@@ -23,14 +25,10 @@ namespace MutualBank.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<UserViewModel>> GetUsers()
+        public UserViewModel GetUsers()
         {
-            int id = 11; 
-          if (_context.Users == null)
-          {
-              return NotFound();
-          }
-            return _context.Users.Where(s=> s.UserId == id).ToArray().Select(s=> new UserViewModel()
+            return _context.Users.Include("UserNavigation").Where(s => s.UserId == User.GetId())
+                .Select(s=> new UserViewModel
             {
                 UserId = s.UserId,
                 UserLname = s.UserLname,
@@ -39,10 +37,12 @@ namespace MutualBank.Controllers
                 UserSex = s.UserSex == true ? "男":"女" ,
                 UserEmail = s.UserEmail,
                 UserBirthday = s.UserBirthday.Value.ToShortDateString(),  
-                UserAreaId = s.UserAreaId  ,
+                UserAreaId = s.UserAreaId,
                 UserCv = s.UserCv,
-                UserResume = s.UserResume
-            }).FirstOrDefault();
+                UserResume = s.UserResume,
+                UserArea=$"{s.UserNavigation.AreaCity}{s.UserNavigation.AreaTown}",
+                UserHphoto= s.UserHphoto==null? s.UserSex==true? Path.Combine(_filePath, "Male.PNG") : Path.Combine(_filePath, "Female.PNG") : Path.Combine(_filePath, s.UserHphoto)
+                }).FirstOrDefault();
         }
 
         [HttpPost]

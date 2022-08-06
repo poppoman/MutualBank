@@ -26,7 +26,10 @@
                 <div class="author col-md-5 col-sm-10 col-xl-6">
                     <span class="author-pic-name">
                         <span class="authorpicture-frame">
-                            <img src="@Html.DisplayFor(model=>model.UserPhoto)" alt="" onerror="this.src = 'https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="author-picture">
+                            <a href="/Profile/Index/@Model.UserId">
+                                <img src="@Html.DisplayFor(model=>model.UserPhoto)" alt=""  class="author-picture">
+                            </a>
+
                         </span>
                         <span class="author-name">
                             <h2 href="" style="padding-left:20px; font-size:16px" class="authorname">@Html.DisplayFor(Model=>Model.UserNName)</h2>
@@ -43,7 +46,7 @@
                             <span>
                                 <i class="fa-regular fa-clock"></i>
                             </span>
-                            <span style="padding-left:3px ">需求時間：<span>@Html.DisplayFor(Model=>Model.CaseSerDate)</span></span>
+                            <span style="padding-left:3px;">需求時間：<span style="overflow-wrap:anywhere;">@Html.DisplayFor(Model=>Model.CaseSerDate)</span></span>
                         </div>
                         <div calss="need-location">
                             <span>
@@ -79,7 +82,7 @@
                                                 <input type="radio" name="inpUser" class="m-3 pe-none"
                                                    :value="item.UserName" style="width:20px;">
                                                 <div class="userPhotoBx pe-none">
-                                                    <img class="pe-none" src="https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg">
+                                                    <img class="pe-none" v-bind:src="item.UserPhoto">
                                                 </div>
                                                 <label class="m-auto ms-2 pe-none">{{item.UserName}}</label>
                                             </li>
@@ -150,7 +153,8 @@
                     <div class="comment-frame">
                         <div>
                             <div class="user-pic">
-                                <img src="@Html.DisplayFor(model=>model.LoginHPhoto)" alt="" onerror="this.src = 'https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="author-picture">
+                                <img v-if="isLoggin" src="@Html.Raw(ViewBag.LoginPhoto)" alt="" class="author-picture">
+                                <img v-else="isLoggin" src="~/postpage/userhphotonull.svg" alt="" class="author-picture">
                             </div>
                         </div>
 
@@ -172,7 +176,7 @@
                         <div class="responer-pic">
                             <a href="">
                                 <div class="pad-avatar">
-                                    <img src="item.magUserPhoto" alt="" onerror="this.src='https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="respons-picture">
+                                    <img v-bind:src="item.magUserPhoto" alt="" onerror="this.src='https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="respons-picture">
                                 </div>
                             </a>
                         </div>
@@ -199,7 +203,7 @@
                                 <div class="comment-bother">
                                     <a href="" class="comment-pic-frame">
                                         <div style="width: 24px; height: 24px;" class="avatar-frame">
-                                            <img src="x.childtoUserHphoto" alt="" onerror="this.src='https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="comment-bother-pic">
+                                            <img v-bind:src="x.childtoUserHphoto" alt=""  class="comment-bother-pic">
                                         </div>
                                     </a>
                                     <div class="comment-brother-re">
@@ -211,7 +215,7 @@
                                                 <span>回覆給：<span>{{x.childtoUsername}}</span></span>
                                                 <div class="comment-bother">
                                                     <a href="">
-                                                        <img src="x.childHphoto" alt="" onerror="this.src='https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="comment-bother-pic">
+                                                        <img v-bind:src="x.childHphoto" alt=""  class="comment-bother-pic">
                                                     </a>
                                                 </div>
                                             </div>
@@ -245,6 +249,18 @@
                         </div>
                     </div>
                 </div>
+                <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1000">
+                    <div id="ToastTransResult" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <i class="fa-solid fa-bell"></i>
+                            <strong class="me-auto">&nbsp;通知</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            {{toastSubmitResult}}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -272,10 +288,12 @@
                     fetch("/PostPage/GetMsgUserModel/" + caseId)
                         .then(res => { return res.json() })
                         .then(data => {
-                            var obj = JSON.parse(data)
-                            vmPoint.msgUserModel = obj.MsgList.filter(x => x.UserName != "@Html.Raw(Model.UserNName)");
-                            vmPoint.finalPoint = vmPoint.orginPoint = obj.CasePoint;
-                            vmPoint.UserPoint = obj.UserPoint;
+                            if (data != "null") {
+                                var obj = JSON.parse(data);
+                                vmPoint.msgUserModel = obj.MsgList.filter(x => x.UserName != "@Html.Raw(Model.UserNName)");
+                                vmPoint.finalPoint = vmPoint.orginPoint = obj.CasePoint;
+                                vmPoint.UserPoint = obj.UserPoint;
+                            }
                         })
                         .catch(err => console.log(err))
                 },
@@ -346,7 +364,7 @@
                 //set first msg user as default selection in list modal
                 setTimeout(function() {
                     var userItem = document.getElementsByName("userItem")[0];
-                    userItem.click();
+                    if (userItem!=undefined)userItem.click();
                 }, 500);
             }
         });
@@ -358,6 +376,8 @@
                 msglist: msgData,
                 value: "",
                 valuecd: "",
+                toastSubmitResult:"",
+                isLoggin:false
             },
 
             filters: {
@@ -369,6 +389,10 @@
             },
             methods: {
                 addcoment: function() {
+                    if (this.isLoggin == false) { 
+                        PP.toastNeedLoggin();
+                        return;
+                    }
                     var id = document.getElementById("commentbtn").dataset.caseid;
                     var formData = new FormData();
                     formData.append("id", id);
@@ -382,16 +406,19 @@
                         contentType: false,
                         processData: false,
                         success: function(res) {
-                            alert("新增成功");
+                            PP._data.value = "";              
+                            PP.toastMsgResult(true);
                             PP.msglist.push(res)
-                            $("textarea:eq(0)").val("");
                             $("#commentbtn").attr("disabled", "true");
+                            if ($(".respone-mes-frame").length != 0) { 
                             var targetTop = $(".respone-mes-frame").last().offset().top;
                             $(window).scrollTop(targetTop);
-
+                            }
+                            
                         },
                         error: function(res) {
-                            alert("新增失敗")
+                            PP.toastMsgResult(false);
+                            $("#exampleFormControlTextarea1").val("");
                         }
                     });
                 },
@@ -407,11 +434,9 @@
                     $("#comment-touser-id").text(touserid)
                     $("#comment-id-resp").text(commentid)
 
-
                     if (z + 1 == y) {
                         $(e.target).parents(".response-day-button").siblings("#comment-bother-frame-input-top").removeAttr("hidden")
                     };
-
                 },
                 recommentreboy: function(e) {
                     $("textarea").val("");
@@ -431,9 +456,12 @@
                     if (z + 1 == y) {
                         $(e.target).parents(".comment-bother-frame").siblings("#comment-bother-frame-input-top").removeAttr("hidden")
                     }
-
                 },
                 addrecomment: function(e) {
+                     if (this.isLoggin == false) { 
+                        PP.toastNeedLoggin();
+                        return;
+                    }
                     var id = $("#commentbtn").data("caseid");
                     var textval = $(e.target).parents(".col-auto-input").siblings(".textarea-box").children(".responeenter").val()
                     var formData = new FormData();
@@ -451,20 +479,31 @@
                         contentType: false,
                         processData: false,
                         success: function(res) {
-                            alert("新增成功");
+                            PP.toastMsgResult(true);
                             var msglistindex = PP.msglist.findIndex(x => x.msgId == y)
                             PP.msglist[msglistindex].mychildinhouse.push(res)
                             $(".comment-bother-frame-input-top").attr("hidden", "hidden")
-                            $("textarea").val("");
+                             PP._data.valuecd= "";
+                             $("#commentbtmre").attr("disabled", "true");
                         },
                         error: function(res) {
-                            alert("新增失敗");
+                            PP.toastMsgResult(false);
                         },
                     });
                 },
-
+                toastMsgResult: function(isSuccess) {
+                    PP.toastSubmitResult = isSuccess==true?"已新增留言":"Oops...留言失敗";
+                    var toastTransResult = document.getElementById("ToastTransResult")
+                    var toast = new bootstrap.Toast(toastTransResult);
+                    toast.show();
+                },
+                toastNeedLoggin: function() {
+                        PP.toastSubmitResult = "請先登入";
+                        var toastTransResult = document.getElementById("ToastTransResult")
+                        var toast = new bootstrap.Toast(toastTransResult);
+                        toast.show();
+                }
             },
-
             computed: {
                 wordvalue: function() {
                     return this.value.length;
@@ -472,9 +511,16 @@
                 wordvaluecd: function() {
                     return this.valuecd.length;
                 },
-
             },
-
+            mounted: function() { 
+                fetch("/PostPage/IsLoggin")
+                    .then(res =>  
+                        res.text())
+                    .then(data => 
+                       PP.isLoggin= data == "true" ? true : false
+                    )
+                    .catch(err => console.log(err));
+            }
         })
     </script>
     <script src="~/js/PostPage.js"></script>

@@ -19,5 +19,6 @@
         public string CaseSerAreaName { get; set; }
         public string CaseUserName { get; set; } = null!;
         public int? MessageCount { get; set; }
+        public string? UserPhoto { get; set; }
     }
 }

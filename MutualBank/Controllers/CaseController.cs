@@ -63,7 +63,7 @@ namespace MutualBank.Controllers
                     CaseUserId = x.CaseUser.UserId,
                     CaseUserName = $"{x.CaseUser.UserLname}{x.CaseUser.UserFname}",
                     MessageCount = x.Messages.Count
-                });
+                }).OrderByDescending(x=>x.CaseReleaseDate).ToList();
 
             var ModelJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model);
             return ModelJson;
@@ -73,11 +73,6 @@ namespace MutualBank.Controllers
         public void AddCase(Case NewCase)
         {
             NewCase.CaseUserId = User.GetId();
-            //fix CaseReleaseDate error
-            if (NewCase.CaseReleaseDate.Year == 0001)
-            {
-                NewCase.CaseReleaseDate=DateTime.Now;
-            }
             NewCase.CaseTitle = NewCase.CaseTitle.Trim();
             NewCase.CaseIntroduction = NewCase.CaseIntroduction.Trim();
             NewCase.CaseAddDate = DateTime.Now;
@@ -106,7 +101,6 @@ namespace MutualBank.Controllers
         public JsonResult GetExecuteCaseModel()
         {
             var id = User.GetId();
-
             var CaseModel = _mutualBankContext.Cases.Include("CaseUser").Include("Points").Include("CaseSkil")
                 .Where(x => x.CaseUserId == id & x.CaseIsExecute == true & x.CaseClosedDate == null)
                 .Select(x => new 
@@ -119,8 +113,10 @@ namespace MutualBank.Controllers
                     IsNeed = x.CaseNeedHelp,
                     TargetUserId = x.Points.Where(y => y.PointNeedHelp != x.CaseNeedHelp)
                     .Select(y => y.PointUserId).First(),
-                    TransDate = x.Points.Where(y => y.PointUserId == x.CaseUserId).Select(y => y.PointAddDate).First()
-                }).ToList();
+                    TransDate = x.Points.Where(y => y.PointUserId == x.CaseUserId).Select(y => y.PointAddDate).First(),
+                    TargetUserName= _mutualBankContext.Users.Where(y=>y.UserId== x.Points.Where(y => y.PointNeedHelp != x.CaseNeedHelp)
+                    .Select(y => y.PointUserId).First()).First().UserNname
+                }).OrderBy(x=>x.TransDate).ToList();
             return Json(Newtonsoft.Json.JsonConvert.SerializeObject(CaseModel));
         }
 
@@ -153,7 +149,7 @@ namespace MutualBank.Controllers
             {
                 _mutualBankContext.SaveChanges();
                 Msg.code = 200;
-                Msg.Msg = "Success";
+                Msg.Msg = Convert.ToString(_mutualBankContext.Users.Where(x => x.UserId == this.User.GetId()).Select(x => x.UserPoint).FirstOrDefault());
             }
             catch (DbUpdateException ex)
             {
