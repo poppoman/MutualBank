@@ -25,10 +25,18 @@ namespace MutualBank.Areas.Admin.Models.ViewModel
         public string? UserFname { get; set; }
         [Display(Name = "暱稱")]
         public string? UserNname { get; set; }
-        [Display(Name = "性別")]
         public bool? UserSex { get; set; }
+        [Display(Name = "性別")]
+        public string? UserSexDisplay
+        {
+            set => SexConvert(UserSex);
+            get => SexConvert(UserSex);
+        }
+
         public string? UserHphoto { get; set; }
         [Display(Name = "生日")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date)]
         public DateTime? UserBirthday { get; set; }
         public string? UserEmail { get; set; }
         public int? UserSkillId { get; set; }
@@ -40,5 +48,14 @@ namespace MutualBank.Areas.Admin.Models.ViewModel
         public int UserPoint { get; set; }
         [Display(Name = "姓名")]
         public string? UserFullname { get; internal set; }
+
+        private string SexConvert(bool? b)
+        {
+            if (b == true)
+            {
+                return "男";
+            }
+            return (b != false) ? "未設定" : "女";
+        }
     }
 }
