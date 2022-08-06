@@ -1,0 +1,25 @@
+﻿.reBgBx {
+    position: relative;
+    width: 100%;
+    height: 100%;
+   overflow: hidden;
+}
+    .reBgBx img {
+        width:100%;
+        height:100%;
+        object-fit:cover;
+    }
+div#reText {
+    position:absolute;
+    z-index:5;
+}
+    form#form {
+        padding: 10px 40px 30px;
+    }
+
+
+@media (max-width: 768px) {
+    div#reDeco {
+        display:none;
+    }
+}

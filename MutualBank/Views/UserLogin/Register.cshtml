@@ -1,53 +1,65 @@
-﻿<div class="container">
-    <div class="offset-2 col-8">
+﻿<div class="container mt-5">
+    <div class="m-auto col-md-8 col-sm-10 col-10">
         <div id="homeContent" class="container cn mb-5">
-            <form id="form" action="/UserLogin/Register" method="post" onsubmit="return false" novalidate>
-                <div class="row pt-3">
-                    <div class="col-12">
-                        <h4 class="postTitle mb-2">註冊帳戶</h4>
+            <div class="row">
+                <div id="reDeco" class="col-md-5 col-sm-12 col-12 p-0 position-relative">
+                    <div class="p-4 w-100" id="reText">
+                        <h2>歡迎加入互助銀行</h2>
+                        <p>圖與文字都是暫代，之後會再更換</p>
                     </div>
-                    <div class="col-12 mb-3">
-                        <label for="LoginName" class="form-label">帳號</label>
-                        <input type="text" class="form-control "
-                               id="LoginName" name="LoginName" v-model="Account" placeholder="" required>
-                        <div class="invalid-feedback">
-                            <div id="Accerrormsg"></div>
-                        </div>
-
+                    <div class="reBgBx">
+                        <img src="https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80" />
                     </div>
-
-                    <div class="col-12 mb-3">
-                        <label for="LoginPwd" class="form-label">密碼</label>
-                        <input type="password" class="form-control"
-                               id="LoginPwd" name="LoginPwd" v-model="Password" placeholder="" required>
-                        <div class="invalid-feedback">
-                            <div id="Pwderrormsg"></div>
-                        </div>
-
-                    </div>
-                    <div class="col-12 mb-3">
-                        <label for="ConfirmPwd" class="form-label">確認密碼</label>
-                        <input type="password" class="form-control"
-                               id="ConfirmPwd" name="ConfirmPwd" v-model="ConfirmPwd" placeholder="" required>
-                        <div class="invalid-feedback">
-                            <div id="Conferrormsg"></div>
-                        </div>
-
-                    </div>
-                    <div class="col-12 mb-3">
-                        <label for="LoginEmail" class="form-label">註冊信箱</label>
-                        <input type="text" class="form-control"
-                               id="LoginEmail" name="LoginEmail" v-model="Email" placeholder="例如XXX@mail.com" required>
-                        <div class="invalid-feedback">
-                            <div id="Emailerrormsg"></div>
-                        </div>
-                    </div>
-                    <div class="col-12 text-center">
-                        <button class="postBtn w-25 mt-4" type="submit" v-on:click="sub">註冊</button>
-                    </div>
-
                 </div>
-            </form>
+                <form id="form" class="col-md-7 col-sm-12 col" action="/UserLogin/Register" method="post" onsubmit="return false" novalidate>
+                    <div>
+                        <div class="row pt-3">
+                            <div class="col-12">
+                                <h4 class="postTitle mb-3">註冊帳戶</h4>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="LoginName" class="form-label">帳號</label>
+                                <input type="text" class="form-control "
+                                       id="LoginName" name="LoginName" v-model="Account" placeholder="" required>
+                                <div class="invalid-feedback">
+                                    <div id="Accerrormsg"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label for="LoginPwd" class="form-label">密碼</label>
+                                <input type="password" class="form-control"
+                                       id="LoginPwd" name="LoginPwd" v-model="Password" placeholder="" required>
+                                <div class="invalid-feedback">
+                                    <div id="Pwderrormsg"></div>
+                                </div>
+
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="ConfirmPwd" class="form-label">確認密碼</label>
+                                <input type="password" class="form-control"
+                                       id="ConfirmPwd" name="ConfirmPwd" v-model="ConfirmPwd" placeholder="" required>
+                                <div class="invalid-feedback">
+                                    <div id="Conferrormsg"></div>
+                                </div>
+
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="LoginEmail" class="form-label">註冊信箱</label>
+                                <input type="text" class="form-control"
+                                       id="LoginEmail" name="LoginEmail" v-model="Email" placeholder="例如XXX@mail.com" required>
+                                <div class="invalid-feedback">
+                                    <div id="Emailerrormsg"></div>
+                                </div>
+                            </div>
+                            <div class="col-12 text-center">
+                                <button class="postBtn w-25 mt-4" type="submit" v-on:click="sub">註冊</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
             <!-- Modal -->
             @*<div class="modal fade" id="success" tabindex="-1" aria-labelledby="successModalLabe" aria-hidden="true">
             <div class="modal-dialog">
@@ -154,13 +166,15 @@
 }
     @section Styles
     {
+    <link rel="stylesheet" href="~/css/Register.css" asp-append-version="true" />
+
     <style>
             .cn {
             position: relative;
             border-radius: 5px;
-            padding: 10px 40px 30px;
             background: var(--white);
             box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.03);
+            overflow: hidden;
         }
         .postTitle {
             font-weight: 700;
@@ -184,5 +198,6 @@
                 padding-right: 10px;
                 border-left: 5px solid var(--help);
             }
+
     </style>
 }

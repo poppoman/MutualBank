@@ -55,7 +55,7 @@
                 </div>
                 <div class="col-12">
                     <label for="CasePhoto" class="form-label">圖片(大小請勿超過2MB)</label>
-                    <input type="file" class="form-control" id="CasePhoto" name="CasePhoto" :change="previewPic"
+                    <input type="file" class="form-control" id="CasePhoto" name="CasePhoto" onchange="previewPic(this)"
                            accept="image/*" required>
                     <img id="pic">
                 </div>

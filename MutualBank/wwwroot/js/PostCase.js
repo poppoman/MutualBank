@@ -1,5 +1,4 @@
-﻿//Vue初始化表單選項
-vmPostCase = new Vue({
+﻿vmPostCase = new Vue({
     el: "#postCase",
     data: {
         areaCity: [],
@@ -90,16 +89,6 @@ vmPostCase = new Vue({
         ableDate: function () {
             var CaseReleaseDate = document.getElementById("CaseReleaseDate");
             CaseReleaseDate.removeAttribute('disabled');
-        },
-        previewPic: function (e) {
-            maxSize_2MB = 2 * 1024 * 1024;
-            if (e.files[0].size > maxSize_2MB) {
-                alert('圖片大小超過2MB！無法上傳');
-                e.value = "";
-            }
-            else {
-                pic.src = URL.createObjectURL(e.files[0])
-            }
         },
         getDateString: function (date) {
             let monthJs = date.getMonth();
@@ -227,4 +216,18 @@ vmPostCase = new Vue({
     }
 });
 
-
+function previewPic(e) {
+    var maxSize = 2 * 1024 * 1024;
+    if (e.files[0].size > maxSize) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: '圖片大小請勿超過2MB',
+            footer: ''
+        });
+        e.value = pic.src = "";
+    }
+    else {
+        pic.src = URL.createObjectURL(e.files[0])
+    }
+}
