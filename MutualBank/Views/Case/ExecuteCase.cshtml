@@ -26,8 +26,7 @@
                     </button>
                 </div>
             </li>
-
-            @*Vue*@
+            <!--Vue-->
             <li v-else class="list-group-item" v-for="item in exeCaseModel">
                 <div class="d-flex justify-content-between align-items-start mb-4">
                     <div class="ms-2 me-auto text-nowrap">
@@ -36,8 +35,8 @@
                             <span class="fw-500">{{item.CaseSkillName}}</span>
                         </div>
                         <h4 class="mb-0">{{item.CaseTitle}}</h4>
-                        <span v-if="item.IsNeed" class="fs-14 fw-300">將支付給對方{{item.CasePoint}}點</span>
-                        <span v-else class="fs-14 fw-300">對方將支付{{item.CasePoint}}點給您</span>
+                        <span v-if="item.IsNeed" class="fs-14 fw-300">將轉出<strong>&nbsp;{{item.CasePoint}}點&nbsp;</strong>給<span class="fw-500">&nbsp;{{item.TargetUserName}}</span></span>
+                        <span v-else class="fs-14 fw-300"><span class="fw-500">{{item.TargetUserName}}&nbsp;</span>將支付<strong>&nbsp;{{item.CasePoint}}點&nbsp;</strong>給您</span>
                     </div>
                     <div>
                         <span class="badge rounded-pill m-2 smallInfo">{{item.TransDate | showDate}}</span>

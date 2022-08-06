@@ -153,7 +153,8 @@
                     <div class="comment-frame">
                         <div>
                             <div class="user-pic">
-                                <img src="@Html.Raw(ViewBag.LoginPhoto)" alt="" class="author-picture">
+                                <img v-if="isLoggin" src="@Html.Raw(ViewBag.LoginPhoto)" alt="" class="author-picture">
+                                <img v-else="isLoggin" src="~/postpage/userhphotonull.svg" alt="" class="author-picture">
                             </div>
                         </div>
 
