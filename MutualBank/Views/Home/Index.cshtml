@@ -65,7 +65,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <img v-bind:src="item.CasePhoto" class="card-img-top p-2" alt="image not found">
+                                <a v-bind:href="'/PostPage/Index/'+item.CaseId">
+                                    <img v-bind:src="item.CasePhoto" class="card-img-top p-2" alt="image not found">
+                                </a>
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title fw-400" title="item.CaseTitle">{{item.CaseTitle}}</h5>

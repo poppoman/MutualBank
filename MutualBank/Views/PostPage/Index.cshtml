@@ -375,7 +375,8 @@
                 msglist: msgData,
                 value: "",
                 valuecd: "",
-                toastSubmitResult:""
+                toastSubmitResult:"",
+                isLoggin:false
             },
 
             filters: {
@@ -387,6 +388,10 @@
             },
             methods: {
                 addcoment: function() {
+                    if (this.isLoggin == false) { 
+                        PP.toastNeedLoggin();
+                        return;
+                    }
                     var id = document.getElementById("commentbtn").dataset.caseid;
                     var formData = new FormData();
                     formData.append("id", id);
@@ -400,7 +405,7 @@
                         contentType: false,
                         processData: false,
                         success: function(res) {
-                            PP.toastShow(true);
+                            PP.toastMsgResult(true);
                             PP.msglist.push(res)
                             $("textarea:eq(0)").val("");
                             $("#commentbtn").attr("disabled", "true");
@@ -408,7 +413,7 @@
                             $(window).scrollTop(targetTop);
                         },
                         error: function(res) {
-                            vmPP.toastShow(false);
+                            PP.toastMsgResult(false);
                         }
                     });
                 },
@@ -448,6 +453,10 @@
                     }
                 },
                 addrecomment: function(e) {
+                     if (this.isLoggin == false) { 
+                        PP.toastNeedLoggin();
+                        return;
+                    }
                     var id = $("#commentbtn").data("caseid");
                     var textval = $(e.target).parents(".col-auto-input").siblings(".textarea-box").children(".responeenter").val()
                     var formData = new FormData();
@@ -465,22 +474,28 @@
                         contentType: false,
                         processData: false,
                         success: function(res) {
-                            PP.toastShow(true);
+                            PP.toastMsgResult(true);
                             var msglistindex = PP.msglist.findIndex(x => x.msgId == y)
                             PP.msglist[msglistindex].mychildinhouse.push(res)
                             $(".comment-bother-frame-input-top").attr("hidden", "hidden")
                             $("textarea").val("");
                         },
                         error: function(res) {
-                            PP.toastShow(false);
+                            PP.toastMsgResult(false);
                         },
                     });
                 },
-                toastShow: function(isSuccess) {
+                toastMsgResult: function(isSuccess) {
                     PP.toastSubmitResult = isSuccess==true?"已新增留言":"Oops...留言失敗";
                     var toastTransResult = document.getElementById("ToastTransResult")
                     var toast = new bootstrap.Toast(toastTransResult);
                     toast.show();
+                },
+                toastNeedLoggin: function() {
+                        PP.toastSubmitResult = "請先登入";
+                        var toastTransResult = document.getElementById("ToastTransResult")
+                        var toast = new bootstrap.Toast(toastTransResult);
+                        toast.show();
                 }
             },
             computed: {
@@ -491,6 +506,15 @@
                     return this.valuecd.length;
                 },
             },
+            mounted: function() { 
+                fetch("/PostPage/IsLoggin")
+                    .then(res =>  
+                        res.text())
+                    .then(data => 
+                       PP.isLoggin= data == "true" ? true : false
+                    )
+                    .catch(err => console.log(err));
+            }
         })
     </script>
     <script src="~/js/PostPage.js"></script>

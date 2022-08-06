@@ -47,7 +47,7 @@ namespace MutualBank.Controllers
                             childname = y.MsgUser.UserNname,
                             childtoUsername = y.MsgToUser.UserNname,
                             childHphoto = y.MsgToUser.UserHphoto == null ? y.MsgToUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, y.MsgToUser.UserHphoto),
-                            
+
                             childtoUserHphoto = y.MsgUser.UserHphoto == null ? y.MsgUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, y.MsgUser.UserHphoto),
 
                             childcontent = y.MsgContent,
@@ -95,7 +95,7 @@ namespace MutualBank.Controllers
                 AreaTownname = AreaTownname,
                 IsExecute = Case.CaseIsExecute,
                 UserPoint = Case.CaseUser.UserPoint,
-                UserId=Case.CaseUserId
+                UserId = Case.CaseUserId
             };
 
             if (User.Identity.IsAuthenticated)
@@ -280,6 +280,11 @@ namespace MutualBank.Controllers
                 return false;
             }
             return _mutualBankContext.Cases.FirstOrDefault(x => x.CaseId == CaseId && x.CaseUserId == User.GetId()) == null ? false : true;
+        }
+        [HttpGet]
+        public bool IsLoggin()
+        {
+            return User.Identity.IsAuthenticated;
         }
     }
 }
