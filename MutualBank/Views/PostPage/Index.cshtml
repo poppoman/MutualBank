@@ -27,7 +27,7 @@
                     <span class="author-pic-name">
                         <span class="authorpicture-frame">
                             <a href="/Profile/Index/@Model.UserId">
-                                <img src="@Html.DisplayFor(model=>model.UserPhoto)" alt="" onerror="this.src = 'https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="author-picture">
+                                <img src="@Html.DisplayFor(model=>model.UserPhoto)" alt=""  class="author-picture">
                             </a>
 
                         </span>
@@ -153,7 +153,7 @@
                     <div class="comment-frame">
                         <div>
                             <div class="user-pic">
-                                <img src="@Html.Raw(ViewBag.LoginPhoto)" alt="" onerror="this.src = 'https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="author-picture">
+                                <img src="@Html.Raw(ViewBag.LoginPhoto)" alt="" class="author-picture">
                             </div>
                         </div>
 
@@ -202,7 +202,7 @@
                                 <div class="comment-bother">
                                     <a href="" class="comment-pic-frame">
                                         <div style="width: 24px; height: 24px;" class="avatar-frame">
-                                            <img v-bind:src="x.childtoUserHphoto" alt="" onerror="this.src='https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="comment-bother-pic">
+                                            <img v-bind:src="x.childtoUserHphoto" alt=""  class="comment-bother-pic">
                                         </div>
                                     </a>
                                     <div class="comment-brother-re">
@@ -214,7 +214,7 @@
                                                 <span>回覆給：<span>{{x.childtoUsername}}</span></span>
                                                 <div class="comment-bother">
                                                     <a href="">
-                                                        <img v-bind:src="x.childHphoto" alt="" onerror="this.src='https://i.pinimg.com/564x/31/1e/34/311e34183aa017d0dd4b232a8a5f3cd8.jpg';this.onerror = null" class="comment-bother-pic">
+                                                        <img v-bind:src="x.childHphoto" alt=""  class="comment-bother-pic">
                                                     </a>
                                                 </div>
                                             </div>
@@ -405,15 +405,19 @@
                         contentType: false,
                         processData: false,
                         success: function(res) {
+                            PP._data.value = "";              
                             PP.toastMsgResult(true);
                             PP.msglist.push(res)
-                            $("textarea:eq(0)").val("");
                             $("#commentbtn").attr("disabled", "true");
+                            if ($(".respone-mes-frame").length != 0) { 
                             var targetTop = $(".respone-mes-frame").last().offset().top;
                             $(window).scrollTop(targetTop);
+                            }
+                            
                         },
                         error: function(res) {
                             PP.toastMsgResult(false);
+                            $("#exampleFormControlTextarea1").val("");
                         }
                     });
                 },
@@ -478,7 +482,8 @@
                             var msglistindex = PP.msglist.findIndex(x => x.msgId == y)
                             PP.msglist[msglistindex].mychildinhouse.push(res)
                             $(".comment-bother-frame-input-top").attr("hidden", "hidden")
-                            $("textarea").val("");
+                             PP._data.valuecd= "";
+                             $("#commentbtmre").attr("disabled", "true");
                         },
                         error: function(res) {
                             PP.toastMsgResult(false);

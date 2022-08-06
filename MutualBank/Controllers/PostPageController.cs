@@ -199,7 +199,7 @@ namespace MutualBank.Controllers
                 childname = User.UserNname,
                 childtoUsername = toUser.UserNname,
                 childHphoto = toUser.UserHphoto == null ? toUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, toUser.UserHphoto),
-                childtoUserHphoto = toUser.UserHphoto,
+                childtoUserHphoto = toUser.UserHphoto == null ? toUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, toUser.UserHphoto),
                 childcontent = recomment.MsgContent,
                 childaddDate = recomment.MsgAddDate,
                 childparentid = recomment.MsgParentId,
