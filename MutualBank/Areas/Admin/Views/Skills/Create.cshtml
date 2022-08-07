@@ -1,30 +1,51 @@
 ﻿@model MutualBank.Models.Skill
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "新增 | 技能管理";
 }
 
-<h1>Create</h1>
+<div class="col-12 col-sm-9 col-md-6 col-lg-4 d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h2>新增技能</h2>
+</div>
 
-<h4>Skill</h4>
-<hr />
+@* 表單起始處 *@
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="SkillName" class="control-label"></label>
-                <input asp-for="SkillName" class="form-control" />
-                <span asp-validation-for="SkillName" class="text-danger"></span>
+    <div class="col-12 col-sm-9 col-md-6 col-lg-4">
+        <form id="userPost" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
+            @*啟用編輯的區域*@
+            <div id="editSec">
+                <div class="form-group has-validation">
+                    <label for="SkillName" class="form-label">技能名稱</label>
+                    <input type="text" name="SkillName" required maxlength="50" class="form-control rounded-pill ps-3" />
+                    <div class="invalid-feedback">
+	                    欄位必填且最長不能超過50字
+	                </div>
+                </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            @* 按鈕列 *@
+            <div class="row justify-content-between p-3">
+                <button type="submit" class="btn btn-lightyellow col-3 col-md-5">新增</button>
+                <a href="~/Admin/Skills/Index" class="btn btn-backtolist col-4 col-md-6">返回總覽</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@*按鈕-事件*@
+@section Scripts{
+    <script>
+        //參數宣告
+        const forms = document.querySelectorAll('.needs-validation');
 
+        // validation 處理
+        Array.from(forms).forEach(form => {
+          form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            form.classList.add('was-validated')
+          }, false)
+        });
+    </script>
+}

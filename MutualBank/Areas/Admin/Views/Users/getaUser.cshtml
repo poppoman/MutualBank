@@ -8,10 +8,10 @@
 
 @* 標題列 & 按鈕 *@
 <div class="row justify-content-between align-items-center pt-3 mb-3">
-    <div class="col-12 col-sm-8 col-md-8 col-lg-6 border-bottom">
+    <div class="col-12 col-sm-8 col-lg-6 border-bottom">
         <h2 id="title">使用者: {{name}} 的詳細資料</h2>
     </div>
-    <div class="col-4 col-md-4 col-lg-6 fs-4">
+    <div class="col-12 col-sm-4 col-lg-6 fs-4">
         <span id="editText" class="badge border-end-0 bg-royalblue">閱讀</span>
         <input type="button" id="editBtn" value="切換模式" class="btn btn-lightyellow"/>
     </div>
@@ -134,7 +134,7 @@
             <div class="row justify-content-evenly pt-3">
                     <button type="button" v-on:click="fetchOrigin" class="btn btn-backtolist col-3">重設</button>
                     <button type="submit" id="prevent" class="btn btn-backtolist col-3">提交</button>
-                    <a href="~/Admin/Users/Index" class="btn btn-backtolist col-5">返回清單</a>
+                    <a href="~/Admin/Users/Index" class="btn btn-backtolist col-5">返回總覽</a>
             </div>
         </form>
     </div>
@@ -192,7 +192,7 @@ var t = new Vue({
 </script>
 
 
-@*切換模式-按鈕-事件*@
+@*按鈕-事件*@
 @section Scripts{
     <script>
         //參數宣告
@@ -200,7 +200,6 @@ var t = new Vue({
         var sel = $('#editSec select');
         var textArea = $('#editSec textarea');
         var sp = $('#editText');
-        var submitButton = $('#prevent');
         var bool = true;
         const forms = document.querySelectorAll('.needs-validation');
 

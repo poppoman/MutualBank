@@ -10,6 +10,8 @@
     --bg: #ececec;
     --bg-saveyellow: #f39412;
     --bg-lightyellow: #ffca5f;
+    --bg-light: #d1d1ff;
+    --light: #000068;
     --color-252: #696969;
     --color-253: #828282;
     --color-254: #BEBEBE;
@@ -19,6 +21,7 @@
     --RoyalBlue-2: #8185c5;
     --RoyalBlue-hover: #ebebfd;
     --RoyalBlue-light: #797ec0;
+    --velvet: #cdcdf8;
 }
 
 .container-cus {
@@ -41,25 +44,16 @@ textarea{
 
 /* Button 樣式 */
 .btn-simple {
-    background-color: var(--white);
+    background-color: var(--RoyalBlue-hover);
+    border-color: var(--RoyalBlue-hover);
+    border: solid, 1px;
     border-radius: 1rem;
 }
 
 .btn-simple:hover {
-    background-color: var(--bg);
-    border-radius: 1rem;
-}
-
-.btn-saveyellow {
-    color: var(--black);
-    background-color: var(--bg-lightyellow);
-    border-color: var(--bg-lightyellow);
-    border-radius: 1rem;
-}
-.btn-saveyellow:hover {
-    color: var(--white);
-    background-color: var(--color-253);
-    border-color: var(--color-253);
+    background-color: var(--RoyalBlue);
+    border-color: var(--RoyalBlue);
+    border: solid, .5px;
     border-radius: 1rem;
 }
 
@@ -156,6 +150,7 @@ textarea{
         font-size: 15px;
     }
 }
+
 .table-Royal-hover > tbody > tr:hover > *{
     --bs-table-accent-bg: var(--RoyalBlue-hover);
     color: var(--bs-table-hover-color);
@@ -174,6 +169,46 @@ textarea{
 .table-minWidth-4{
     min-width: 4.5rem;
 }
+.table-minWidth-5{
+    min-width: 5.5rem;
+}
+.table-wordWrap{
+    min-width: 75px;
+    max-width: 15vw;
+    word-wrap: break-word;
+}
+@media(min-width:450px){
+    .table-wordWrap{
+        max-width: 25vw;
+    }
+}
+@media(min-width:810px){
+    .table-wordWrap{
+        max-width: 33vw;
+    }
+}
+/* svg 樣式 */
+/* ====================== */
+
+.feather-cus{
+    width: 16px;
+    height: 16px;
+}
+@media(min-width:1080px){
+    .feather-cus{
+        width: 20px;
+        height: 20px;
+    }
+}
+/* 套用在 path 標籤 */
+.svg-cus > svg > *{
+    fill: var(--light);
+}
+.svg-cus:hover > svg >*{
+    fill: var(--color-256);
+}
+
+
 
 .aspect-ratio-box {
     background: white;

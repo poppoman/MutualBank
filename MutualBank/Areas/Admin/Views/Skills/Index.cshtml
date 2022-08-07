@@ -1,4 +1,6 @@
-﻿@model IEnumerable<MutualBank.Models.Skill>
+﻿@model IEnumerable<MutualBank.Areas.Admin.Models.ViewModel.SkillsIndex> 
+@{//TODO 換 model;
+}
 
 @{
     ViewData["Title"] = "首頁 | 技能管理";
@@ -8,16 +10,32 @@
     <h1>技能管理 - 首頁</h1>
 </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table table-responsive">
-    <thead>
+<div class="container-cus">
+<table class="table table-striped table-Royal-hover table-Royal-font align-middle">
+    <thead class="header table-Royal">
         <tr>
-            <th>
+            <th class="header">
                 @Html.DisplayNameFor(model => model.SkillName)
             </th>
-            <th></th>
+            <th class="header ps-1">
+                <span class="table-minWidth-4 ps-1"></span>
+                <a href="~/Admin/Skills/Create" class="btn btn-simple svg-cus align-baseline">
+                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                           class="feather-cus" viewBox="0 0 488.8 488.8" style="enable-background:new 0 0 488.8 488.8;" xml:space="preserve">
+                        <g>
+	                        <g>
+		                        <path d="M488.8,383V9.9c0-5.5-4.4-9.9-9.9-9.9H105.8c-5.5,0-9.9,4.4-9.9,9.9V383c0,5.5,4.4,9.9,9.9,9.9
+			                        h373.1C484.4,392.9,488.8,388.5,488.8,383z M469,373.1H115.7V19.8H469V373.1L469,373.1z"/>
+		                        <path d="M9.9,488.8H383c5.5,0,9.9-4.4,9.9-9.9s-4.4-9.9-9.9-9.9H19.8V105.8c0-5.5-4.4-9.9-9.9-9.9
+			                        S0,100.3,0,105.8v373.1C0,484.4,4.4,488.8,9.9,488.8z"/>
+		                        <path d="M211.8,206.3h70.7V277c0,5.5,4.4,9.9,9.9,9.9s9.9-4.4,9.9-9.9v-70.7H373c5.5,0,9.9-4.4,9.9-9.9
+			                        s-4.4-9.9-9.9-9.9h-70.7v-70.7c0-5.5-4.4-9.9-9.9-9.9s-9.9,4.4-9.9,9.9v70.7h-70.7c-5.5,0-9.9,4.4-9.9,9.9
+			                        S206.3,206.3,211.8,206.3z"/>
+	                        </g>
+                        </g>
+                    </svg>
+                </a>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -27,9 +45,9 @@
                 @Html.DisplayFor(modelItem => item.SkillName)
             </td>
             <td>
-                <a class="btn btn-image align-baseline" asp-action="Edit" asp-route-id="@item.SkillId">                    
-                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="24" width="24"
-                            class="feather feather-home align-middle" viewBox="0 0 194.436 194.436" 
+                <a class="btn btn-image align-baseline" asp-action="Edit" asp-route-id="@item.SkillId">             
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                            class="feather-cus align-bottom" viewBox="0 0 194.436 194.436" 
                             style="enable-background:new 0 0 194.436 194.436;" xml:space="preserve">
                         <g>
 	                        <path d="M192.238,34.545L159.894,2.197C158.487,0.79,156.579,0,154.59,0c-1.989,0-3.897,0.79-5.303,2.196l-32.35,32.35 c-0.004,0.004-0.008,0.01-0.013,0.014L54.876,96.608c-1.351,1.352-2.135,3.166-2.193,5.076l-1.015,33.361 c-0.063,2.067,0.731,4.068,2.193,5.531c1.409,1.408,3.317,2.196,5.303,2.196c0.076,0,0.153-0.001,0.229-0.004l33.36-1.018 c1.909-0.058,3.724-0.842,5.075-2.192l94.41-94.408C195.167,42.223,195.167,37.474,192.238,34.545z M154.587,61.587L132.847,39.85 l21.743-21.743l21.738,21.741L154.587,61.587z M89.324,126.85l-22.421,0.685l0.682-22.422l54.655-54.656l21.741,21.738 L89.324,126.85z"/>
@@ -42,3 +60,4 @@
 }
     </tbody>
 </table>
+</div>
