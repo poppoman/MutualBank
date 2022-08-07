@@ -78,6 +78,36 @@
         </div>
     </footer>
 
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" id=buyPointmodal>
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">點數購買</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <input type="radio" name="select" id="option-1" value="100" checked>
+                    <input type="radio" name="select" id="option-2" value="300">
+                    <input type="radio" name="select" id="option-3" value="500">
+
+                    <label for="option-1" class="option option-1">
+                        <span><i class="fa-solid fa-diamond" style="font-size:12px;color:var(--help)"></i>100</span>
+                    </label>
+                    <label for="option-2" class="option option-2">
+                        <span><i class="fa-solid fa-diamond" style="font-size:12px;color:var(--help)"></i>300</span>
+                    </label>
+                    <label for="option-3" class="option option-3">
+                        <span><i class="fa-solid fa-diamond" style="font-size:12px;color:var(--help)"></i>500</span>
+                    </label>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" onclick="buyPoint()">確認購買</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://kit.fontawesome.com/d0f99bafb2.js" crossorigin="anonymous"></script>
     <script src="~/js/_Layout.js" asp-append-version="true"></script>
@@ -107,47 +137,72 @@
         var logKeyWord = "@Html.Raw(ViewBag.LogKeyWord)";
         var KeyWord = document.getElementById("KeyWord");
         KeyWord.value = logKeyWord;
+
+
+
+        function buyPoint() {
+            var point = $("[name='select']:checked").val();
+            var OrderData = {
+                Amt: point
+            };
+            $.ajax({
+                        type: "post",
+                        url: "/NewebPay/SpgatewayPayBill",
+                        data: OrderData,
+                    }).done(res => {
+                        console.log(res);
+                        const form = document.createElement('form');
+                        form.method = 'post';
+                        form.action = 'https://ccore.newebpay.com/MPG/mpg_gateway';//藍新金流驗證網址(測試環境)
+                        for (const key in res) {
+                            if (res.hasOwnProperty(key)) {
+                                const hiddenField = document.createElement('input');
+                                hiddenField.type = 'hidden';
+                                hiddenField.name = key[0].toUpperCase()+key.slice(1);
+                                hiddenField.value = res[key];
+                                form.appendChild(hiddenField);
+                            }
+                        }
+                        console.log(form);
+                        document.body.appendChild(form);
+                        form.submit();
+                    })
+                        .fail(err => console.log(err))
+        }
     </script>
-    @*@if (User.Identity.IsAuthenticated)
-    {
-    <script src="~/js/signalr/dist/browser/signalr.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
-    <script>
-    toastr.options =
-    {
-    "closeButton": false,
-    "debug": false,
-    "newestOnTop": false,
-    "progressBar": true,
-    "positionClass": "toast-bottom-right",
-    "preventDuplicates": false,
-    "onclick": function () { location.href = "/Home/ProfilePageAjax"; },
-    "showDuration": "300",
-    "hideDuration": "1000",
-    "timeOut": "5000",
-    "extendedTimeOut": "1000",
-    "showEasing": "swing",
-    "hideEasing": "linear",
-    "showMethod": "fadeIn",
-    "hideMethod": "fadeOut"
+    <style>
+
+
+    input[type="radio"] {
+        display: none;
     }
 
-    var userName = "@User.Identity.Name";
+    #option-1:checked:checked ~ .option-1,
+    #option-2:checked:checked ~ .option-2
+    #option-3:checked:checked ~ .option-3, {
+        border-color: #0069d9;
+        background: var(--bg);
+    }
 
-    var connection = new signalR.HubConnectionBuilder().withUrl("/messageHub").build();
+        #option-1:checked:checked ~ .option-1 .dot,
+        #option-2:checked:checked ~ .option-2 .dot,
+        #option-3:checked:checked ~ .option-3 .dot {
+            background: var(--bg);
+        }
 
-    connection.start().then(function() {
-    connection.invoke("Online", userName);
-    }).catch (function(err) {
-    return console.error(err.toString());
-    });
-    connection.on("UserOnline", function(user, UserId,Msg) {
-    toastr["success"](`目前有${Msg}則未讀訊息`, `歡迎您 ${user}`)
-    });
+            #option-1:checked:checked ~ .option-1 .dot::before,
+            #option-2:checked:checked ~ .option-2 .dot::before,
+            #option-3:checked:checked ~ .option-3 .dot::before {
+                opacity: 1;
+                transform: scale(1);
+            }
 
-    </script>
-    }*@
+        #option-1:checked:checked ~ .option-1 span,
+        #option-2:checked:checked ~ .option-2 span,
+        #option-3:checked:checked ~ .option-3 span {
+            color: var(--skill);
+        }
+</style>
 </body>
 
 
