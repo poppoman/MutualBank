@@ -71,13 +71,26 @@ namespace MutualBank.Controllers
             var TradeNo = decryptTradeCollection["TradeNo"];
             var PayTime = decryptTradeCollection["PayTime"];
             HttpContext.Session.SetString("OrderNo", OrderID);
-            if (Status != "/NewebPay/PayFail")
+            if (Status != "SUCCESS")
             {
                 return View();
             }
             var userid = Convert.ToInt32(OrderID.Split('T')[0].Split('U')[1]);
             var userPoint = _mutualBankContext.Users.FirstOrDefault(x => x.UserId == userid);
+            var PointCase = _mutualBankContext.Cases.FirstOrDefault(x => x.CaseId == 67);
             userPoint.UserPoint+= Convert.ToInt32(Amt);
+            Point p = new Point 
+            {
+                PointAddDate = Convert.ToDateTime(PayTime),
+                PointCaseId = 0,
+                PointNeedHelp = false,
+                PointUserId = userid,
+                PointQuantity = Convert.ToInt32(Amt),
+                PointIsDone = true,
+                PointSpgorder = OrderID,
+                PointCase = PointCase
+            };
+            _mutualBankContext.Points.Add(p);
             _mutualBankContext.SaveChanges();
             return Redirect("/NewebPay/PaySuccess");
         }

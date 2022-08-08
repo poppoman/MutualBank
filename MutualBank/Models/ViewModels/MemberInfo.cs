@@ -11,7 +11,7 @@
         public string? UserSchool { get; set; }
         public string? UserResume { get; set; }
         public string? UserCv { get; set; }
-        public Area? UserAreaId { get; set; }
+        public UserArea? UserAreaId { get; set; }
         public string? UserBirthday { get; set; }
         public string? UserHphoto { get; set; }
     }

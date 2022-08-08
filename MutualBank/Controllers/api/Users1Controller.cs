@@ -25,6 +25,7 @@ namespace MutualBank.Controllers
             var userid = this.User.GetId();
             var userInfo = _mutualBankContext.Users.FirstOrDefault(x => x.UserId == userid);
             var area = _mutualBankContext.Areas.FirstOrDefault(x => userInfo.UserAreaId == x.AreaId);
+            UserArea userAra = new UserArea { AreaCity = area.AreaCity, AreaTown = area.AreaTown };
             Area a = new Area { AreaCity = "臺北市", AreaId = 1, AreaTown = "中正區" };
             if (userInfo.UserFname == null) userInfo.UserFname = "";
             if (userInfo.UserLname == null) userInfo.UserLname = "";
@@ -44,7 +45,7 @@ namespace MutualBank.Controllers
                 UserResume = userInfo.UserResume,
                 UserSchool = userInfo.UserSchool,
                 UserSex = userInfo.UserSex,
-                UserAreaId = area,
+                UserAreaId = userAra,
                 UserSkillId = userInfo.UserSkillId,
                 UserBirthday = Convert.ToDateTime(userInfo.UserBirthday).ToString("yyyy-MM-dd"),
                 UserHphoto = Path.Combine(PhotoFileFolder, userInfo.UserHphoto),
