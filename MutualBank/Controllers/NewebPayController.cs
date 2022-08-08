@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MutualBank.Extensions;
 using MutualBank.Models;
+using MutualBank.Models.ViewModels;
 using System.Collections.Specialized;
 using System.Text;
 using System.Web;
@@ -73,7 +74,7 @@ namespace MutualBank.Controllers
             HttpContext.Session.SetString("OrderNo", OrderID);
             if (Status != "SUCCESS")
             {
-                return View();
+                return Redirect("/NewebPay/PayFail");
             }
             var userid = Convert.ToInt32(OrderID.Split('T')[0].Split('U')[1]);
             var userPoint = _mutualBankContext.Users.FirstOrDefault(x => x.UserId == userid);
@@ -100,6 +101,20 @@ namespace MutualBank.Controllers
         }
         public IActionResult PayFail() {
             return View();
+        }
+
+        [HttpGet]
+        public spgStatus payStatus() 
+        {
+            var userid = this.User.GetId();
+            var pointDetail = _mutualBankContext.Points.Where(x => x.PointUserId == userid && x.PointCaseId == 67).OrderByDescending(x=>x.PointId).Take(1).FirstOrDefault();
+            spgStatus spg = new spgStatus
+            {
+                payTime = Convert.ToDateTime(pointDetail.PointAddDate).ToString("yyyy/MM/dd-HH:mm"),
+                Amt = pointDetail.PointQuantity,
+                spgOrder = pointDetail.PointSpgorder
+            };
+            return spg;
         }
     }
 }

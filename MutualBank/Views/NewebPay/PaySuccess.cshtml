@@ -6,7 +6,7 @@
                 <div class="text-center m-2">
                     <i class="fa-regular fa-circle-check m-2" style="font-size:50px;"></i>
                     <h4 class="fw-500 mb-0">交易成功</h4>
-                    <span class="fw-300 fs-16">購買300點</span>
+                    <span class="fw-300 fs-16" id="point"></span>
                 </div>
             </div>
 
@@ -14,15 +14,15 @@
                 <ul>
                     <li class="mb-2">
                         <p class="m-0 fw-500 fs-16">訂單編號</p>
-                        <span class="fw-300">001545</span>
+                        <span class="fw-300" id="order"></span>
                     </li>
                     <li class="mb-2">
                         <p class="m-0 fw-500 fs-16">購買時間</p>
-                        <span class="fw-300">2022-8-8 15:11</span>
+                        <span class="fw-300" id="time"></span>
                     </li>
                     <li>
                         <p class="m-0 fw-500 fs-16">付款方式</p>
-                        <span class="fw-300">信用卡</span>
+                        <span class="fw-300">信用卡一次付清</span>
                     </li>
                 </ul>
             </div>
@@ -38,3 +38,19 @@
         </div>
     </div>
 </div>
+
+<script>
+function getStatus() 
+{
+    fetch("/NewebPay/payStatus")
+        .then(function(res) { return res.json(); })
+        .then(function(result) {
+           document.getElementById("time").innerText = result.payTime;
+           document.getElementById("order").innerText = result.spgOrder;
+           document.getElementById("point").innerText = `購買${result.amt}點`;
+        });
+}
+$(document).ready(function() {
+    getStatus();
+});
+</script>
