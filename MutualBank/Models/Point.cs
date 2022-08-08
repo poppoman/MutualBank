@@ -13,5 +13,7 @@ namespace MutualBank.Models
         public int PointQuantity { get; set; }
         public bool PointIsDone { get; set; }
         public string? PointSpgorder { get; set; }
+
+        public virtual Case PointCase { get; set; } = null!;
     }
 }
