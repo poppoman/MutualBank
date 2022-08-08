@@ -71,7 +71,7 @@ namespace MutualBank.Controllers
             var TradeNo = decryptTradeCollection["TradeNo"];
             var PayTime = decryptTradeCollection["PayTime"];
             HttpContext.Session.SetString("OrderNo", OrderID);
-            if (Status != "SUCCESS")
+            if (Status != "/NewebPay/PayFail")
             {
                 return View();
             }
@@ -79,7 +79,14 @@ namespace MutualBank.Controllers
             var userPoint = _mutualBankContext.Users.FirstOrDefault(x => x.UserId == userid);
             userPoint.UserPoint+= Convert.ToInt32(Amt);
             _mutualBankContext.SaveChanges();
-            return Redirect("/Home/Index");
+            return Redirect("/NewebPay/PaySuccess");
+        }
+        public IActionResult PaySuccess() {
+            //TODO 還沒抓資料庫
+            return View();
+        }
+        public IActionResult PayFail() {
+            return View();
         }
     }
 }

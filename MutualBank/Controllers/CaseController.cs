@@ -61,7 +61,7 @@ namespace MutualBank.Controllers
                     CaseSkillId = x.CaseSkil.SkillId,
                     CaseSkillName = x.CaseSkil.SkillName,
                     CaseUserId = x.CaseUser.UserId,
-                    CaseUserName = $"{x.CaseUser.UserLname}{x.CaseUser.UserFname}",
+                    CaseUserName = x.CaseUser.UserNname,
                     MessageCount = x.Messages.Count
                 }).OrderByDescending(x=>x.CaseReleaseDate).ToList();
 

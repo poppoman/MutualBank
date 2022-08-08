@@ -296,7 +296,11 @@
                 ob.observe(loadingbar);
             }
         });
-
     </script>
-
+    <script>
+        var queryString = location.search.split("=")[1];
+        if (queryString == "pay") {
+            document.getElementById("userPoint").click();
+        }
+    </script>
 }

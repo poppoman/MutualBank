@@ -78,32 +78,31 @@
         </div>
     </footer>
 
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" id=buyPointmodal>
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" id=buyPointmodal>
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">點數購買</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-
+                <div id="inputItem" class="modal-body p-0">
                     <input type="radio" name="select" id="option-1" value="100" checked>
                     <input type="radio" name="select" id="option-2" value="300">
                     <input type="radio" name="select" id="option-3" value="500">
-
-                    <label for="option-1" class="option option-1">
-                        <span><i class="fa-solid fa-diamond" style="font-size:12px;color:var(--help)"></i>100</span>
-                    </label>
-                    <label for="option-2" class="option option-2">
-                        <span><i class="fa-solid fa-diamond" style="font-size:12px;color:var(--help)"></i>300</span>
-                    </label>
-                    <label for="option-3" class="option option-3">
-                        <span><i class="fa-solid fa-diamond" style="font-size:12px;color:var(--help)"></i>500</span>
-                    </label>
+                    <ul id="payList" class="m-0 p-0">
+                        <li for="option-1" class="selectItem active" onclick="selectThis(this,0)">
+                            <span><i class="fa-solid fa-diamond"></i>&nbsp;100</span>
+                        </li>
+                        <li for="option-2" class="selectItem" onclick="selectThis(this,1)">
+                            <span><i class="fa-solid fa-diamond"></i>&nbsp;300</span>
+                        </li>
+                        <li for="option-3" class="selectItem" onclick="selectThis(this,2)">
+                            <span><i class="fa-solid fa-diamond" ></i>&nbsp;500</span>
+                        </li>
+                    </ul>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn" onclick="buyPoint()">確認購買</button>
-
+                    <button class="btn btn-primary" onclick="buyPoint()">確認購買</button>
                 </div>
             </div>
         </div>
@@ -138,8 +137,14 @@
         var KeyWord = document.getElementById("KeyWord");
         KeyWord.value = logKeyWord;
 
-
-
+        //third-party payment
+        function selectThis(e, selIndex) {
+            $("#payList li").removeClass("active");
+            e.classList.add("active");
+            var select = document.getElementsByName("select");
+            select.forEach(x => x.removeAttribute("checked"));
+            select[selIndex].checked = true;
+        }
         function buyPoint() {
             var point = $("[name='select']:checked").val();
             var OrderData = {
@@ -170,40 +175,5 @@
                         .fail(err => console.log(err))
         }
     </script>
-    <style>
-
-
-    input[type="radio"] {
-        display: none;
-    }
-
-    #option-1:checked:checked ~ .option-1,
-    #option-2:checked:checked ~ .option-2
-    #option-3:checked:checked ~ .option-3, {
-        border-color: #0069d9;
-        background: var(--bg);
-    }
-
-        #option-1:checked:checked ~ .option-1 .dot,
-        #option-2:checked:checked ~ .option-2 .dot,
-        #option-3:checked:checked ~ .option-3 .dot {
-            background: var(--bg);
-        }
-
-            #option-1:checked:checked ~ .option-1 .dot::before,
-            #option-2:checked:checked ~ .option-2 .dot::before,
-            #option-3:checked:checked ~ .option-3 .dot::before {
-                opacity: 1;
-                transform: scale(1);
-            }
-
-        #option-1:checked:checked ~ .option-1 span,
-        #option-2:checked:checked ~ .option-2 span,
-        #option-3:checked:checked ~ .option-3 span {
-            color: var(--skill);
-        }
-</style>
 </body>
-
-
 </html>

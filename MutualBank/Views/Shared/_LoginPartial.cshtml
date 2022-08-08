@@ -1,6 +1,6 @@
 ﻿@if (User.Identities.First().IsAuthenticated)
 {
-    <li><a id="userPoint" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fa-solid fa-diamond" style="font-size:12px;color:var(--help)"></i>&nbsp;{{userPoint}}</a></li>
+    <li><a id="userPoint" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fa-solid fa-diamond" style="font-size:12px;color:var(--help);cursor:pointer"></i>&nbsp;{{userPoint}}</a></li>
     <li><a href="/Home/ProfilePageAjax?page=postcase"><i class="fa-solid fa-square-plus"></i>&nbsp;新增貼文</a></li>
     <li><a href="/Home/ProfilePageAjax?page=myProfile"><i class="fa-solid fa-user"></i>&nbsp;帳戶</a></li>
 
