@@ -26,7 +26,7 @@ namespace MutualBank.Areas.Admin.Controllers
         [HttpGet]
         [Route("Index")]
         [Produces("application/json")]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             var query = _context.Users.Include(UserNav => UserNav.User1).Select(u => new UserLogin
             {
@@ -34,7 +34,7 @@ namespace MutualBank.Areas.Admin.Controllers
                 LoginEmail = u.User1.LoginEmail,
                 LoginAddDate = u.User1.LoginAddDate,
                 UserId = u.UserId,
-                UserFullname = u.UserFname +" "+ u.UserLname,
+                UserFullname = u.UserLname +" "+ u.UserFname,
                 UserNname = u.UserNname,
                 UserEmail = u.UserEmail,
                 UserSex = u.UserSex,
@@ -68,7 +68,7 @@ namespace MutualBank.Areas.Admin.Controllers
                 return NotFound();
             }            
             ViewBag.UserId = id;
-            ViewBag.aUser = user.UserFname + " " + user.UserLname ?? "null";
+            ViewBag.aUser = user.UserLname + " " + user.UserFname;
             return View();
         }
 

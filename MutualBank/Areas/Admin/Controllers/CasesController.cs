@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MutualBank.Areas.Admin.Models;
 using MutualBank.Areas.Admin.Models.ViewModel;
 using MutualBank.Models;
 
 namespace MutualBank.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Route("Admin/[controller]")]
     public class CasesController : Controller
     {
         private readonly MutualBankContext _context;
@@ -22,8 +24,12 @@ namespace MutualBank.Areas.Admin.Controllers
         }
 
         // GET: Admin/Cases
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        [Route("Index")]
+        public IActionResult Index()
         {
+            if (_context.Cases == null)
+            { return NotFound(); }
             var query = _context.Cases.Include(AreaNav => AreaNav.CaseSerAreaNavigation).Include(skil => skil.CaseSkil).Include(user => user.CaseUser).Select(c => new CaseIndex
             {
                 CaseClosedIn = c.CaseClosedDate ?? new DateTime(2022,08,06),
@@ -44,153 +50,185 @@ namespace MutualBank.Areas.Admin.Controllers
             return View(query);
         }
 
-        // GET: Admin/Cases/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Cases == null)
-            {
-                return NotFound();
-            }
-            return NotFound();
-            //var @case = await _context.Cases
-            //    .Include(@ => @.CaseSerAreaNavigation)
-            //    .Include(@ => @.CaseSkil)
-            //    .Include(@ => @.CaseUser)
-            //    .FirstOrDefaultAsync(m => m.CaseId == id);
-            //if (@case == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //return View(@case);
-        }
-
-        // GET: Admin/Cases/Create
-        public IActionResult Create()
-        {
-            ViewData["CaseSerArea"] = new SelectList(_context.Areas, "AreaId", "AreaId");
-            ViewData["CaseSkilId"] = new SelectList(_context.Skills, "SkillId", "SkillId");
-            ViewData["CaseUserId"] = new SelectList(_context.Users, "UserId", "UserId");
-            return View();
-        }
-
-        // POST: Admin/Cases/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CaseId,CaseUserId,CaseNeedHelp,CaseSkilId,CaseAddDate,CaseReleaseDate,CaseExpireDate,CaseClosedDate,CaseTitle,CaseIntroduction,CasePhoto,CaseSerDate,CaseSerArea")] Case @case)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(@case);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CaseSerArea"] = new SelectList(_context.Areas, "AreaId", "AreaId", @case.CaseSerArea);
-            ViewData["CaseSkilId"] = new SelectList(_context.Skills, "SkillId", "SkillId", @case.CaseSkilId);
-            ViewData["CaseUserId"] = new SelectList(_context.Users, "UserId", "UserId", @case.CaseUserId);
-            return View(@case);
-        }
-
         // GET: Admin/Cases/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        [HttpGet]
+        [Route("Edit/{id}")]
+        public async Task<IActionResult> Edit([FromRoute(Name ="id")]int? id)
         {
             if (id == null || _context.Cases == null)
             {
                 return NotFound();
             }
 
-            var @case = await _context.Cases.FindAsync(id);
-            if (@case == null)
+            var caseModel = await _context.Cases.FindAsync(id);
+            if (caseModel == null)
             {
                 return NotFound();
             }
-            ViewData["CaseSerArea"] = new SelectList(_context.Areas, "AreaId", "AreaId", @case.CaseSerArea);
-            ViewData["CaseSkilId"] = new SelectList(_context.Skills, "SkillId", "SkillId", @case.CaseSkilId);
-            ViewData["CaseUserId"] = new SelectList(_context.Users, "UserId", "UserId", @case.CaseUserId);
-            return View(@case);
+            ViewBag.CaseId = id;
+            ViewBag.AreaName = _context.Areas.Where(a => a.AreaId == caseModel.CaseSerArea).Select(a => new
+            {
+                areaName = a.AreaCity + a.AreaTown,
+            }).FirstOrDefault();
+            return View(caseModel);
         }
 
         // POST: Admin/Cases/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Route("Edit/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CaseId,CaseUserId,CaseNeedHelp,CaseSkilId,CaseAddDate,CaseReleaseDate,CaseExpireDate,CaseClosedDate,CaseTitle,CaseIntroduction,CasePhoto,CaseSerDate,CaseSerArea")] Case @case)
+        [Produces("application/json")]
+        public async Task<IActionResult> Edit(int id, [FromForm]CaseApiModel json)
         {
-            if (id != @case.CaseId)
+            var caseModel = _context.Cases.Where(c => c.CaseId == id).FirstOrDefault();
+            if (id != json.CaseId || caseModel == null)
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _context.Update(@case);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CaseExists(@case.CaseId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _context.Update(CorrespondTheValue(caseModel, json));
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CaseSerArea"] = new SelectList(_context.Areas, "AreaId", "AreaId", @case.CaseSerArea);
-            ViewData["CaseSkilId"] = new SelectList(_context.Skills, "SkillId", "SkillId", @case.CaseSkilId);
-            ViewData["CaseUserId"] = new SelectList(_context.Users, "UserId", "UserId", @case.CaseUserId);
-            return View(@case);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CaseExists(caseModel.CaseId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
 
-        // GET: Admin/Cases/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        [HttpGet]
+        [Route("getReadonlyCases/{id}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Case), 200)]
+        [ProducesResponseType(typeof(ApiMsg), 400)]
+        public IActionResult getReadonlyCases([FromRoute(Name = "id")] int id)
         {
-            if (id == null || _context.Cases == null)
+            var caseModel = _context.Cases.Where(c => c.CaseId == id).Select(c => new CaseApiModel
             {
-                return NotFound();
-            }
-            return NotFound();
-            //var @case = await _context.Cases
-            //    .Include(@ => @.CaseSerAreaNavigation)
-            //    .Include(@ => @.CaseSkil)
-            //    .Include(@ => @.CaseUser)
-            //.FirstOrDefaultAsync(m => m.CaseId == id);
-            //if (@case == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //return View(@case);
+                CaseAddDate = c.CaseAddDate,
+                CaseClosedIn = c.CaseClosedDate ?? new DateTime(2022,08,06),
+                CaseExpireDate = c.CaseExpireDate,
+                CaseIntroduction = c.CaseIntroduction,
+                CaseNeedHelp = c.CaseNeedHelp,
+                CaseId = c.CaseId,
+                CasePoint = c.CasePoint,
+                CaseReleaseDate = c.CaseReleaseDate,
+                CaseSerArea = c.CaseSerArea,
+                CaseSerDate = c.CaseSerDate,
+                CaseSkilId = c.CaseSkilId,
+                CaseTitle = c.CaseTitle,
+                CaseUserId = c.CaseUserId,
+            }).FirstOrDefault();
+            if (caseModel == null)
+            {
+                return this.StatusCode(400, errorMsg());
+            }            
+            return this.StatusCode(200, caseModel);
         }
 
-        // POST: Admin/Cases/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpGet]
+        [Route("getAreaList")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Area), 200)]
+        [ProducesResponseType(typeof(ApiMsg), 400)]
+        public IActionResult getAreaList()
         {
-            if (_context.Cases == null)
+            var areaModel = _context.Areas;
+            if (areaModel == null)
             {
-                return Problem("Entity set 'MutualBankContext.Cases'  is null.");
+                return this.StatusCode(400, errorMsg());
             }
-            var @case = await _context.Cases.FindAsync(id);
-            if (@case != null)
-            {
-                _context.Cases.Remove(@case);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return this.StatusCode(200, CreateAreaView());
         }
+
+        [HttpGet]
+        [Route("getSkillList")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(SkillsIndex), 200)]
+        [ProducesResponseType(typeof(ApiMsg), 400)]
+        public IActionResult getSkillList()
+        {
+            var skill = _context.Skills;
+            if (skill == null)
+            {
+                return this.StatusCode(400, errorMsg());
+            }
+            return this.StatusCode(200, CreateSkillView());
+
+        }
+
 
         private bool CaseExists(int id)
         {
           return (_context.Cases?.Any(e => e.CaseId == id)).GetValueOrDefault();
         }
+
+        private Case CorrespondTheValue(Case caseModel, CaseApiModel apiModel)
+        {
+            caseModel.CaseExpireDate = apiModel.CaseExpireDate;
+            caseModel.CaseIntroduction = apiModel.CaseIntroduction;
+            caseModel.CaseNeedHelp = apiModel.CaseNeedHelp;
+            caseModel.CasePoint = apiModel.CasePoint;
+            caseModel.CaseSerDate = apiModel.CaseSerDate;
+            caseModel.CaseSkilId = apiModel.CaseSkilId;
+            caseModel.CaseTitle = apiModel.CaseTitle;
+            caseModel.CaseUserId = apiModel.CaseUserId;
+            return caseModel;
+        }
+        private CaseApiModel CorrespondToViewModel(Case caseModel)
+        {
+            var apiModel = new CaseApiModel();
+            apiModel.CaseAddDate = caseModel.CaseAddDate;
+            apiModel.CaseClosedDate = caseModel.CaseClosedDate;
+            apiModel.CaseExpireDate = caseModel.CaseExpireDate; 
+            apiModel.CaseIntroduction = caseModel.CaseIntroduction;
+            apiModel.CaseNeedHelp = caseModel.CaseNeedHelp;
+            apiModel.CaseId = caseModel.CaseId;
+            apiModel.CasePoint = caseModel.CasePoint;
+            apiModel.CaseReleaseDate = caseModel.CaseReleaseDate;
+            apiModel.CaseSerArea = caseModel.CaseSerArea;
+            apiModel.CaseSerDate = caseModel.CaseSerDate;
+            apiModel.CaseSkilId = caseModel.CaseSkilId;
+            apiModel.CaseTitle = caseModel.CaseTitle;
+            apiModel.CaseUserId = caseModel.CaseUserId;           
+            return apiModel;
+        }
+        private List<SkillsIndex> CreateSkillView()
+        {
+            List<SkillsIndex> skills = _context.Skills.Select(sk => new SkillsIndex
+            {
+                SkillId = sk.SkillId,
+                SkillName = sk.SkillName,
+            }).ToList();
+            return skills;
+        }
+        private List<AreaViewModel> CreateAreaView()
+        {
+            List<AreaViewModel> areas = _context.Areas.Select(a => new AreaViewModel
+            {
+                AreaId = a.AreaId,
+                AreaCity = a.AreaCity,
+                AreaTown = a.AreaTown,
+                SerAreaDisplay = a.AreaCity + a.AreaTown,
+            }).ToList();
+            return areas;
+        }
+        private ApiMsg errorMsg()
+        {
+            return new ApiMsg
+            {
+                code = 400,
+                msg = "查無此筆資料"
+            };
+        }
+
     }
 }

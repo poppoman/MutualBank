@@ -47,12 +47,22 @@ namespace MutualBank.Controllers
                 _mutualBankContext.Logins.Add(newuser);
                 _mutualBankContext.SaveChanges();
                 var user2 = _mutualBankContext.Logins.Where(u => u.LoginName == usergister.LoginName).Select(u => u.LoginId).FirstOrDefault();
+                var PhotoFileFolder = Path.Combine("/Img", "User");
                 var newuser2 = new User
                 {
                     UserEmail = usergister.LoginEmail,
                     UserNname = usergister.LoginName,
-                    UserId = user2
-                };
+                    UserId = user2,
+                    UserAreaId=1,
+                    UserFname = "",
+                    UserLname = "",
+                    UserCv = "",
+                    UserResume = "",
+                    UserSchool = "",
+                    UserBirthday = Convert.ToDateTime("1970-01-01"),
+                    UserHphoto = Path.Combine(PhotoFileFolder, "Male.PNG"),
+                    UserSex = true
+            };
                     _mutualBankContext.Users.Add(newuser2);
                     _mutualBankContext.SaveChanges();
                     return RedirectToAction("Login", "UserLogin");
@@ -157,23 +167,10 @@ namespace MutualBank.Controllers
             // 取得系統自定密鑰，在 Web.config 設定
 
             string SecretKey = _configuration.GetValue<string>("Email:SecretKey");
-
+            var HashIV = _configuration.GetValue<string>("Email:HashIV");
             try
             {
-                // 使用 3DES 解密驗證碼
-                //TripleDESCryptoServiceProvider DES = new TripleDESCryptoServiceProvider();
-                //MD5 md5 = new MD5CryptoServiceProvider();
-                //byte[] buf = Encoding.UTF8.GetBytes(SecretKey);
-                //byte[] md5result = md5.ComputeHash(buf);
-                //string md5Key = BitConverter.ToString(md5result).Replace("-", "").ToLower().Substring(0, 24);
-                //DES.Key = UTF8Encoding.UTF8.GetBytes(md5Key);
-                //DES.Mode = CipherMode.ECB;
-                //DES.Padding = PaddingMode.PKCS7;
-                //ICryptoTransform DESDecrypt = DES.CreateDecryptor();
-                //byte[] Buffer = Convert.FromBase64String(verify);
-                //string deCode = UTF8Encoding.UTF8.GetString(DESDecrypt.TransformFinalBlock(Buffer, 0, Buffer.Length));
-
-                //verify = deCode; //解密後還原資料
+                verify = CryptoUtil.DecryptAESHex(verify, SecretKey, HashIV);
             }
             catch (Exception ex)
             {
