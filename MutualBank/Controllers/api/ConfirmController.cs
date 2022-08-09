@@ -198,24 +198,13 @@ namespace MutualBank.Controllers.api
 				string UserEmail = user.LoginEmail;
 
                 string SecretKey = _configuration.GetValue<string>("Email:SecretKey");
-
+				var HashIV = _configuration.GetValue<string>("Email:HashIV");
 					// 產生帳號+時間驗證碼
 					string sVerify = id + "|" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+				 sVerify = CryptoUtil.EncryptAESHex(sVerify, SecretKey, HashIV);
 
-					// 將驗證碼使用 3DES 加密
-					//TripleDESCryptoServiceProvider DES = new TripleDESCryptoServiceProvider();
-					//MD5 md5 = new MD5CryptoServiceProvider();
-					//byte[] buf = Encoding.UTF8.GetBytes(SecretKey);
-					//byte[] result = md5.ComputeHash(buf);
-					//string md5Key = BitConverter.ToString(result).Replace("-", "").ToLower().Substring(0, 24);
-					//DES.Key = UTF8Encoding.UTF8.GetBytes(md5Key);
-					//DES.Mode = CipherMode.ECB;
-					//ICryptoTransform DESEncrypt = DES.CreateEncryptor();
-					//byte[] Buffer = UTF8Encoding.UTF8.GetBytes(sVerify);
-					//sVerify = Convert.ToBase64String(DESEncrypt.TransformFinalBlock(Buffer, 0, Buffer.Length)); // 3DES 加密後驗證碼
-
-					// 將加密後密碼使用網址編碼處理
-					sVerify = HttpUtility.UrlEncode(sVerify);
+				// 將加密後密碼使用網址編碼處理
+				sVerify = HttpUtility.UrlEncode(sVerify);
 
 					// 網站網址
 					 string webPath = new StringBuilder()
@@ -229,8 +218,7 @@ namespace MutualBank.Controllers.api
 				string receivePage = "UserLogin/resetPassword";
 
 					// 信件內容
-					string mailContent = "請點擊以下連結，返回網站重新設定密碼，逾期 30 分鐘後，此連結將會失效。<br><br>";
-					//mailContent = $"{mailContent}<a href={webPath}{receivePage}?verify={sVerify}target=_blank>點此連結</a>";
+					string mailContent = "請點擊以下連結，返回網站重新設定密碼，逾期 30 分鐘後，此連結將會失效。<br><br>";;
 					mailContent = $"{mailContent}<a href={webPath}{receivePage}?verify={sVerify}>點此連結</a>";
 
 
