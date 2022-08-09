@@ -222,14 +222,14 @@ namespace MutualBank.Controllers
                     x.MsgUser.UserHphoto == null ? x.MsgUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, x.MsgUser.UserHphoto)
                 }).Distinct().ToList();
 
-            var res = _mutualBankContext.Messages.Include("MsgUser").Include("MsgCase").Where(x => x.MsgCaseId == id & x.MsgParentId == null)
+            var res = _mutualBankContext.Cases.Include("CaseUser").Where(x => x.CaseId == id)
                     .Select(x => new MsgInfo
                     {
-                        UserId = x.MsgUserId,
-                        UserName = x.MsgUser.UserNname,
-                        UserPhoto = x.MsgUser.UserHphoto == null ? x.MsgUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, x.MsgUser.UserHphoto),
-                        CasePoint = x.MsgCase.CasePoint,
-                        UserPoint = x.MsgUser.UserPoint,
+                        UserId = x.CaseUserId,
+                        UserName = x.CaseUser.UserNname,
+                        UserPhoto = x.CaseUser.UserHphoto == null ? x.CaseUser.UserSex == true ? Path.Combine(_userPhotoFilePath, "Male.PNG") : Path.Combine(_userPhotoFilePath, "Female.PNG") : Path.Combine(_userPhotoFilePath, x.CaseUser.UserHphoto),
+                        CasePoint = x.CasePoint,
+                        UserPoint = x.CaseUser.UserPoint,
                         MsgList = Msgs
                     }).FirstOrDefault();
             return Json(Newtonsoft.Json.JsonConvert.SerializeObject(res));

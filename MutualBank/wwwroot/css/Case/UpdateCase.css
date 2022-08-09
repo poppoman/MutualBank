@@ -1,0 +1,54 @@
+﻿#updatetCase .container {
+    position: relative;
+    border-radius: 5px;
+    padding: 10px 40px 30px;
+    background: var(--white);
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.03);
+}
+div#msgSuccessSubmit {
+    width: 60%;
+}
+
+
+#updatetCase .postBtn {
+    border: 0px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 18px;
+    background: var(--help);
+    font-weight: 700;
+}
+
+    #updatetCase .postBtn:hover {
+        background: var(--help1);
+    }
+
+#updatetCase h6 {
+    font-weight: 700;
+}
+
+    #updatetCase h6::before {
+        updatetCase: '';
+        padding-right: 10px;
+        border-left: 5px solid var(--help);
+    }
+
+#updatetCase #pic {
+    width: 50%;
+}
+
+#updatetCase .dateP {
+    font-size: 14px;
+}
+
+
+@media(max-width:768px) {
+    #updatetCase #pic {
+        width: 100%;
+    }
+
+    div#msgSuccessSubmit {
+        width: 90%;
+    }
+}
+

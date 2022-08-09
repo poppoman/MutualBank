@@ -62,7 +62,8 @@ namespace MutualBank.Controllers
                     CaseSkillName = x.CaseSkil.SkillName,
                     CaseUserId = x.CaseUser.UserId,
                     CaseUserName = x.CaseUser.UserNname,
-                    MessageCount = x.Messages.Count
+                    MessageCount = x.Messages.Count,
+                    IsExpired = x.CaseReleaseDate < DateTime.Now
                 }).OrderByDescending(x=>x.CaseReleaseDate).ToList();
 
             var ModelJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model);
@@ -158,6 +159,71 @@ namespace MutualBank.Controllers
                 throw;
             }
             return StatusCode(Msg.code, Msg);
+        }
+        [HttpGet]
+        public IActionResult CaseUpdate(int id)
+        {
+            ViewBag.UserPoint = _mutualBankContext.Users.First(x => x.UserId == User.GetId()).UserPoint;
+            var Case = _mutualBankContext.Cases.Include("CaseSerAreaNavigation").Where(x => x.CaseId == id && x.CaseUserId == this.User.GetId())
+                .Select(x => new
+                {
+                    CaseId = x.CaseId,
+                    CaseTitle = x.CaseTitle.Trim(),
+                    CaseSkilId = x.CaseSkilId,
+                    CaseIntroduction = x.CaseIntroduction.Trim(),
+                    CasePhoto = Path.Combine("/Img", "CasePhoto", x.CasePhoto),
+                    CasePoint = x.CasePoint,
+                    CaseCity = x.CaseSerAreaNavigation.AreaCity,
+                    CaseSerArea = x.CaseSerArea,
+                    CaseSerDate = x.CaseSerDate.Trim(),
+                    CaseNeedHelp = x.CaseNeedHelp,
+                    CaseRealseDate=x.CaseReleaseDate
+                }).FirstOrDefault();
+            return View(Case);
+        }
+        [HttpPost]
+        public IActionResult CaseUpdateSave(Case UpdateCase)
+        {
+            var CaseOrg = _mutualBankContext.Cases.Where(x => x.CaseId == UpdateCase.CaseId).FirstOrDefault();
+            CaseOrg.CaseTitle= UpdateCase.CaseTitle.Trim();
+            CaseOrg.CaseSkilId= UpdateCase.CaseSkilId;
+            CaseOrg.CaseIntroduction  =UpdateCase.CaseIntroduction.Trim();
+            CaseOrg.CasePoint=UpdateCase.CasePoint;
+            CaseOrg.CaseSerArea=UpdateCase.CaseSerArea;
+            CaseOrg.CaseSerDate = UpdateCase.CaseSerDate.Trim();
+
+            if (HttpContext.Request.Form.Files.Count != 0 )
+            {
+                //檢查貼文是否使用預設圖片，如果不是，刪除檔案再進行存檔
+                if (!CaseOrg.CasePhoto.Contains("0_Default"))
+                {
+                    var OrgFilePath = Path.Combine(_webHostEnvironment.WebRootPath,"Img", "CasePhoto", CaseOrg.CasePhoto);
+                    System.IO.File.Delete(OrgFilePath);
+                }
+                IFormFile InputFile = HttpContext.Request.Form.Files[0];
+                var UniqueId = Guid.NewGuid().ToString("D");
+                var PhotoFormat = InputFile.FileName.Split(".")[1];
+                CaseOrg.CasePhoto = $"{CaseOrg.CaseUserId}_{UniqueId}.{PhotoFormat}";
+                var InputFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Img", "CasePhoto", CaseOrg.CasePhoto);
+                FileStream fs = new FileStream(InputFilePath, FileMode.Create);
+                InputFile.CopyTo(fs);
+                fs.Close();
+            }
+            var ResMsg = new ReturnMsg();
+            try
+            {
+                _mutualBankContext.SaveChanges();
+                ResMsg.code = 200;
+                ResMsg.Msg = "OK";
+
+            }
+            catch (Exception ex)
+            {
+                ResMsg.code = 400;
+                ResMsg.Msg = "Fail";
+                throw;
+            }
+            return Ok(ResMsg);
         }
     }
 }

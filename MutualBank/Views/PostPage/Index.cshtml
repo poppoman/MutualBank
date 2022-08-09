@@ -93,7 +93,7 @@
                                     <div class="modal-footer" v-if="isPostHasMsg">
                                         <div class="me-0">
                                             <label>點數：</label>
-                                            <input id="inpPoint" class="me-2 inputPoint" type="text" maxlength="3" title="請輸入數字"
+                                            <input id="inpPoint" class="me-2 inputPoint" type="text" maxlength="4" title="請輸入數字"
                                                v-model.number="finalPoint" v-on:keypress="isNumber" v-bind:disabled="setPointLock" v-bind:style={"color:darkgray":setPointLock,"color:var(--black)":!setPointLock}>
                                             <div class="d-inline-block" id="setPointEnable" v-on:click="setPointEnable">
                                                 <i class="fa-solid fa-pen-to-square pe-none"></i>

@@ -82,7 +82,7 @@
             var CaseReleaseDate = document.getElementById("CaseReleaseDate");
             CaseReleaseDate.setAttribute('disabled', 'disabled');
             CaseReleaseDate.value = getDateString(new Date());//時間恢復為當天
-            dateRemind.innerText = this.FinalDate(new Date(), 14);//預告下架日期
+            dateRemind.innerText = this.finalDate(new Date(), 14);//預告下架日期
         },
         ableDate: function () {
             var CaseReleaseDate = document.getElementById("CaseReleaseDate");
