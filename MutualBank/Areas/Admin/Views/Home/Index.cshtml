@@ -9,21 +9,31 @@
 
     <div class="chart-container-frame row">
         <div class="col-md-6 col-lg-6">
-            <div class="fs-3">註冊人數統計</div>
-            <div class="chart-container-1" >
+            <div class="fs-3">每月註冊人數</div>
+            <div class="chart-container-1">
                 <canvas id="userdata"></canvas>
             </div>
         </div>
         <div class="col-md-6 col-lg-6">
-            <div class="fs-3">文章數量</div>
+            <div class="fs-3">每月文章數量</div>
             <div class="chart-container-3">
                 <canvas id="casedata"></canvas>
             </div>
         </div>
     </div>
-    <div class="fs-3">文章類別統計</div>
-    <div class="chart-container-2">
-        <canvas id="skilldata"></canvas>
+    <div class="chart-container-frame-2 row">
+        <div class="col-md-6 col-lg-6">
+            <div class="fs-3">文章標籤</div>
+            <div class="chart-container-2">
+                <canvas id="skilldata"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-6">
+            <div class="fs-3">文章種類</div>
+            <div class="chart-container-4" >
+                <canvas id="skilltypedata" height="300"></canvas>
+            </div>
+        </div>
     </div>
 </div>
 @section Scripts{
@@ -161,6 +171,33 @@
                     }
                 }
             });
+
+
+        //文章總類
+        var skilltypedata = @Html.Raw(ViewBag.skilltypedata);
+        var ctx = document.getElementById("skilltypedata"),
+            skilltypedata = new Chart(ctx, {
+                type: "bar", // 圖表類型
+                data: {
+                    labels: ["提供技能", "需要幫助"], // 標題
+                    datasets: [{
+                        data: skilltypedata,// 資料
+                        backgroundColor: backgroundcolor,
+
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false, // 固定長寬比
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false,
+
+                        }
+                    }
+                }
+            });
+
 
     </script>
 
