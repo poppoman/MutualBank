@@ -3,7 +3,7 @@
     var id = ViewBag.CaseId;
     var aName = ViewBag.AreaName;
     //頁籤標題
-    ViewData["Title"] = $"卡片:\"{id}\"的詳細資料";
+    ViewData["Title"] = $"卡片 | 詳細資料";
 }
 
 @* 標題列 & 按鈕 *@
@@ -24,11 +24,11 @@
             <input type="hidden" name="CaseId" :value="changedCaseData.caseId" />
                 <div class="form-group">
                     <label for="CaseAddDate" class="form-label">建立時間</label>
-	                <p class="fs-5 rounded-pill ps-3">{{changedCaseData.caseAddDate}}</p>
+	                <p class="fs-5 rounded-pill ps-3">{{changedCaseData.caseAddString}}</p>
                 </div>
                 <div class="form-group">
                     <label for="CaseReleaseDate" class="form-label">發佈時間</label>
-	                <p class="fs-5 rounded-pill ps-3">{{changedCaseData.caseReleaseDate}}</p>
+	                <p class="fs-5 rounded-pill ps-3">{{changedCaseData.caseReleaseString}}</p>
                 </div>
                 <div class="form-group has-validation">
                     <label for="CaseClosedDate" class="form-label">結案時間</label>
@@ -46,8 +46,8 @@
                 </div>
                 <div class="form-group has-validation">
                     <label for="CaseExpireDate" class="form-label">過期時間</label>
-	                <input type="datetime-local" id="CaseExpireDate" name="CaseExpireDate" v-bind:value="changedCaseData.caseExpireDate" 
-                           :min="changedCaseData.caseReleaseDate" class="form-control rounded-pill ps-3" />
+	                <input type="date" id="CaseExpireDate" name="CaseExpireDate" v-bind:value="changedCaseData.caseExpireString" 
+                           :min="changedCaseData.caseReleaseString" class="form-control rounded-pill ps-3" />
                     <div class="invalid-feedback">
                       不是可用的日期範圍
                     </div>
@@ -122,53 +122,73 @@
     const basicDate = new Date();
     const current  = basicDate.toISOString().substring(0,16);
     //Vue 物件
-    var vm = new Vue({
-        el: '#vmEle',
-        data: {
-            changedCaseData: [],
-            selectUserList: [],
-            selectSkillList: [],
-            selectAreaList: [],
-            selectNeedList: [
-                {bool: false, text: "提供" },
-                {bool: true, text: "幫助" },
-            ],
-            currentDate: current,
-            aName: areaName,
+var vm = new Vue({
+    el: '#vmEle',
+    data: {
+        changedCaseData: [],
+        selectUserList: [],
+        selectSkillList: [],
+        selectAreaList: [],
+        selectNeedList: [
+            { bool: false, text: "提供" },
+            { bool: true, text: "幫助" },
+        ],
+        currentDate: current,
+        aName: areaName,
+    },
+    methods: {
+        fetchOrigin: function() {
+            vm.$forceUpdate();
         },
-        methods: {            
-            fetchOrigin: function() {
-                vm.$forceUpdate();
-            },
+    },
+    mounted: function() {
+        var self = this;
+        fetch(`/Admin/Cases/getReadonlyCases/${Id}`)
+            .then(function(res) { return res.json() })
+            .then(function(json) {
+                console.log("cases =", json);
+                self.changedCaseData = json;
+            });
+        fetch(`/api/ApiUser/getUserName`)
+            .then(function(res) { return res.json() })
+            .then(function(json) {
+                console.log("user =", json);
+                self.selectUserList = json;
+            });
+        fetch(`/Admin/Cases/getSkillList`)
+            .then(function(res) { return res.json() })
+            .then(function(json) {
+                console.log("skill =", json);
+                self.selectSkillList = json;
+            });
+        fetch(`/Admin/Cases/getAreaList`)
+            .then(function(res) { return res.json() })
+            .then(function(json) {
+                console.log("area =", json);
+                self.selectAreaList = json;
+            });
+    },
+});
+    var t = new Vue({
+        el: '#title',
+        data: {
+            x: {},
+            strS: "卡片: 【",
+            strE: "】",
+            text: "",
         },
         mounted: function() {
-            var self = this;
-            fetch(`/Admin/Cases/getReadonlyCases/${Id}`)
+            fetch(`/Admin/Cases/getTitle/${Id}`)
                 .then(function(res) { return res.json() })
                 .then(function(json) {
-                    console.log("cases =", json);
-                    self.changedCaseData = json;                    
-                });
-            fetch(`/api/ApiUser/getUserName`)
-                .then(function(res) { return res.json() })
-                .then(function(json) {
-                    console.log("user =", json);
-                    self.selectUserList = json;
-                });
-            fetch(`/Admin/Cases/getSkillList`)
-                .then(function(res) { return res.json() })
-                .then(function(json) {
-                    console.log("skill =", json);
-                    self.selectSkillList = json;
-                });
-            fetch(`/Admin/Cases/getAreaList`)
-                .then(function(res) { return res.json() })
-                .then(function(json) {
-                    console.log("area =", json);
-                    self.selectAreaList = json;
+                    console.log("title =", json);
+                    self.x = json;
+                })
+                .then(function() {
+                    self.text = self.strS + self.x.title + self.strE;
                 });
         },
-    })
+    });
 </script>
 
 
@@ -179,6 +199,7 @@
     var sel = $('#editSec select');
     var textArea = $('#editSec textarea');
     var sp = $('#editText');
+    var h = $('#title');
     var bool = true;
     const forms = document.querySelectorAll('.needs-validation');
 

@@ -44,8 +44,8 @@ namespace MutualBank.Areas.Admin.Controllers
                 CaseSerDate = c.CaseSerDate,
                 CaseSkil = c.CaseSkil.SkillName,
                 CaseUserId = c.CaseUserId,
-                UserName = (c.CaseUser.UserFname + " " + c.CaseUser.UserLname != " ") ? 
-                            (c.CaseUser.UserFname + " " + c.CaseUser.UserLname):"無名氏",
+                UserName = (c.CaseUser.UserLname + " " + c.CaseUser.UserFname != " ") ? 
+                            (c.CaseUser.UserLname + " " + c.CaseUser.UserFname):"無名氏",
             });
             return View(query);
         }
@@ -70,7 +70,8 @@ namespace MutualBank.Areas.Admin.Controllers
             {
                 areaName = a.AreaCity + a.AreaTown,
             }).FirstOrDefault();
-            return View(caseModel);
+            ViewBag.title = caseModel.CaseTitle;
+            return View(caseModel);            
         }
 
         // POST: Admin/Cases/Edit/5
@@ -113,14 +114,14 @@ namespace MutualBank.Areas.Admin.Controllers
         {
             var caseModel = _context.Cases.Where(c => c.CaseId == id).Select(c => new CaseApiModel
             {
-                CaseAddDate = c.CaseAddDate,
+                CaseAddString = c.CaseAddDate.ToString("yyyy-MM-dd"),
                 CaseClosedIn = c.CaseClosedDate ?? new DateTime(2022,08,06),
-                CaseExpireDate = c.CaseExpireDate,
+                CaseExpireString = c.CaseExpireDate.ToString("yyyy-MM-dd"),
                 CaseIntroduction = c.CaseIntroduction,
                 CaseNeedHelp = c.CaseNeedHelp,
                 CaseId = c.CaseId,
                 CasePoint = c.CasePoint,
-                CaseReleaseDate = c.CaseReleaseDate,
+                CaseReleaseString = c.CaseReleaseDate.ToString("yyyy-MM-dd"),
                 CaseSerArea = c.CaseSerArea,
                 CaseSerDate = c.CaseSerDate,
                 CaseSkilId = c.CaseSkilId,
@@ -165,6 +166,17 @@ namespace MutualBank.Areas.Admin.Controllers
 
         }
 
+        [HttpGet]
+        [Route("getTitle/{id}")]
+        [Produces("application/json")]
+        public IActionResult getTitle([FromRoute(Name ="id")]int id)
+        {
+            var cModel = _context.Cases.Where(c => c.CaseId == id).Select(c=> new
+            {
+                title = c.CaseTitle
+            }).FirstOrDefault();
+            return Ok(cModel);
+        }
 
         private bool CaseExists(int id)
         {

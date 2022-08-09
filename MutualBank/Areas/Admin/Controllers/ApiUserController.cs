@@ -61,7 +61,7 @@ namespace MutualBank.Areas.Admin.Controllers
             {
                 userId = id,
                 userAreaId = u.UserAreaId,
-                userBirthday = u.UserBirthday,
+                userBnotNull = u.UserBirthday ?? new DateTime(2022,08,06),
                 userCv = u.UserCv,
                 userEmail = u.UserEmail,
                 userFaculty = u.UserFaculty,

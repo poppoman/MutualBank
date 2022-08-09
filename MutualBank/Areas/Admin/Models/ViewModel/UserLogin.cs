@@ -34,10 +34,17 @@ namespace MutualBank.Areas.Admin.Models.ViewModel
         }
 
         public string? UserHphoto { get; set; }
-        [Display(Name = "生日")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
         public DateTime? UserBirthday { get; set; }
+        public DateTime userBnotNull { get; set; }
+        [Display(Name = "生日")]
+        public string? userDate
+        {
+            set => userBnotNull.ToString("yyyy-MM-dd");
+            get => userBnotNull.ToString("yyyy-MM-dd") != "2022-08-06" ?
+                   userBnotNull.ToString("yyyy-MM-dd") : "未填寫";
+        }
         public string? UserEmail { get; set; }
         public int? UserSkillId { get; set; }
         public int? UserAreaId { get; set; }

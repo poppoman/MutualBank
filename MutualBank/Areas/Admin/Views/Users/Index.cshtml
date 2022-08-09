@@ -25,7 +25,7 @@
                 @Html.DisplayNameFor(model => model.UserSexDisplay)
             </th>
             <th class="header">
-                @Html.DisplayNameFor(model => model.UserBirthday)
+                @Html.DisplayNameFor(model => model.userDate)
             </th>            
             <th class="header">編輯</th>
         </tr>
@@ -46,7 +46,7 @@
                 @Html.DisplayFor(modelItem => item.UserSexDisplay)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.UserBirthday)
+                @Html.DisplayFor(modelItem => item.userDate)
             </td>
             <td>
                 <a class="btn btn-image align-baseline" asp-action="getaUser" asp-route-id="@item.UserId">

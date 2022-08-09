@@ -5,6 +5,12 @@
         public int userId { get; set; }
         public int? userAreaId { get; set; }
         public DateTime? userBirthday { get; set; }
+        public DateTime userBnotNull { get; set; }
+        public string? userDate {
+            set => userBnotNull.ToString("yyyy-MM-dd");
+            get => userBnotNull.ToString("yyyy-MM-dd") != "2022-08-06" ?
+                   userBnotNull.ToString("yyyy-MM-dd") : null;
+        }
         public string? userCv { get; set; }
         public string? userEmail { get; set; }
         public string? userFaculty { get; set; }

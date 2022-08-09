@@ -28,42 +28,58 @@ namespace MutualBank.Areas.Admin.Controllers
                 PointIsDone = p.PointIsDone,
                 PointNeedDisplay = (p.PointNeedHelp.ToString() != "True") ? "提供" : "需要",
                 PointQuantity = p.PointQuantity,
-                PointUserName = p.PointCase.CaseUser.UserLname + " " + p.PointCase.CaseUser.UserFname,
+                PointUserName = p.PointCase.CaseUser.UserLname + " " + p.PointCase.CaseUser.UserFname != " " ?
+                                p.PointCase.CaseUser.UserLname + " " + p.PointCase.CaseUser.UserFname : "無名氏"
             });
             return View(pModel);
         }
 
         //Get: Points/Edit/{PointId}
-        public IActionResult Edit(int? id)
+        [HttpGet]
+        [Route("Edit/{id}")]
+        public IActionResult Edit([FromRoute(Name ="id")]int? id)
         {
             var pModel = _context.Points;
             if (id == null || pModel == null)
             { return NotFound(); }
-            var query = _context.Points.Where(p => p.PointId == id).Select( p => new PointsIndex
+            var query = _context.Points.Where(p => p.PointId == id).FirstOrDefault();
+            if (query != null)
             {
-                PointId = p.PointId,
-                PointAddDate = p.PointAddDate,
-                //PointCaseId = p.PointCaseId,
-                PointIsDone = p.PointIsDone,
-                //PointNeedHelp = p.PointNeedHelp,
-                PointQuantity = p.PointQuantity,
-                PointUserId = p.PointUserId,
-            });
-            return View(query);
+                return View(query);
+            }
+            return NotFound();
         }
 
-        public async Task<IActionResult> Details(int? id)
+        [HttpPost]
+        [Route("Edit/{id}")]
+        public IActionResult Edit([FromRoute(Name ="id")]int id, [FromForm] PointApiModel json)
         {
-            if(id == null)
+            if (id != json.PointId || !PointExists(id))
             {
-                return Problem("資料錯誤，請洽系統管理員");
+                return BadRequest();
+            }            
+            var pModel = _context.Points.Where(p => p.PointId == id).FirstOrDefault();
+            try
+            {
+                _context.Points.Update(CorrespondTheValue(pModel,json));
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
             }
-            else
+            catch(DbUpdateException ex)
             {
-                var Point = _context.Points.FirstOrDefault(p => p.PointId == id);
-                return View(Point);
+                return BadRequest(ex.Message);
             }
         }
 
+        private bool PointExists(int id)
+        {
+            return (_context.Points?.Any(e => e.PointId == id)).GetValueOrDefault();
+        }
+        private Point CorrespondTheValue(Point p, PointApiModel apiModel)
+        {
+            p.PointUserId = apiModel.PointUserId;
+            p.PointQuantity = apiModel.PointQuantity;
+            return p;
+        }
     }
 }

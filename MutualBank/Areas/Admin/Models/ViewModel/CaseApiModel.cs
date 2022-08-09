@@ -28,5 +28,8 @@
 
         public int CasePoint { get; set; }
         public bool CaseIsExecute { get; set; }
+        public string? CaseReleaseString { get; internal set; }
+        public string? CaseExpireString { get; internal set; }
+        public string? CaseAddString { get; internal set; }
     }
 }

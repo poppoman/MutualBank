@@ -72,7 +72,7 @@
                 </div>
                 <div class="form-group has-validation">
                     <label for="userBirthday" class="form-label">出生日期</label>
-                    <input type="datetime-local" id="userBirthday" name="userBirthday" v-bind:value="changedUserData.userBirthday" 
+                    <input type="date" id="userBirthday" name="userBirthday" v-bind:value="changedUserData.userDate"
                            v-bind:max="currentDate" class="form-control rounded-pill ps-3" />
                     <div class="invalid-feedback">
                       不是可用的日期範圍
@@ -145,7 +145,7 @@
 var Id = @id;
 var Name = "@id"+" "+"@Html.Raw(name)";
 //時間
-const current  = new Date().toISOString().substring(0,16);
+const current  = new Date().toISOString().substring(0,10);
 // new Vue 取名 vm 掛載在 #vmEle
 var vm = new Vue({
     el: "#vmEle",
