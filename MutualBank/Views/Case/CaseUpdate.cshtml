@@ -350,7 +350,7 @@
                 var releaseDate = new Date(this.updateCase.CaseRealseDate)
                 if (releaseDate < new Date()) {
                     $("#releaseOption input[type='radio']").prop("disabled", true);
-                    document.getElementById("releaseTitle").innerText = "貼文已發佈，不可變更時間";
+                    document.getElementById("releaseTitle").innerText = "貼文已發佈，無法變更時間";
                 }
                 this.$nextTick(() => {
                     var currentDate = new Date();

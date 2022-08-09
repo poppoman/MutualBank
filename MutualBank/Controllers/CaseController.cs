@@ -185,11 +185,13 @@ namespace MutualBank.Controllers
         {
             var CaseOrg = _mutualBankContext.Cases.Where(x => x.CaseId == UpdateCase.CaseId).FirstOrDefault();
             CaseOrg.CaseTitle= UpdateCase.CaseTitle.Trim();
+            CaseOrg.CaseNeedHelp = UpdateCase.CaseNeedHelp;
             CaseOrg.CaseSkilId= UpdateCase.CaseSkilId;
             CaseOrg.CaseIntroduction  =UpdateCase.CaseIntroduction.Trim();
             CaseOrg.CasePoint=UpdateCase.CasePoint;
             CaseOrg.CaseSerArea=UpdateCase.CaseSerArea;
             CaseOrg.CaseSerDate = UpdateCase.CaseSerDate.Trim();
+            CaseOrg.CaseReleaseDate = UpdateCase.CaseReleaseDate;
 
             if (HttpContext.Request.Form.Files.Count != 0 )
             {
