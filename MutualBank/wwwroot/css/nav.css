@@ -9,6 +9,12 @@
     /* 預覽框線 */
     /*border: 0.5px solid #808080;*/
 }
+
+body {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
 .fromNav {
     position: relative;
     top: 50px;
@@ -21,7 +27,6 @@ body {
 a {
     color: var(--black) !important;
 }
-
 
 .fs-14 {
     font-size: 14px;
