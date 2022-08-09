@@ -9,7 +9,7 @@
 @* 標題列 & 按鈕 *@
 <div class="row justify-content-between align-items-center pt-3 mb-3">
     <div class="col-12 col-sm-8 col-lg-6 border-bottom">
-        <h2 id="title">@Html.Raw(ViewData["Title"])</h2>
+        <h2 id="title">卡片: 【{{caseTitle.title}}】</h2>
     </div>
     <div class="col-12 col-sm-4 col-lg-6 fs-4">
         <span id="editText" class="badge border-end-0 bg-royalblue">閱讀</span>
@@ -53,14 +53,14 @@
                     </div>
                 </div>
                 <div class="form-group has-validation">
-                    <label for="CaseNeedHelp" class="form-label">案子類型</label>
+                    <label for="CaseNeedHelp" class="form-label">卡片類型</label>
                     <select name="CaseNeedHelp" v-bind:value="changedCaseData.caseNeedHelp" class="form-select" aria-label="Default select example">
                         <option v-for="item in selectNeedList" v-bind:value="item.bool">{{item.text}}</option>
                     </select>
                     <div class="invalid-feedback">請選擇有效的類型</div>
                 </div>
                 <div class="form-group has-validation">
-                    <label for="CaseSkilId" class="form-label">技能Id</label>
+                    <label for="CaseSkilId" class="form-label">技能名稱</label>
                     <select name="CaseSkilId" :value="changedCaseData.caseSkilId" class="form-select" aria-label="Default select example">
                         <option  v-for="item in selectSkillList" :value="item.skillId">{{item.skillName}}</option>
                     </select>
@@ -96,7 +96,7 @@
                 </div>
                 <div class="form-group has-validation">
                     <label for="CasePoint" class="form-label">交易點數</label>
-                    <input type="number" name="CasePoint" min="1" max="50" class="form-control rounded-pill ps-3"
+                    <input type="number" name="CasePoint" min="0" max="1000" class="form-control rounded-pill ps-3"
                            :value="changedCaseData.casePoint"/>
                     <div class="invalid-feedback">
                         不是可用的數值範圍
@@ -118,9 +118,6 @@
     //將資料帶入 js
     var Id = @id;
     var areaName = "@Html.Raw(aName.areaName)";
-    //時間
-    const basicDate = new Date();
-    const current  = basicDate.toISOString().substring(0,16);
     //Vue 物件
 var vm = new Vue({
     el: '#vmEle',
@@ -133,7 +130,6 @@ var vm = new Vue({
             { bool: false, text: "提供" },
             { bool: true, text: "幫助" },
         ],
-        currentDate: current,
         aName: areaName,
     },
     methods: {
@@ -161,32 +157,21 @@ var vm = new Vue({
                 console.log("skill =", json);
                 self.selectSkillList = json;
             });
-        fetch(`/Admin/Cases/getAreaList`)
-            .then(function(res) { return res.json() })
-            .then(function(json) {
-                console.log("area =", json);
-                self.selectAreaList = json;
-            });
     },
 });
     var t = new Vue({
         el: '#title',
         data: {
-            x: {},
-            strS: "卡片: 【",
-            strE: "】",
-            text: "",
+            caseTitle: [],
         },
         mounted: function() {
+            var self = this;
             fetch(`/Admin/Cases/getTitle/${Id}`)
                 .then(function(res) { return res.json() })
                 .then(function(json) {
                     console.log("title =", json);
-                    self.x = json;
+                    self.caseTitle = json;
                 })
-                .then(function() {
-                    self.text = self.strS + self.x.title + self.strE;
-                });
         },
     });
 </script>
@@ -202,7 +187,7 @@ var vm = new Vue({
     var h = $('#title');
     var bool = true;
     const forms = document.querySelectorAll('.needs-validation');
-
+    vm.$forceUpdate();
     //函式宣告
     $.fn.eleReadonly = function () {
         var ele = this;
