@@ -1,89 +1,247 @@
-﻿@model MutualBank.Models.Case
-
-@{
-    ViewData["Title"] = "Edit";
+﻿@{
+    //取出 data
+    var id = ViewBag.CaseId;
+    var aName = ViewBag.AreaName;
+    //頁籤標題
+    ViewData["Title"] = $"卡片:\"{id}\"的詳細資料";
 }
 
-<h1>Edit</h1>
+@* 標題列 & 按鈕 *@
+<div class="row justify-content-between align-items-center pt-3 mb-3">
+    <div class="col-12 col-sm-8 col-lg-6 border-bottom">
+        <h2 id="title">@Html.Raw(ViewData["Title"])</h2>
+    </div>
+    <div class="col-12 col-sm-4 col-lg-6 fs-4">
+        <span id="editText" class="badge border-end-0 bg-royalblue">閱讀</span>
+        <input type="button" id="editBtn" value="切換模式" class="btn btn-lightyellow" />
+    </div>
+</div>
 
-<h4>Case</h4>
-<hr />
+@* 表單起始處 *@
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="CaseId" />
-            <div class="form-group">
-                <label asp-for="CaseUserId" class="control-label"></label>
-                <select asp-for="CaseUserId" class="form-control" asp-items="ViewBag.CaseUserId"></select>
-                <span asp-validation-for="CaseUserId" class="text-danger"></span>
+    <div id="vmEle" class="col-12 col-sm-8 col-md-8 col-lg-6">
+        <form id="casePost" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
+            <input type="hidden" name="CaseId" :value="changedCaseData.caseId" />
+                <div class="form-group">
+                    <label for="CaseAddDate" class="form-label">建立時間</label>
+	                <p class="fs-5 rounded-pill ps-3">{{changedCaseData.caseAddDate}}</p>
+                </div>
+                <div class="form-group">
+                    <label for="CaseReleaseDate" class="form-label">發佈時間</label>
+	                <p class="fs-5 rounded-pill ps-3">{{changedCaseData.caseReleaseDate}}</p>
+                </div>
+                <div class="form-group has-validation">
+                    <label for="CaseClosedDate" class="form-label">結案時間</label>
+	                <p class="fs-5 rounded-pill ps-3">{{changedCaseData.caseCloseDisplay}}</p>
+                </div>
+            @*啟用編輯的區域*@
+            <div id="editSec">
+                <div class="form-group has-validation">
+                    <label for="CaseUserId" class="form-label">po文者</label>
+                    <select name="CaseUserId" v-bind:value="changedCaseData.caseUserId" class="form-select">
+                        <option disabled>---(編號代表使用者未填其名稱)---</option>
+                        <option v-for="item in selectUserList" :value="item.userId">{{item.userFullName}}</option>
+                    </select>
+                    <div class="invalid-feedback">請選擇有效的使用者名稱</div>
+                </div>
+                <div class="form-group has-validation">
+                    <label for="CaseExpireDate" class="form-label">過期時間</label>
+	                <input type="datetime-local" id="CaseExpireDate" name="CaseExpireDate" v-bind:value="changedCaseData.caseExpireDate" 
+                           :min="changedCaseData.caseReleaseDate" class="form-control rounded-pill ps-3" />
+                    <div class="invalid-feedback">
+                      不是可用的日期範圍
+                    </div>
+                </div>
+                <div class="form-group has-validation">
+                    <label for="CaseNeedHelp" class="form-label">案子類型</label>
+                    <select name="CaseNeedHelp" v-bind:value="changedCaseData.caseNeedHelp" class="form-select" aria-label="Default select example">
+                        <option v-for="item in selectNeedList" v-bind:value="item.bool">{{item.text}}</option>
+                    </select>
+                    <div class="invalid-feedback">請選擇有效的類型</div>
+                </div>
+                <div class="form-group has-validation">
+                    <label for="CaseSkilId" class="form-label">技能Id</label>
+                    <select name="CaseSkilId" :value="changedCaseData.caseSkilId" class="form-select" aria-label="Default select example">
+                        <option  v-for="item in selectSkillList" :value="item.skillId">{{item.skillName}}</option>
+                    </select>
+                    <div class="invalid-feedback">請選擇有效的技能名稱</div>
+                </div>
+                <div class="form-group has-validation">
+                    <label for="CaseTitle" class="form-label">標題</label>
+                    <input type="text" name="CaseTitle" class="form-control rounded-pill ps-3" 
+                            :value="changedCaseData.caseTitle" maxlength="50"/>
+                    <div class="invalid-feedback">
+                        最長不能超過50字
+                    </div>
+                </div>
+                <div class="form-group has-validation">
+                    <label for="CaseIntroduction" class="form-label">詳細內容</label>
+                    <textarea form="casePost" name="CaseIntroduction" class="form-control rounded-10" 
+                              v-bind:value="changedCaseData.caseIntroduction" rows="4" maxlength="200"></textarea>
+                    <div class="invalid-feedback">
+                        最長不能超過200字
+                    </div>
+                </div>
+                <div class="form-group has-validation">
+                    <label for="CaseSerDate" class="form-label">服務時間</label>
+                    <input type="text" name="CaseSerDate" class="form-control rounded-pill ps-3" placeholder="建議格式:周一 09:00~12:00"
+                            :value="changedCaseData.caseSerDate" maxlength="20"/>
+                    <div class="invalid-feedback">
+                        欄位最長不能超過20字
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="SerAreaDisplay">服務區域</label>
+                    <p class="fs-5 rounded-pill ps-3">{{aName}}</p>
+                </div>
+                <div class="form-group has-validation">
+                    <label for="CasePoint" class="form-label">交易點數</label>
+                    <input type="number" name="CasePoint" min="1" max="50" class="form-control rounded-pill ps-3"
+                           :value="changedCaseData.casePoint"/>
+                    <div class="invalid-feedback">
+                        不是可用的數值範圍
+                    </div>
+                </div>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="CaseNeedHelp" /> @Html.DisplayNameFor(model => model.CaseNeedHelp)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="CaseSkilId" class="control-label"></label>
-                <select asp-for="CaseSkilId" class="form-control" asp-items="ViewBag.CaseSkilId"></select>
-                <span asp-validation-for="CaseSkilId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CaseAddDate" class="control-label"></label>
-                <input asp-for="CaseAddDate" class="form-control" />
-                <span asp-validation-for="CaseAddDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CaseReleaseDate" class="control-label"></label>
-                <input asp-for="CaseReleaseDate" class="form-control" />
-                <span asp-validation-for="CaseReleaseDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CaseExpireDate" class="control-label"></label>
-                <input asp-for="CaseExpireDate" class="form-control" />
-                <span asp-validation-for="CaseExpireDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CaseClosedDate" class="control-label"></label>
-                <input asp-for="CaseClosedDate" class="form-control" />
-                <span asp-validation-for="CaseClosedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CaseTitle" class="control-label"></label>
-                <input asp-for="CaseTitle" class="form-control" />
-                <span asp-validation-for="CaseTitle" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CaseIntroduction" class="control-label"></label>
-                <input asp-for="CaseIntroduction" class="form-control" />
-                <span asp-validation-for="CaseIntroduction" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CasePhoto" class="control-label"></label>
-                <input asp-for="CasePhoto" class="form-control" />
-                <span asp-validation-for="CasePhoto" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CaseSerDate" class="control-label"></label>
-                <input asp-for="CaseSerDate" class="form-control" />
-                <span asp-validation-for="CaseSerDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CaseSerArea" class="control-label"></label>
-                <select asp-for="CaseSerArea" class="form-control" asp-items="ViewBag.CaseSerArea"></select>
-                <span asp-validation-for="CaseSerArea" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            @* 按鈕列 *@
+            <div class="row justify-content-evenly pt-3">
+                <button type="button" v-on:click="fetchOrigin" class="btn btn-backtolist col-3">重設</button>
+                <button type="submit" id="prevent" class="btn btn-backtolist col-3">提交</button>
+                <a href="~/Admin/Cases/Index" class="btn btn-backtolist col-5">返回總覽</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
+<script>    
+    //將資料帶入 js
+    var Id = @id;
+    var areaName = "@Html.Raw(aName.areaName)";
+    //時間
+    const basicDate = new Date();
+    const current  = basicDate.toISOString().substring(0,16);
+    //Vue 物件
+    var vm = new Vue({
+        el: '#vmEle',
+        data: {
+            changedCaseData: [],
+            selectUserList: [],
+            selectSkillList: [],
+            selectAreaList: [],
+            selectNeedList: [
+                {bool: false, text: "提供" },
+                {bool: true, text: "幫助" },
+            ],
+            currentDate: current,
+            aName: areaName,
+        },
+        methods: {            
+            fetchOrigin: function() {
+                vm.$forceUpdate();
+            },
+        },
+        mounted: function() {
+            var self = this;
+            fetch(`/Admin/Cases/getReadonlyCases/${Id}`)
+                .then(function(res) { return res.json() })
+                .then(function(json) {
+                    console.log("cases =", json);
+                    self.changedCaseData = json;                    
+                });
+            fetch(`/api/ApiUser/getUserName`)
+                .then(function(res) { return res.json() })
+                .then(function(json) {
+                    console.log("user =", json);
+                    self.selectUserList = json;
+                });
+            fetch(`/Admin/Cases/getSkillList`)
+                .then(function(res) { return res.json() })
+                .then(function(json) {
+                    console.log("skill =", json);
+                    self.selectSkillList = json;
+                });
+            fetch(`/Admin/Cases/getAreaList`)
+                .then(function(res) { return res.json() })
+                .then(function(json) {
+                    console.log("area =", json);
+                    self.selectAreaList = json;
+                });
+        },
+    })
+</script>
+
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+    //參數宣告
+    var inp = $('#editSec input');
+    var sel = $('#editSec select');
+    var textArea = $('#editSec textarea');
+    var sp = $('#editText');
+    var bool = true;
+    const forms = document.querySelectorAll('.needs-validation');
+
+    //函式宣告
+    $.fn.eleReadonly = function () {
+        var ele = this;
+        ele.prop('readonly', 'true');
+        ele.removeClass('form-control');
+        ele.addClass('form-control-plaintext fs-6 bg-light');
+    }
+    $.fn.eleDisabled = function () {
+        var ele = this;
+        ele.prop('disabled', 'true');
+        ele.removeClass('form-control');
+        ele.addClass('form-control-plaintext fs-6 bg-light');
+    }
+    $.fn.eleEditable = function () {
+        var ele = this;
+        ele.removeAttr('readonly');
+        ele.removeAttr('disabled');
+        ele.removeClass('form-control-plaintext fs-6 bg-light');
+        ele.addClass('form-control');
+    }
+    function eleReadable() {
+        inp.eleReadonly();
+        sel.eleDisabled();
+        textArea.eleReadonly();
+    }
+    //element 預設為閱讀狀態
+    eleReadable();
+
+    //註冊事件
+    $("#editBtn").on("click",modeSwitch);
+
+    //按鈕事件處理
+    function modeSwitch() {
+        if (bool) {
+            inp.eleEditable();
+            sel.eleEditable();
+            textArea.eleEditable();
+            sp.text("編輯");
+            sp.removeClass('bg-royalblue');
+            sp.addClass('bg-lightyellow');
+            bool = false;
+        }
+        else {
+            eleReadable();
+            sp.text("閱讀");
+            sp.removeClass('bg-lightyellow');
+            sp.addClass('bg-royalblue');
+            bool = true;
+        }
+    }
+
+    // validation 處理
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.classList.add('was-validated')
+        }, false)
+    });
+</script>
 }

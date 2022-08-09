@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MutualBank.Areas.Admin.Models;
 using MutualBank.Areas.Admin.Models.ViewModel;
 using MutualBank.Models;
+using System.Collections.Generic;
 
 namespace MutualBank.Areas.Admin.Controllers
 {
@@ -26,6 +27,21 @@ namespace MutualBank.Areas.Admin.Controllers
             ViewBag.UserAll = users;
             return users;
         }
+
+        //GET: api/ApiUser/getUserName
+        [HttpGet]
+        [Route("getUserName")]
+        public List<UserNameView> getUserName()
+        {
+            var users = _context.Users.Select(u => new UserNameView
+            {
+                userId = u.UserId,
+                userFullName = (u.UserLname + " " + u.UserFname != " ") ?
+                            u.UserLname + " " + u.UserFname : u.UserId.ToString()
+            }).ToList();
+            return users;
+        }
+
 
         //Get: getaUser/{id}
         //getaUser by id(from Route)

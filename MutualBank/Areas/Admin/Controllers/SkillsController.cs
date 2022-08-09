@@ -23,7 +23,7 @@ namespace MutualBank.Areas.Admin.Controllers
 
         // GET: Admin/Skills
         [Route("Index")]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             var skillModel = _context.Skills.Select(s => new SkillsIndex
             {

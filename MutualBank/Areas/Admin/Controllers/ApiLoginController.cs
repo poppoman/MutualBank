@@ -36,14 +36,9 @@ namespace MutualBank.Areas.Admin.Controllers
         [ProducesResponseType(typeof(ApiMsg), 400)]
         public IActionResult getaLogin([FromRoute(Name = "id")] int id)
         {
-            var error = new ApiMsg
-            {
-                code = 400,
-                msg = "查無此筆資料"
-            };
             if (_context.Logins == null)
             {
-                return this.StatusCode(400, error);
+                return this.StatusCode(400, errorMsg());
             }
             var query = _context.Logins.Where(L => L.LoginId == id).Select(l => new LoginApiModel
             {
@@ -57,7 +52,7 @@ namespace MutualBank.Areas.Admin.Controllers
             {
                 return this.StatusCode(200, query);
             }
-            return this.StatusCode(400, error);
+            return this.StatusCode(400, errorMsg());
         }
 
         //Post: json 物件進來，POST 方式，根據表單name欄位 serialize 成 json (string)
@@ -66,7 +61,7 @@ namespace MutualBank.Areas.Admin.Controllers
         [Produces("application/json")]
         public IActionResult updateLogin([FromRoute(Name = "Id")] int userId, [FromForm] LoginApiModel jsonLogin)
         {
-            Login loginModel = _context.Logins.Where(l => l.LoginId == userId).FirstOrDefault();
+            var loginModel = _context.Logins.Where(l => l.LoginId == userId).FirstOrDefault();
             if (!LoginExists(userId) || loginModel == null)
             {
                 return NotFound();
@@ -90,9 +85,27 @@ namespace MutualBank.Areas.Admin.Controllers
         private Login CorrespondTheValue(Login login, LoginApiModel apiModel)
         {
             login.LoginName = apiModel.loginName;
-            login.LoginPwd = apiModel.loginPwd;
-            login.LoginEmail = apiModel.loginEmail;
+            if(apiModel.loginEmail != null)
+            {
+                login.LoginEmail = apiModel.loginEmail;
+            }
+            if(apiModel.loginPwd != null)
+            {
+                login.LoginPwd = apiModel.loginPwd;
+            }
             return login;
         }
+        /// <summary>
+        /// 製作錯誤訊息
+        /// </summary>
+        /// <returns>ApiMsg</returns>
+        private ApiMsg errorMsg()
+        {
+            return new ApiMsg
+            {
+                code = 400,
+                msg = "查無此筆資料"
+            };
+        }        
     }
 }

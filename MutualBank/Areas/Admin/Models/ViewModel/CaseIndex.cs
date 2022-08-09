@@ -45,6 +45,7 @@ namespace MutualBank.Areas.Admin.Models.ViewModel
         public string? CaseSerDate { get; set; }
         [Display(Name = "所在地")]
         public string? SerArea { get; set; }
+
         [Display(Name = "點數")]
         public int CasePoint { get; set; }
         /// <summary>
