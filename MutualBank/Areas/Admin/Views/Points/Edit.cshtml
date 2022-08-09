@@ -1,15 +1,15 @@
 ﻿@{
     //取出 data
-    var id = ViewBag.CaseId;
-    var aName = ViewBag.AreaName;
+    var id = ViewBag.PointId;
+    var caseId = ViewBag.CaseId;
     //頁籤標題
-    ViewData["Title"] = $"卡片 | 詳細資料";
+    ViewData["Title"] = $"點數 | 交換明細";
 }
 
 @* 標題列 & 按鈕 *@
 <div class="row justify-content-between align-items-center pt-3 mb-3">
     <div class="col-12 col-sm-8 col-lg-6 border-bottom">
-        <h2 id="title">卡片的詳細資料</h2>
+        <h2 id="title">點數明細</h2>
     </div>
     <div class="col-12 col-sm-4 col-lg-6 fs-4">
         <span id="editText" class="badge border-end-0 bg-royalblue">閱讀</span>
@@ -20,84 +20,37 @@
 @* 表單起始處 *@
 <div class="row">
     <div id="vmEle" class="col-12 col-sm-8 col-md-8 col-lg-6">
-        <form id="casePost" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
-            <input type="hidden" name="CaseId" :value="changedCaseData.caseId" />
+        <form id="pointsPost" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
+            <input type="hidden" name="PointId" v-bind:value="changedPointData.pointId" />
                 <div class="form-group">
-                    <label for="CaseAddDate" class="form-label">建立時間</label>
-	                <p class="fs-5 rounded-pill ps-3">{{changedCaseData.caseAddString}}</p>
+                    <label for="PointAddDate" class="form-label">建立時間</label>
+	                <p class="fs-5 rounded-pill ps-3">{{changedPointData.pointAddDisplay}}</p>
                 </div>
                 <div class="form-group">
-                    <label for="CaseReleaseDate" class="form-label">發佈時間</label>
-	                <p class="fs-5 rounded-pill ps-3">{{changedCaseData.caseReleaseString}}</p>
-                </div>
-                <div class="form-group has-validation">
-                    <label for="CaseClosedDate" class="form-label">結案時間</label>
-	                <p class="fs-5 rounded-pill ps-3">{{changedCaseData.caseCloseDisplay}}</p>
+                    <label for="PointCaseId" class="form-label">交易卡片標題</label>
+                    <p class="fs-5 rounded-pill ps-3">{{pointCaseData.title}}</p>
                 </div>
             @*啟用編輯的區域*@
             <div id="editSec">
                 <div class="form-group has-validation">
-                    <label for="CaseUserId" class="form-label">po文者</label>
-                    <select name="CaseUserId" v-bind:value="changedCaseData.caseUserId" class="form-select">
+                    <label for="PointUserId" class="form-label">點數變更的使用者</label>
+                    <select name="PointUserId" v-bind:value="changedPointData.pointUserId" class="form-select">
                         <option disabled>---(編號代表使用者未填其名稱)---</option>
                         <option v-for="item in selectUserList" :value="item.userId">{{item.userFullName}}</option>
                     </select>
                     <div class="invalid-feedback">請選擇有效的使用者名稱</div>
                 </div>
                 <div class="form-group has-validation">
-                    <label for="CaseExpireDate" class="form-label">過期時間</label>
-	                <input type="date" id="CaseExpireDate" name="CaseExpireDate" v-bind:value="changedCaseData.caseExpireString" 
-                           :min="changedCaseData.caseReleaseString" class="form-control rounded-pill ps-3" />
-                    <div class="invalid-feedback">
-                      不是可用的日期範圍
-                    </div>
-                </div>
-                <div class="form-group has-validation">
-                    <label for="CaseNeedHelp" class="form-label">案子類型</label>
-                    <select name="CaseNeedHelp" v-bind:value="changedCaseData.caseNeedHelp" class="form-select" aria-label="Default select example">
+                    <label for="PointNeedHelp" class="form-label">使用者角色</label>
+                    <select name="PointNeedHelp" v-bind:value="changedPointData.pointNeedHelp" class="form-select" aria-label="Default select example">
                         <option v-for="item in selectNeedList" v-bind:value="item.bool">{{item.text}}</option>
                     </select>
                     <div class="invalid-feedback">請選擇有效的類型</div>
                 </div>
                 <div class="form-group has-validation">
-                    <label for="CaseSkilId" class="form-label">技能Id</label>
-                    <select name="CaseSkilId" :value="changedCaseData.caseSkilId" class="form-select" aria-label="Default select example">
-                        <option  v-for="item in selectSkillList" :value="item.skillId">{{item.skillName}}</option>
-                    </select>
-                    <div class="invalid-feedback">請選擇有效的技能名稱</div>
-                </div>
-                <div class="form-group has-validation">
-                    <label for="CaseTitle" class="form-label">標題</label>
-                    <input type="text" name="CaseTitle" class="form-control rounded-pill ps-3" 
-                            :value="changedCaseData.caseTitle" maxlength="50"/>
-                    <div class="invalid-feedback">
-                        最長不能超過50字
-                    </div>
-                </div>
-                <div class="form-group has-validation">
-                    <label for="CaseIntroduction" class="form-label">詳細內容</label>
-                    <textarea form="casePost" name="CaseIntroduction" class="form-control rounded-10" 
-                              v-bind:value="changedCaseData.caseIntroduction" rows="4" maxlength="200"></textarea>
-                    <div class="invalid-feedback">
-                        最長不能超過200字
-                    </div>
-                </div>
-                <div class="form-group has-validation">
-                    <label for="CaseSerDate" class="form-label">服務時間</label>
-                    <input type="text" name="CaseSerDate" class="form-control rounded-pill ps-3" placeholder="建議格式:周一 09:00~12:00"
-                            :value="changedCaseData.caseSerDate" maxlength="20"/>
-                    <div class="invalid-feedback">
-                        欄位最長不能超過20字
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="SerAreaDisplay">服務區域</label>
-                    <p class="fs-5 rounded-pill ps-3">{{aName}}</p>
-                </div>
-                <div class="form-group has-validation">
-                    <label for="CasePoint" class="form-label">交易點數</label>
-                    <input type="number" name="CasePoint" min="1" max="50" class="form-control rounded-pill ps-3"
-                           :value="changedCaseData.casePoint"/>
+                    <label for="PointQuantity" class="form-label">交易點數</label>
+                    <input type="number" name="PointQuantity" min="-1000" max="1000" class="form-control rounded-pill ps-3"
+                           :value="changedPointData.pointQuantity"/>
                     <div class="invalid-feedback">
                         不是可用的數值範圍
                     </div>
@@ -107,7 +60,7 @@
             <div class="row justify-content-evenly pt-3">
                 <button type="button" v-on:click="fetchOrigin" class="btn btn-backtolist col-3">重設</button>
                 <button type="submit" id="prevent" class="btn btn-backtolist col-3">提交</button>
-                <a href="~/Admin/Cases/Index" class="btn btn-backtolist col-5">返回總覽</a>
+                <a href="~/Admin/Points/Index" class="btn btn-backtolist col-5">返回總覽</a>
             </div>
         </form>
     </div>
@@ -117,27 +70,20 @@
 <script>    
     //將資料帶入 js
     var Id = @id;
-    var areaName = "@Html.Raw(aName.areaName)";
-    //時間
-    const basicDate = new Date();
-    const current  = basicDate.toISOString().substring(0,16);  
+    var cId = @caseId;
+    console.log("id=", Id);
+    console.log("cid=", cId);
     //Vue 物件
     var vm = new Vue({
         el: '#vmEle',
         data: {
-            changedCaseData: [],
+            changedPointData: [],
             selectUserList: [],
-            selectSkillList: [],
-            selectAreaList: [],
+            pointCaseData: [],
             selectNeedList: [
                 { bool: false, text: "提供" },
                 { bool: true, text: "幫助" },
             ],
-            currentDate: current,
-            aName: areaName,
-            x: {},
-            strS = "卡片: 【" ,
-            strE = "】",
         },
         methods: {
             fetchOrigin: function() {
@@ -146,11 +92,11 @@
         },
         mounted: function() {
             var self = this;
-            fetch(`/Admin/Cases/getReadonlyCases/${Id}`)
+            fetch(`/Admin/Points/getPointDetail/${Id}`)
                 .then(function(res) { return res.json() })
                 .then(function(json) {
-                    console.log("cases =", json);
-                    self.changedCaseData = json;
+                    console.log("points =", json);
+                    self.changedPointData = json;
                 });
             fetch(`/api/ApiUser/getUserName`)
                 .then(function(res) { return res.json() })
@@ -158,19 +104,12 @@
                     console.log("user =", json);
                     self.selectUserList = json;
                 });
-            fetch(`/Admin/Cases/getSkillList`)
+            fetch(`/Admin/Cases/getTitle/${cId}`)
                 .then(function(res) { return res.json() })
                 .then(function(json) {
-                    console.log("skill =", json);
-                    self.selectSkillList = json;
+                    console.log("title =", json);
+                    self.pointCaseData = json;
                 });
-            fetch(`/Admin/Cases/getAreaList`)
-                .then(function(res) { return res.json() })
-                .then(function(json) {
-                    console.log("area =", json);
-                    self.selectAreaList = json;
-                });
-
         },
     });
 </script>
@@ -212,6 +151,7 @@
     }
     //element 預設為閱讀狀態
     eleReadable();
+    vm.$forceUpdate();
 
     //註冊事件
     $("#editBtn").on("click",modeSwitch);
@@ -235,7 +175,6 @@
             bool = true;
         }
     }
-
 
     // validation 處理
     Array.from(forms).forEach(form => {

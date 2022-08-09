@@ -82,7 +82,7 @@ namespace MutualBank.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(int id, [FromForm]CaseApiModel json)
         {
             var caseModel = _context.Cases.Where(c => c.CaseId == id).FirstOrDefault();
-            if (id != json.CaseId || caseModel == null)
+            if (caseModel == null || json == null)
             {
                 return NotFound();
             }

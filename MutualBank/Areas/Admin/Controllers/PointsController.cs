@@ -6,6 +6,7 @@ using MutualBank.Models;
 namespace MutualBank.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Route("Admin/[controller]")]
     public class PointsController : Controller
     {
         private readonly MutualBankContext _context;
@@ -16,6 +17,7 @@ namespace MutualBank.Areas.Admin.Controllers
         }
 
         // GET: Admin/Points
+        [Route("Index")]
         public IActionResult Index()
         {
             if(_context.Points == null) 
@@ -45,7 +47,34 @@ namespace MutualBank.Areas.Admin.Controllers
             var query = _context.Points.Where(p => p.PointId == id).FirstOrDefault();
             if (query != null)
             {
+                ViewBag.PointId = id;
+                ViewBag.CaseId = query.PointCaseId;                
                 return View(query);
+            }
+            return NotFound();
+        }
+
+        [HttpGet]
+        [Route("getPointDetail/{id}")]
+        public IActionResult getPointDetail([FromRoute(Name ="id")]int? id)
+        {
+            if(id == null || _context.Points == null)
+            {
+                return NotFound();
+            }
+            var query = _context.Points.Where(p => p.PointId == id).Select(p => new PointApiModel
+            {
+                PointId = p.PointId,
+                PointAddDate = p.PointAddDate,
+                PointAddDisplay = p.PointAddDate.ToString("yyyy-MM-dd"),
+                PointCaseId = p.PointCaseId,
+                PointNeedHelp = p.PointNeedHelp,
+                PointQuantity = p.PointQuantity,
+                PointUserId = p.PointUserId
+            }).FirstOrDefault();
+            if (query != null)
+            {
+                return Ok(query);
             }
             return NotFound();
         }
@@ -54,7 +83,7 @@ namespace MutualBank.Areas.Admin.Controllers
         [Route("Edit/{id}")]
         public IActionResult Edit([FromRoute(Name ="id")]int id, [FromForm] PointApiModel json)
         {
-            if (id != json.PointId || !PointExists(id))
+            if (!PointExists(id))
             {
                 return BadRequest();
             }            
@@ -65,9 +94,9 @@ namespace MutualBank.Areas.Admin.Controllers
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            catch(DbUpdateException ex)
+            catch(DbUpdateException)
             {
-                return BadRequest(ex.Message);
+                return BadRequest();
             }
         }
 
@@ -78,6 +107,7 @@ namespace MutualBank.Areas.Admin.Controllers
         private Point CorrespondTheValue(Point p, PointApiModel apiModel)
         {
             p.PointUserId = apiModel.PointUserId;
+            p.PointNeedHelp = apiModel.PointNeedHelp;
             p.PointQuantity = apiModel.PointQuantity;
             return p;
         }
