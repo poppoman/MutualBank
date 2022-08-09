@@ -27,22 +27,25 @@ namespace MutualBank.Controllers
         [HttpGet]
         public UserViewModel GetUsers()
         {
-            return _context.Users.Include("UserNavigation").Where(s => s.UserId == User.GetId())
-                .Select(s=> new UserViewModel
+            var a = _context.Users.Include("UserNavigation").Where(s => s.UserId == User.GetId())
+                .FirstOrDefault();
+            var area = _context.Areas.FirstOrDefault(x => x.AreaId == a.UserAreaId);
+            UserViewModel v = new UserViewModel
             {
-                UserId = s.UserId,
-                UserLname = s.UserLname,
-                UserFname = s.UserFname,
-                UserNname = s.UserNname,
-                UserSex = s.UserSex == true ? "男":"女" ,
-                UserEmail = s.UserEmail,
-                UserBirthday = s.UserBirthday.Value.ToShortDateString(),  
-                UserAreaId = s.UserAreaId,
-                UserCv = s.UserCv,
-                UserResume = s.UserResume,
-                UserArea=$"{s.UserNavigation.AreaCity}{s.UserNavigation.AreaTown}",
-                UserHphoto= s.UserHphoto==null? s.UserSex==true? Path.Combine(_filePath, "Male.PNG") : Path.Combine(_filePath, "Female.PNG") : Path.Combine(_filePath, s.UserHphoto)
-                }).FirstOrDefault();
+                UserId = a.UserId,
+                UserLname = a.UserLname,
+                UserFname = a.UserFname,
+                UserNname = a.UserNname,
+                UserSex = a.UserSex == true ? "男" : "女",
+                UserEmail = a.UserEmail,
+                UserBirthday = a.UserBirthday.Value.ToShortDateString(),
+                UserAreaId = a.UserAreaId,
+                UserCv = a.UserCv,
+                UserResume = a.UserResume,
+                UserArea = $"{area.AreaCity}{area.AreaTown}",
+                UserHphoto = a.UserHphoto == null ? a.UserSex == true ? Path.Combine(_filePath, "Male.PNG") : Path.Combine(_filePath, "Female.PNG") : Path.Combine(_filePath, a.UserHphoto)
+            };
+            return v;
         }
 
         [HttpPost]
