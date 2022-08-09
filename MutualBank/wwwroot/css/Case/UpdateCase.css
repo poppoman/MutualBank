@@ -28,7 +28,7 @@ div#msgSuccessSubmit {
 }
 
     #updatetCase h6::before {
-        updatetCase: '';
+        content: '';
         padding-right: 10px;
         border-left: 5px solid var(--help);
     }
