@@ -25,16 +25,15 @@ namespace MutualBank.Controllers
             var userid = this.User.GetId();
             var userInfo = _mutualBankContext.Users.FirstOrDefault(x => x.UserId == userid);
             var area = _mutualBankContext.Areas.FirstOrDefault(x => userInfo.UserAreaId == x.AreaId);
+            if (area == null) area = new Area { AreaCity = "臺北市", AreaId = 1, AreaTown = "中正區" };
             UserArea userAra = new UserArea { AreaCity = area.AreaCity, AreaTown = area.AreaTown };
-            Area a = new Area { AreaCity = "臺北市", AreaId = 1, AreaTown = "中正區" };
             if (userInfo.UserFname == null) userInfo.UserFname = "";
             if (userInfo.UserLname == null) userInfo.UserLname = "";
             if (userInfo.UserCv == null) userInfo.UserCv = "";
             if (userInfo.UserResume == null) userInfo.UserResume = "";
             if (userInfo.UserSchool == null) userInfo.UserSchool = "";
             if (userInfo.UserBirthday == null) userInfo.UserBirthday = Convert.ToDateTime("1970-01-01");
-            if (userInfo.UserHphoto == null) userInfo.UserHphoto = Path.Combine(PhotoFileFolder, "Male.PNG");
-            if (area == null) area = a;
+            if (userInfo.UserHphoto == null) userInfo.UserHphoto = Path.Combine(PhotoFileFolder, "Male.PNG");           
             MemberInfo memberInfo = new MemberInfo
             {
                 UserFname = userInfo.UserFname,

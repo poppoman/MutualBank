@@ -28,8 +28,6 @@ namespace MutualBank.Areas.Admin.Controllers
                 data = x.People,
                 
             }).ToList();
-
-
             foreach (var item in usersCount) 
             {
                 
@@ -49,7 +47,6 @@ namespace MutualBank.Areas.Admin.Controllers
             foreach (var item in casedata) {
                 arry[(int)item.lable] = (int)item.data;
             }
-
             ViewBag.casedata = Newtonsoft.Json.JsonConvert.SerializeObject(arry);
 
 
@@ -72,9 +69,26 @@ namespace MutualBank.Areas.Admin.Controllers
 
             //文章類型統計
             List<int> skilltypeList = new List<int>();
-            
+            var skilltypedata = _MutualBankContext.Cases.Include("CaseSkil").GroupBy(z => z.CaseNeedHelp).Select
+                (x => new
+                {
+                    lable= x.Key,
+                    data = x.Count(),
 
+                }).ToList();
+            foreach (var item in skilltypedata) {
+                skilltypeList.Add(item.data);
+            }
+            ViewBag.skilltypedata = Newtonsoft.Json.JsonConvert.SerializeObject(skilltypeList);
 
+            //每月點數交換統計
+            List<int> pointList = new List<int>();
+            var pointdata = _MutualBankContext.Points.Include("PointCase").Select(x => new
+            {
+                lable = x.PointAddDate,
+                data = x.PointQuantity
+
+            }).ToList();
             return View();
         }
        

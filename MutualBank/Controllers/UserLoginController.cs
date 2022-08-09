@@ -47,12 +47,22 @@ namespace MutualBank.Controllers
                 _mutualBankContext.Logins.Add(newuser);
                 _mutualBankContext.SaveChanges();
                 var user2 = _mutualBankContext.Logins.Where(u => u.LoginName == usergister.LoginName).Select(u => u.LoginId).FirstOrDefault();
+                var PhotoFileFolder = Path.Combine("/Img", "User");
                 var newuser2 = new User
                 {
                     UserEmail = usergister.LoginEmail,
                     UserNname = usergister.LoginName,
-                    UserId = user2
-                };
+                    UserId = user2,
+                    UserAreaId=1,
+                    UserFname = "",
+                    UserLname = "",
+                    UserCv = "",
+                    UserResume = "",
+                    UserSchool = "",
+                    UserBirthday = Convert.ToDateTime("1970-01-01"),
+                    UserHphoto = Path.Combine(PhotoFileFolder, "Male.PNG"),
+                    UserSex = true
+            };
                     _mutualBankContext.Users.Add(newuser2);
                     _mutualBankContext.SaveChanges();
                     return RedirectToAction("Login", "UserLogin");
