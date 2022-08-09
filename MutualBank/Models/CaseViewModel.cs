@@ -20,6 +20,5 @@
         public string CaseUserName { get; set; } = null!;
         public int? MessageCount { get; set; }
         public string? UserPhoto { get; set; }
-        public bool IsExpired { get;  set; }
     }
 }

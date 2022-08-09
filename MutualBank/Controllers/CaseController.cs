@@ -51,7 +51,7 @@ namespace MutualBank.Controllers
                     CaseNeedHelp = x.CaseNeedHelp,
                     CaseReleaseDate = x.CaseReleaseDate,
                     CaseExpireDate = x.CaseExpireDate,
-                    IsCaseExpire = DateTime.Now >= x.CaseExpireDate ? true : false,
+                    IsCaseExpire = !(x.CaseExpireDate >= DateTime.Now),
                     CaseTitle = x.CaseTitle,
                     CaseIntroduction = x.CaseIntroduction,
                     CasePhoto = Path.Combine(PhotoFileFolder, x.CasePhoto),
@@ -62,8 +62,7 @@ namespace MutualBank.Controllers
                     CaseSkillName = x.CaseSkil.SkillName,
                     CaseUserId = x.CaseUser.UserId,
                     CaseUserName = x.CaseUser.UserNname,
-                    MessageCount = x.Messages.Count,
-                    IsExpired = x.CaseReleaseDate < DateTime.Now
+                    MessageCount = x.Messages.Count
                 }).OrderByDescending(x=>x.CaseReleaseDate).ToList();
 
             var ModelJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model);

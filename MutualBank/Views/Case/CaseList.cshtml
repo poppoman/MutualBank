@@ -55,7 +55,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4 text-center p-0">
-                                    <a v-if="!item.IsExpired" class="btn text-nowrap" v-bind:href="'/Case/CaseUpdate/'+item.CaseId">修改</a>
+                                    <a v-if="!item.IsCaseExpire" class="btn text-nowrap" v-bind:href="'/Case/CaseUpdate/'+item.CaseId">修改</a>
                                     <a v-else class="btn text-nowrap" v-bind:href="'/PostPage/Index/'+item.CaseId">查看</a>
                                 </div>
                             </div>
