@@ -6,7 +6,8 @@
         tarCaseTitle: "",
         tarIsNeed:"",
         tarUserId: "",
-        transPoint:0,
+        transPoint: 0,
+        tarIndex: -1
     },
     methods: {
         getExeCaseModel: function () {
@@ -23,6 +24,7 @@
             this.tarUserId = e.target.dataset.targetuserid ;
             this.transPoint = e.target.dataset.point;
             this.tarIsNeed = e.target.dataset.isneed;
+            this.tarIndex = e.target.dataset.index;
         },
         caseDone: function () {
             $.ajax({
@@ -33,6 +35,8 @@
                 }
             })
                 .done(function (res) {
+                    //update model list
+                    vmEC.exeCaseModel.splice(vmEC.tarIndex, 1);
                     //refresh points
                     var userPoint = document.getElementById("userPoint");
                     userPoint.innerHTML = "";

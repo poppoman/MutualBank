@@ -52,7 +52,7 @@ namespace MutualBank.Controllers
                     UserEmail = usergister.LoginEmail,
                     UserNname = usergister.LoginName,
                     UserId = user2,
-                    UserAreaId=1,
+                    UserAreaId = 1,
                     UserFname = "",
                     UserLname = "",
                     UserCv = "",
@@ -61,10 +61,10 @@ namespace MutualBank.Controllers
                     UserBirthday = Convert.ToDateTime("1970-01-01"),
                     UserHphoto = "Male.PNG",
                     UserSex = true
-            };
-                    _mutualBankContext.Users.Add(newuser2);
-                    _mutualBankContext.SaveChanges();
-                    return RedirectToAction("Login", "UserLogin");
+                };
+                _mutualBankContext.Users.Add(newuser2);
+                _mutualBankContext.SaveChanges();
+                return RedirectToAction("Login", "UserLogin");
             }
             else
             {
@@ -83,7 +83,7 @@ namespace MutualBank.Controllers
         public IActionResult Login(Login userlogin)
         {
             if (userlogin.LoginName == "Admin" && userlogin.LoginPwd == "Admin") { return Redirect("~/Admin/Home"); }
-            else 
+            else
             {
                 var user = (from a in _mutualBankContext.Logins
                             where a.LoginName == userlogin.LoginName
@@ -115,6 +115,8 @@ namespace MutualBank.Controllers
         public IActionResult Logout()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            if (Request.Cookies["Name"] != null) { Response.Cookies.Delete("Name"); }
+            if (Request.Cookies["UserId"] != null) { Response.Cookies.Delete("UserId"); }
             return RedirectToAction("Index", "Home");
         }
         #endregion
@@ -138,7 +140,7 @@ namespace MutualBank.Controllers
             {
                 update.LoginPwd = Password.LoginPwd;
                 _mutualBankContext.SaveChanges();
-                return RedirectToAction("ProfilePageAjax", "Home");
+                return Redirect("/Home/ProfilePageAjax?page=myProfile");
             }
             else
             {
@@ -210,7 +212,7 @@ namespace MutualBank.Controllers
         public async Task<IActionResult> FacebookResponse()
         {
             var data = await HttpContext.AuthenticateAsync(FacebookDefaults.AuthenticationScheme);
-            
+
             return RedirectToAction("Index", "Home");
         }
         public IActionResult GoogleLogin()
@@ -254,26 +256,29 @@ namespace MutualBank.Controllers
                 if (userHphoto == null)
                 {
                     if (memberUpdate.UserSex == true)
-                {
-                    memberUpdate.UserPhoto = "Male.PNG";
-                }
-                else
-                {
-                    memberUpdate.UserPhoto = "Female.PNG";
-                }
+                    {
+                        memberUpdate.UserPhoto = "Male.PNG";
+                    }
+                    else
+                    {
+                        memberUpdate.UserPhoto = "Female.PNG";
+                    }
                 }
                 else memberUpdate.UserPhoto = userHphoto;
-                
+
             }
             else
             {
+                var userphoto = _mutualBankContext.Users.Where(_x => _x.UserId == userid).Select(x => x.UserHphoto).FirstOrDefault();
+                var path = Path.Combine(_webHostEnvironment.WebRootPath, "Img", "User", userphoto);
+                if(userphoto !="Male.PNG" && userphoto!="Femaile.PNG") System.IO.File.Delete(path);
                 IFormFile InputFile = HttpContext.Request.Form.Files[0];
                 IFormFile InputFile2 = HttpContext.Request.Form.Files[2];
                 var UniqueId = Guid.NewGuid().ToString("D");
                 var PhotoFormat = InputFile.FileName.Split(".")[1];
                 memberUpdate.UserPhoto = $"{userid}_{UniqueId}.{PhotoFormat}";
                 var InputFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Img", "User", memberUpdate.UserPhoto);
-                FileStream fs = new FileStream(InputFilePath, FileMode.Create);
+                FileStream fs = new FileStream(InputFilePath, FileMode.Create);               
                 InputFile2.CopyTo(fs);
                 fs.Close();
             }
