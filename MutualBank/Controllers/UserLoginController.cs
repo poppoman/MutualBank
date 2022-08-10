@@ -115,6 +115,8 @@ namespace MutualBank.Controllers
         public IActionResult Logout()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            if (Request.Cookies["Name"] != null) { Response.Cookies.Delete("Name"); }
+            if (Request.Cookies["UserId"] != null) { Response.Cookies.Delete("UserId"); }
             return RedirectToAction("Index", "Home");
         }
         #endregion
@@ -138,7 +140,7 @@ namespace MutualBank.Controllers
             {
                 update.LoginPwd = Password.LoginPwd;
                 _mutualBankContext.SaveChanges();
-                return RedirectToAction("ProfilePageAjax", "Home");
+                return Redirect("/Home/ProfilePageAjax?page=myProfile");
             }
             else
             {

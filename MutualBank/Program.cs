@@ -26,7 +26,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         {
             OnTicketReceived = ctx =>
                 {
-                    var PhotoFileFolder = Path.Combine("/Img", "User");
                     var db = ctx.HttpContext.RequestServices.GetRequiredService<MutualBankContext>();
                     var Name = ctx.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
                     var Email = ctx.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
@@ -58,7 +57,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                             UserResume = "",
                             UserSchool = "",
                             UserBirthday = Convert.ToDateTime("1970-01-01"),
-                            UserHphoto = Path.Combine(PhotoFileFolder, "Male.PNG"),
+                            UserHphoto =  "Male.PNG",
                             UserSex = true
                         };
                         db.Users.Add(newuser2);
@@ -82,7 +81,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         {
             OnTicketReceived = ctx =>
             {
-                var PhotoFileFolder = Path.Combine("/Img", "User");
                 var db = ctx.HttpContext.RequestServices.GetRequiredService<MutualBankContext>();
                 var Name = ctx.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
                 var Email = ctx.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
@@ -114,7 +112,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                         UserResume = "",
                         UserSchool = "",
                         UserBirthday = Convert.ToDateTime("1970-01-01"),
-                        UserHphoto = Path.Combine(PhotoFileFolder, "Male.PNG"),
+                        UserHphoto = "Male.PNG",
                         UserSex = true
                     };
                     db.Users.Add(newuser2);
