@@ -274,7 +274,7 @@ namespace MutualBank.Controllers
                 memberUpdate.UserPhoto = $"{userid}_{UniqueId}.{PhotoFormat}";
                 var InputFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Img", "User", memberUpdate.UserPhoto);
                 FileStream fs = new FileStream(InputFilePath, FileMode.Create);
-                InputFile2.CopyToAsync(fs);
+                InputFile2.CopyTo(fs);
                 fs.Close();
             }
             user.UserHphoto = memberUpdate.UserPhoto;
