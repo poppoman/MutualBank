@@ -91,7 +91,7 @@ namespace MutualBank.Controllers
                 NewCase.CasePhoto = $"{NewCase.CaseUserId}_{UniqueId}.{PhotoFormat}";
                 var InputFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Img", "CasePhoto", NewCase.CasePhoto);
                 FileStream fs = new FileStream(InputFilePath, FileMode.Create);
-                InputFile.CopyToAsync(fs);
+                InputFile.CopyTo(fs);
                 fs.Close();
             }
             _mutualBankContext.Cases.Add(NewCase);
@@ -176,7 +176,7 @@ namespace MutualBank.Controllers
                     CaseSerArea = x.CaseSerArea,
                     CaseSerDate = x.CaseSerDate.Trim(),
                     CaseNeedHelp = x.CaseNeedHelp,
-                    CaseRealseDate=x.CaseReleaseDate
+                    CaseReleaseDate = x.CaseReleaseDate
                 }).FirstOrDefault();
             return View(Case);
         }
@@ -185,11 +185,13 @@ namespace MutualBank.Controllers
         {
             var CaseOrg = _mutualBankContext.Cases.Where(x => x.CaseId == UpdateCase.CaseId).FirstOrDefault();
             CaseOrg.CaseTitle= UpdateCase.CaseTitle.Trim();
+            CaseOrg.CaseNeedHelp = UpdateCase.CaseNeedHelp;
             CaseOrg.CaseSkilId= UpdateCase.CaseSkilId;
             CaseOrg.CaseIntroduction  =UpdateCase.CaseIntroduction.Trim();
             CaseOrg.CasePoint=UpdateCase.CasePoint;
             CaseOrg.CaseSerArea=UpdateCase.CaseSerArea;
             CaseOrg.CaseSerDate = UpdateCase.CaseSerDate.Trim();
+            CaseOrg.CaseReleaseDate = UpdateCase.CaseReleaseDate;
 
             if (HttpContext.Request.Form.Files.Count != 0 )
             {
