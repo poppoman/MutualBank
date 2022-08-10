@@ -69,17 +69,17 @@
                 <div class="form-group has-validation">
                     <label for="CaseTitle" class="form-label">標題</label>
                     <input type="text" name="CaseTitle" class="form-control rounded-pill ps-3" 
-                            :value="changedCaseData.caseTitle" maxlength="50"/>
+                            :value="changedCaseData.caseTitle" required maxlength="50"/>
                     <div class="invalid-feedback">
-                        最長不能超過50字
+                        欄位必填且最長不能超過50字
                     </div>
                 </div>
                 <div class="form-group has-validation">
                     <label for="CaseIntroduction" class="form-label">詳細內容</label>
                     <textarea form="casePost" name="CaseIntroduction" class="form-control rounded-10" 
-                              v-bind:value="changedCaseData.caseIntroduction" rows="4" maxlength="200"></textarea>
+                              v-bind:value="changedCaseData.caseIntroduction" required rows="4" maxlength="200"></textarea>
                     <div class="invalid-feedback">
-                        最長不能超過200字
+                        欄位必填且最長不能超過200字
                     </div>
                 </div>
                 <div class="form-group has-validation">
@@ -99,7 +99,7 @@
                     <input type="number" name="CasePoint" min="1" max="1000" step="1" class="form-control rounded-pill ps-3"
                            :value="changedCaseData.casePoint"/>
                     <div class="invalid-feedback">
-                        不是可用的數值範圍，且點數應為整數
+                        可能數值範圍不可用，或點數不是整數
                     </div>
                 </div>
             </div>

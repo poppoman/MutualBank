@@ -148,7 +148,9 @@
 var Id = @id;
 var Name = "@id"+" "+"@Html.Raw(name)";
 //時間
-const current  = new Date().toISOString().substring(0,10);
+var day  = new Date();
+day.setDate(day.getDate() - 1);
+var limit = day.toISOString().substring(0, 10);
 // new Vue 取名 vm 掛載在 #vmEle
 var vm = new Vue({
     el: "#vmEle",
@@ -160,7 +162,7 @@ var vm = new Vue({
         //selectedAId:"",
         //selectedCity:"",
         //selectedTown:"",
-        currentDate: current,
+        currentDate: limit,
         selectList: [            
             { bool: false, text: "女" },
             { bool: true, text: "男" }
