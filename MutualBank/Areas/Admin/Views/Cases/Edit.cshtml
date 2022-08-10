@@ -96,10 +96,10 @@
                 </div>
                 <div class="form-group has-validation">
                     <label for="CasePoint" class="form-label">交易點數</label>
-                    <input type="number" name="CasePoint" min="0" max="1000" class="form-control rounded-pill ps-3"
+                    <input type="number" name="CasePoint" min="1" max="1000" step="1" class="form-control rounded-pill ps-3"
                            :value="changedCaseData.casePoint"/>
                     <div class="invalid-feedback">
-                        不是可用的數值範圍
+                        不是可用的數值範圍，且點數應為整數
                     </div>
                 </div>
             </div>
