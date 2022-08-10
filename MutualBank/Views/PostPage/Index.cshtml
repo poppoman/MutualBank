@@ -56,7 +56,7 @@
                         </div>
                     </div>
                 <!-- 選擇交易對象 -->
-                    <div id="confirmCase" v-if="isOwner">
+                    <div id="confirmCase" v-if="isOwner" v-cloak>
                         <div class="mt-4">
                             <button v-if="isWaitForTrans" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#listModal">
                                 選擇交易對象

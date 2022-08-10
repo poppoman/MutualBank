@@ -176,7 +176,7 @@ namespace MutualBank.Controllers
                     CaseSerArea = x.CaseSerArea,
                     CaseSerDate = x.CaseSerDate.Trim(),
                     CaseNeedHelp = x.CaseNeedHelp,
-                    CaseRealseDate=x.CaseReleaseDate
+                    CaseReleaseDate = x.CaseReleaseDate
                 }).FirstOrDefault();
             return View(Case);
         }

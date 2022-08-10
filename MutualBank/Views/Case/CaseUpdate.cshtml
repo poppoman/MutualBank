@@ -298,7 +298,7 @@
                     if (pic.src != this.updateCase.CasePhoto) formData.append("CasePhoto", $("#CasePhoto").prop("files")[0]);
                     formData.append("CaseSerArea", $("#CaseSerArea").val());
                     formData.append("CaseSerDate", $("#CaseSerDate").val());
-                    formData.append("CaseReleaseDate", $("#CaseReleaseDate").val());
+                    formData.append("CaseReleaseDate",new Date( $("#CaseReleaseDate").val()).toJSON());
                     $.ajax({
                         url: "/Case/CaseUpdateSave",
                         type: "POST",
@@ -360,6 +360,7 @@
                     CaseReleaseDate.max = this.finalDate(currentDate, 14);
                     dateRemind.innerText = CaseReleaseDate.max;
                     CaseReleaseDate.setAttribute('disabled', 'disabled');
+                    $("#CaseReleaseDate").val(this.updateCase.CaseReleaseDate.split("T")[0]);
                 });
             }
         });

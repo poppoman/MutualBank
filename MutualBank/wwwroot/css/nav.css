@@ -14,7 +14,9 @@ body {
     overflow-y: scroll;
     overflow-x: hidden;
 }
-
+[v-cloak] {
+    display: none;
+}
 .fromNav {
     position: relative;
     top: 50px;
