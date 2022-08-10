@@ -111,7 +111,10 @@ namespace MutualBank.Areas.Admin.Controllers
         }
         private Skill CorrespondTheValue(Skill skillModel, SkillsIndex json)
         {
-            skillModel.SkillName = json.SkillName;
+            if(json.SkillName != null)
+            {
+                skillModel.SkillName = json.SkillName;
+            }
             return skillModel;
         }
     }

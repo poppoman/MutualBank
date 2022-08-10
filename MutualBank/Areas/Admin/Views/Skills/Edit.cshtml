@@ -27,7 +27,7 @@
                 <div class="form-group has-validation">
                     <label for="SkillName" class="form-label">技能名稱</label>
                     <input type="text" id="SkillName" name="SkillName" required maxlength="50" class="form-control rounded-pill ps-3"
-                            value="@Html.Raw(skName)"/>
+                            v-bind:value="changeSkillData"/>
                     <div class="invalid-feedback">
 	                    欄位必填且最長不能超過50字
 	                </div>
@@ -35,7 +35,7 @@
             </div>
             @* 按鈕列 *@
             <div class="row justify-content-evenly pt-3">
-                <button type="button" id="resetOrigin" class="btn btn-backtolist col-3">重設</button>
+                <button type="button" v-on:click="fetchOrigin" class="btn btn-backtolist col-3">重設</button>
                 <button type="submit" id="prevent" class="btn btn-backtolist col-3">提交</button>
                 <a href="~/Admin/Skills/Index" class="btn btn-backtolist col-5">返回總覽</a>
             </div>
@@ -43,13 +43,28 @@
     </div>
 </div>
 
+<script>
+var skillName = "@Html.Raw(skName)";
+var vm = new Vue({
+    el: '#editSec',
+    data: {
+        changeSkillData: skillName,
+    },
+    methods: {
+        fetchOrigin: function () {
+            vm.$forceUpdate();
+        },
+    },
+});
+</script>
+
 @section Scripts{
     <script>
         //參數宣告
         var inp = $('#editSec input');
         var sp = $('#editText');
-        var resetBtn = $('#resetOrigin');
         var bool = true;
+        const forms = document.querySelectorAll('.needs-validation');
 
         //input 初始化
         inp.prop('readonly', 'true');
@@ -57,7 +72,6 @@
         inp.addClass('form-control-plaintext fs-6 bg-light');
         //註冊事件
         $("#editBtn").on("click",modeSwitch);
-        resetBtn.on("click", fetchOrigin);
 
         //按鈕事件處理
         function modeSwitch() {
@@ -80,9 +94,17 @@
                 bool = true;
             }
         }
-        function fetchOrigin() {
-            $('#SkillName').val("@Html.Raw(skName)");
-        }
+
+        // validation 處理
+        Array.from(forms).forEach(form => {
+          form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            form.classList.add('was-validated')
+          }, false)
+        });
     </script>
 }
 
