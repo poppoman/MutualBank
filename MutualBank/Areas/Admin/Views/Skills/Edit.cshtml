@@ -3,12 +3,12 @@
     var id = ViewBag.skillId;
     String skName = ViewBag.skillName;
     //頁籤標題
-    ViewData["Title"] = $"技能\"{id}\"的詳細資料";
+    ViewData["Title"] = $"技能 | 詳細資料";
 }
 
 <div class="row justify-content-between align-items-center pt-3 mb-3">
     <div class="col-12 col-sm-9 col-md-6 col-lg-4 border-bottom">
-        <h2>@ViewData["Title"]</h2>
+        <h2>技能的詳細資料</h2>
     </div>
     <div class="col-12 col-sm-3 col-md-6 col-lg-8 fs-4">
         <span id="editText" class="badge border-end-0 bg-royalblue">閱讀</span>
