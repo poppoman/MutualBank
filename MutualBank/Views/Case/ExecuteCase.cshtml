@@ -27,7 +27,7 @@
                 </div>
             </li>
             <!--Vue-->
-            <li v-else class="list-group-item" v-for="item in exeCaseModel">
+            <li v-else class="list-group-item" v-for="(item,index) in exeCaseModel">
                 <div class="d-flex justify-content-between align-items-start mb-4">
                     <div class="ms-2 me-auto text-nowrap">
                         <div class="mt-2 mb-2">
@@ -45,7 +45,7 @@
                 <div class="text-end m-2">
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal"
                             :data-targetuserid="item.TargetUserId" :data-point="item.CasePoint" :data-caseid="item.CaseId"
-                            :data-casetitle="item.CaseTitle" :data-isneed="item.IsNeed| isNeedFilter" v-on:click="getTargetData">
+                            :data-casetitle="item.CaseTitle" :data-isneed="item.IsNeed| isNeedFilter" :data-index="index" v-on:click="getTargetData">
                         結案
                     </button>
                 </div>
