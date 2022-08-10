@@ -91,7 +91,7 @@ namespace MutualBank.Controllers
                 NewCase.CasePhoto = $"{NewCase.CaseUserId}_{UniqueId}.{PhotoFormat}";
                 var InputFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Img", "CasePhoto", NewCase.CasePhoto);
                 FileStream fs = new FileStream(InputFilePath, FileMode.Create);
-                InputFile.CopyToAsync(fs);
+                InputFile.CopyTo(fs);
                 fs.Close();
             }
             _mutualBankContext.Cases.Add(NewCase);
