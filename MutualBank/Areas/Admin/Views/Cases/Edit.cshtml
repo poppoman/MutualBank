@@ -139,12 +139,6 @@ var vm = new Vue({
     },
     mounted: function() {
         var self = this;
-        fetch(`/Admin/Cases/getReadonlyCases/${Id}`)
-            .then(function(res) { return res.json() })
-            .then(function(json) {
-                console.log("cases =", json);
-                self.changedCaseData = json;
-            });
         fetch(`/api/ApiUser/getUserName`)
             .then(function(res) { return res.json() })
             .then(function(json) {
@@ -156,6 +150,13 @@ var vm = new Vue({
             .then(function(json) {
                 console.log("skill =", json);
                 self.selectSkillList = json;
+            });
+        fetch(`/Admin/Cases/getReadonlyCases/${Id}`)
+            .then(function(res) { return res.json() })
+            .then(function(json) {
+                console.log("cases =", json);
+                self.changedCaseData = json;
+                self.$forceUpdate();
             });
     },
 });

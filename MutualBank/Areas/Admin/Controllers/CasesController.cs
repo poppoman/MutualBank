@@ -115,7 +115,7 @@ namespace MutualBank.Areas.Admin.Controllers
             var caseModel = _context.Cases.Where(c => c.CaseId == id).Select(c => new CaseApiModel
             {
                 CaseAddString = c.CaseAddDate.ToString("yyyy-MM-dd"),
-                CaseClosedIn = c.CaseClosedDate ?? new DateTime(2022,08,06),
+                CaseClosedIn = c.CaseClosedDate ?? new DateTime(2022, 08, 06),
                 CaseExpireString = c.CaseExpireDate.ToString("yyyy-MM-dd"),
                 CaseIntroduction = c.CaseIntroduction,
                 CaseNeedHelp = c.CaseNeedHelp,
@@ -127,6 +127,8 @@ namespace MutualBank.Areas.Admin.Controllers
                 CaseSkilId = c.CaseSkilId,
                 CaseTitle = c.CaseTitle,
                 CaseUserId = c.CaseUserId,
+                userFullName = c.CaseUser.UserLname + " " + c.CaseUser.UserFname != " " ?
+                               c.CaseUser.UserLname + " " + c.CaseUser.UserFname : c.CaseUserId.ToString()
             }).FirstOrDefault();
             if (caseModel == null)
             {

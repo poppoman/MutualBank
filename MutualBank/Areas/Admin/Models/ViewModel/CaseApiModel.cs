@@ -31,5 +31,6 @@
         public string? CaseReleaseString { get; internal set; }
         public string? CaseExpireString { get; internal set; }
         public string? CaseAddString { get; internal set; }
+        public string? userFullName { get; internal set; }
     }
 }

@@ -92,12 +92,6 @@
         },
         mounted: function() {
             var self = this;
-            fetch(`/Admin/Points/getPointDetail/${Id}`)
-                .then(function(res) { return res.json() })
-                .then(function(json) {
-                    console.log("points =", json);
-                    self.changedPointData = json;
-                });
             fetch(`/api/ApiUser/getUserName`)
                 .then(function(res) { return res.json() })
                 .then(function(json) {
@@ -109,6 +103,13 @@
                 .then(function(json) {
                     console.log("title =", json);
                     self.pointCaseData = json;
+                });
+            fetch(`/Admin/Points/getPointDetail/${Id}`)
+                .then(function(res) { return res.json() })
+                .then(function(json) {
+                    console.log("points =", json);
+                    self.changedPointData = json;
+                    self.$forceUpdate();
                 });
         },
     });

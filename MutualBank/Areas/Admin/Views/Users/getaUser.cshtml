@@ -19,7 +19,7 @@
 
 @* 表單起始處 *@
 <div class="row">
-    <div id="vmEle" class="col-12 col-sm-8 col-md-8 col-lg-6">
+    <div id="vmEle" class="col-12 col-sm-8 col-md-8 col-lg-6" v-cloak>
         <form id="userPost" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
             <input type="hidden" id="userId" name="userId" v-model="changedUserData.userId"/>
             <div class="form-group">
@@ -79,15 +79,16 @@
                     </div>
                 </div>
                 <div class="form-group has-validation">
-                    <label for="userSkillId" class="form-label">技能</label>
-                    <input type="number" id="userSkillId" name="userSkillId" min="1" max="12" placeholder="請填入1~12" v-bind:value="changedUserData.userSkillId" class="form-control rounded-pill ps-3" />
-                    <div class="invalid-feedback">
-                      請填入1~12
-                    </div>
+                    <label for="CaseSkilId" class="form-label">技能名稱</label>
+                    <select name="userSkillId" :value="changedUserData.userSkillId" class="form-select" aria-label="Default select example">
+                        <option  v-for="item in selectSkillList" :value="item.skillId">{{item.skillName}}</option>
+                    </select>
+                    <div class="invalid-feedback">請選擇有效的技能名稱</div>
                 </div>
                 <div class="form-group has-validation">
                     <label for="userAreaId" class="form-label">居住區域</label>
-                    <input type="number" id="userAreaId" name="userAreaId" min="1" max="374" placeholder="請填入1~374" v-bind:value="changedUserData.userAreaId" class="form-control rounded-pill ps-3" />
+                    <input type="number" id="userAreaId" name="userAreaId" min="1" max="374" placeholder="請填入1~374"
+                           v-bind:value="changedUserData.userAreaId" class="form-control rounded-pill ps-3" />
                     <div class="invalid-feedback">
                       請填入1~374
                     </div>
@@ -152,6 +153,11 @@ var vm = new Vue({
     data: {
         changedUserData: [],
         changedLoginData: [],
+        selectSkillList: [],
+        //areaList:[],
+        //selectedAId:"",
+        //selectedCity:"",
+        //selectedTown:"",
         currentDate: current,
         selectList: [
             { bool: null, text: "未設定" },
@@ -167,12 +173,24 @@ var vm = new Vue({
     },
     mounted: function() {
         var self = this;
+        fetch(`/Admin/Cases/getSkillList`)
+            .then(function(res) { return res.json() })
+            .then(function(json) {
+                console.log("skill =", json);
+                self.selectSkillList = json;
+            });
+        //fetch(`/Admin/Cases/getAreaList`)
+        //    .then(function(res) {return res.json() })
+        //    .then(function(json) {
+        //        console.log("area = ", json);
+        //        self.areaList = json;
+        //    })
         fetch(`/api/ApiUser/getaUser/${Id}`)
             .then(function(res) { return res.json() })
             .then(function(json) {
                 self.changedUserData = json;
                 console.log("UserRes = ", json);
-            });
+            });        
         fetch(`/api/ApiLogin/getaLogin/${Id}`)
             .then(function(res) { return res.json() })
             .then(function(json) {
@@ -185,10 +203,14 @@ var t = new Vue({
     el: '#title',
     data: {
         name: Name,
-    }
+    },
 })
 </script>
-
+<style>
+    [v-cloak]{  
+        display: none;  
+    }
+</style>
 
 @*按鈕-事件*@
 @section Scripts{
