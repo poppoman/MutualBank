@@ -60,7 +60,7 @@ namespace MutualBank.Areas.Admin.Controllers
             var query = _context.Users.Where(u => u.UserId == id).Select(u => new UserApiModel
             {
                 userId = id,
-                userAreaId = u.UserAreaId,
+                userAreaId = u.UserAreaId,                
                 userBnotNull = u.UserBirthday ?? new DateTime(2022,08,06),
                 userCv = u.UserCv,
                 userEmail = u.UserEmail,

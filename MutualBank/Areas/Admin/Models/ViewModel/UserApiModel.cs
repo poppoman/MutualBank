@@ -22,5 +22,6 @@
         public string? userSchool { get; set; }
         public bool? userSex { get; set; }
         public int? userSkillId { get; set; }
+        public string? userAreaDisplay { get; set; }
     }
 }

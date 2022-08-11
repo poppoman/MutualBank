@@ -70,6 +70,10 @@ namespace MutualBank.Areas.Admin.Controllers
             }            
             ViewBag.UserId = id;
             ViewBag.aUser = user.UserLname + " " + user.UserFname;
+            ViewBag.AreaName = _context.Areas.Where(a => a.AreaId == user.UserAreaId).Select(a => new
+            {
+                areaName = a.AreaCity + a.AreaTown,
+            }).FirstOrDefault().ToString();
             return View();
         }
 
@@ -157,8 +161,7 @@ namespace MutualBank.Areas.Admin.Controllers
             return user;
         }
         private User CorrespondTheValue(User user, ApiUserLoginModel apiModel)
-        {
-            user.UserAreaId = apiModel.userAreaId;
+        {            
             user.UserBirthday = apiModel.userBirthday;
             user.UserEmail = apiModel.userEmail;
             user.UserCv = apiModel.userCv;
