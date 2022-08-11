@@ -70,7 +70,6 @@ namespace MutualBank.Areas.Admin.Controllers
             {
                 areaName = a.AreaCity + a.AreaTown,
             }).FirstOrDefault();
-            ViewBag.title = caseModel.CaseTitle;
             return View(caseModel);            
         }
 
