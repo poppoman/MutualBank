@@ -60,10 +60,13 @@
                 </div>
                 <div class="form-group has-validation">
                     <label for="userSex" class="form-label">性別</label>
-                    <select id="userSex" class="form-select" name="userSex" aria-label="Default select example" v-bind:value="changedUserData.userSex">
+                    <select id="userSex" class="form-select" name="userSex" required aria-label="Default select example" v-bind:value="changedUserData.userSex">
                         <option value="" disabled>未設定</option>
                         <option v-for="item in selectList" :value="item.bool">{{item.text}}</option>
                     </select>
+                    <div class="invalid-feedback">
+                      請設定性別
+                    </div>
                 </div>
                 <div class="form-group has-validation">
                     <label for="userEmail" class="form-label">聯絡電子郵件</label>
@@ -121,7 +124,7 @@
                 </div>
                 <div class="form-group has-validation">
                     <label for="userPoint" class="form-label">擁有點數</label>
-                    <input type="number" id="userPoint" name="userPoint" min="0" max="100000" step="1" class="form-control rounded-pill ps-3"
+                    <input type="number" id="userPoint" name="userPoint" required min="0" max="100000" step="1" class="form-control rounded-pill ps-3"
                             v-bind:value="changedUserData.userPoint" />
                     <div class="invalid-feedback">
                       擁有點數應為整數且不能為負

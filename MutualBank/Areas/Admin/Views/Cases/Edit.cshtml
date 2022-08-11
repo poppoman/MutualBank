@@ -85,9 +85,9 @@
                 <div class="form-group has-validation">
                     <label for="CaseSerDate" class="form-label">服務時間</label>
                     <input type="text" name="CaseSerDate" class="form-control rounded-pill ps-3" placeholder="建議格式:周一 09:00~12:00"
-                            :value="changedCaseData.caseSerDate" maxlength="20"/>
+                            :value="changedCaseData.caseSerDate" required maxlength="20"/>
                     <div class="invalid-feedback">
-                        欄位最長不能超過20字
+                        欄位必填且最長不能超過20字
                     </div>
                 </div>
                 <div class="form-group">
@@ -96,7 +96,7 @@
                 </div>
                 <div class="form-group has-validation">
                     <label for="CasePoint" class="form-label">交易點數</label>
-                    <input type="number" name="CasePoint" min="1" max="1000" step="1" class="form-control rounded-pill ps-3"
+                    <input type="number" name="CasePoint" required min="1" max="1000" step="1" class="form-control rounded-pill ps-3"
                            :value="changedCaseData.casePoint"/>
                     <div class="invalid-feedback">
                         可能數值範圍不可用，或點數不是整數
