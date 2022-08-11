@@ -47,7 +47,7 @@
                 <div class="form-group has-validation">
                     <label for="CaseExpireDate" class="form-label">過期時間</label>
 	                <input type="date" id="CaseExpireDate" name="CaseExpireDate" v-bind:value="changedCaseData.caseExpireString" 
-                           :min="changedCaseData.caseReleaseString" class="form-control rounded-pill ps-3" />
+                           :min="changedCaseData.caseReleaseString" :max="maxLimit" class="form-control rounded-pill ps-3" />
                     <div class="invalid-feedback">
                       不是可用的日期範圍
                     </div>
@@ -118,6 +118,10 @@
     //將資料帶入 js
     var Id = @id;
     var areaName = "@Html.Raw(aName.areaName)";
+    //時間
+    var day = new Date();
+    var maxDay = new Date(day.getFullYear() + 5, 11, 31);
+    var maxLimit = maxDay.toISOString().substring(0, 10);
     //Vue 物件
 var vm = new Vue({
     el: '#vmEle',
@@ -131,6 +135,7 @@ var vm = new Vue({
             { bool: true, text: "幫助" },
         ],
         aName: areaName,
+        maxLimit: maxLimit,
     },
     methods: {
         fetchOrigin: function() {

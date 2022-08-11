@@ -78,7 +78,7 @@
                 <div class="form-group has-validation">
                     <label for="userBirthday" class="form-label">出生日期</label>
                     <input type="date" id="userBirthday" name="userBirthday" v-bind:value="changedUserData.userDate"
-                           v-bind:max="currentDate" class="form-control rounded-pill ps-3" />
+                           v-bind:max="currentDate" :min="minDate" class="form-control rounded-pill ps-3" />
                     <div class="invalid-feedback">
                       不是可用的日期範圍
                     </div>
@@ -154,6 +154,8 @@ console.log(areaString);
 var day  = new Date();
 day.setDate(day.getDate() - 1);
 var limit = day.toISOString().substring(0, 10);
+var dayMin = new Date(day.getFullYear() - 100, 11, 31);
+var minLimit = dayMin.toISOString().substring(0, 10);
 // new Vue 取名 vm 掛載在 #vmEle
 var vm = new Vue({
     el: "#vmEle",
@@ -163,6 +165,7 @@ var vm = new Vue({
         selectSkillList: [],
         areaData: areaResult,
         currentDate: limit,
+        minDate: minLimit,
         selectList: [            
             { bool: false, text: "女" },
             { bool: true, text: "男" }
