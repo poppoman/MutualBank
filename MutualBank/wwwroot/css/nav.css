@@ -90,8 +90,8 @@ a {
         .navBar .topL .logo {
             position: relative;
             top: -10px;
-            width: 40px;
-            height: 40px;
+            max-width: 40px;
+            max-height: 40px;
         }
 
             .navBar .topL .logo img {
@@ -144,6 +144,12 @@ a {
                 color: var(--gray);
                 cursor: pointer;
             }
+            .navBar .topL .search .area,
+            .navBar .topL .search .city {
+                margin-right: 0 ;
+                margin: 0.25rem;
+            }
+
 
     .navBar .topR {
         width: 30%;
@@ -256,7 +262,7 @@ div#staticBackdrop input[name="select"] {
         padding: 20px 10px;
         text-align: left;
         width: 40%;
-        height: 100vh;
+        height: 120vh;
         background: var(--white);
         box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.03);
         opacity: 0;
@@ -293,18 +299,94 @@ div#staticBackdrop input[name="select"] {
     }
 
     .navBar .topL .search {
-        width: 90%;
+        width: 100%;
     }
         .navBar .topL .search i {
-            left: 92%;
-            top: 18%;
+            left: 90%;
+            top: 21%;
             font-size: 22px;
+        }
+    .navBar .topL .logo {
+        top: 0;
+        left: 90px;
+        max-width: 120px;
+        max-height: 120px;
+    }
+
+        .navBar .topL .logo img {
+            max-width: 50%;
+        }
+
+    .navBar .topL .search i {
+        left: 88%;
+        top: 24%;
+        font-size: 22px;
+    }
+}
+@media(max-width:541px) {
+    .navBar .topL .logo {
+        left: 0;
+    }
+    .navBar .topL .search {
+        position: relative;
+        left: -20px;
+        width: 110%;
+        margin-left: 0px;
+        height: 40px;
+        font-size: 16px;
+    }
+        .navBar .topL .search .area,
+        .navBar .topL .search .city {
+            margin: auto;
         }
 }
 
-@media(max-width:480px) {
+    @media(max-width:480px) {
+        .mainBtn {
+            margin: 10px 10px 10px 10px;
+            padding: 13px 15px;
+        }
 
-    .navBar .topR .barManu.active {
-        width: 80%;
+        #home .typeBar {
+            text-align: center;
+            display: flex;
+            justify-content: space-around;
+            white-space: nowrap;
+        }
+
+        .navBar .topR .barManu.active {
+            width: 80%;
+        }
+
+            .navBar .topL .search .selectList {
+                width: auto;
+            }
+
+
+        .navBar .topL .logo {
+            top: 0;
+            width: auto;
+            height: auto;
+        }
+
+            .navBar .topL .logo img {
+                max-width: 65%;
+            }
+
+        .navBar .topL .search i {
+            left: 88%;
+            top: 24%;
+            font-size: 22px;
+        }
+    }
+
+@media (max-width: 281px) {
+    #home .typeBar {
+        display: block;
+        text-align: left;
+        white-space: break-spaces;
+    }
+    .navBar .topR .iconMaun {
+        right: 0;
     }
 }

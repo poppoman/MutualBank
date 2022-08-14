@@ -78,29 +78,37 @@
 //-RWD Manu控制
 let panelsToggle = document.querySelector('.panelsToggle');
 
-let barManu = document.querySelector('.topR .barManu ');
+let barManu = document.querySelector('.topR .barManu');
 let iconManu = document.querySelector('.navBar .topR .iconMaun');
 iconManu.addEventListener('click', function () {
     barManu.classList.toggle('active');
-    //點選時切換icon
-    iconManu.classList.toggle('fa-bars');
-    iconManu.classList.toggle('fa-xmark');
-    //開啟背景關閉功能
-    panelsToggle.classList.add('bgOn');
+    //點選時切換icon與背景黑幕
+    if (iconManu.classList.contains("fa-xmark")) {
+        panelsToggle.classList.remove('bgOn');
+        panelsToggle.classList.remove('On');
+        iconManu.classList.remove('fa-xmark');
+        iconManu.classList.add('fa-bars');
+    }
+    else  {
+        panelsToggle.classList.add('bgOn');
+        panelsToggle.classList.add('On');
+        iconManu.classList.add('fa-xmark');
+        iconManu.classList.remove('fa-bars');
+    }
 })
 
 
-//-點擊背景時關閉面板
+//-點擊背景時關閉所有面板
 panelsToggle.addEventListener('click', function () {
-    panelcity.classList.remove('active');
-    panelTown.classList.remove('active');
+    if (barManu.classList.contains('active')) {
+        //關閉barManu，並將X恢復為原 menu icon
+        barManu.classList.remove('active');
+        iconManu.classList.add('fa-bars');
+        iconManu.classList.remove('fa-xmark');
+    }
     barManu.classList.remove('active');
     panelsToggle.classList.remove('On');
     panelsToggle.classList.remove('bgOn');
-    if (barManu.classList.contains('active')) {
-        //關閉barManu，並將X恢復為原icon
-        barManu.classList.remove('active');
-        iconManu.classList.toggle('fa-bars');
-        iconManu.classList.toggle('fa-xmark');
-    }
+
+    
 })
